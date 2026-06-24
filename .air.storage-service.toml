@@ -1,0 +1,30 @@
+root = "."
+tmp_dir = "tmp/storage-service"
+env_file = ".env"
+
+[build]
+cmd = "go build -o ./tmp/storage-service/main ./services/storage-service/cmd/server"
+bin = "./tmp/storage-service/main"
+full_bin = "./tmp/storage-service/main"
+
+include_ext = ["go", "env", "proto"]
+include_dir = ["services/storage-service", "pkg", "proto"]
+
+exclude_dir = ["tmp", "vendor", "node_modules", "db/data"]
+
+delay = 1000
+stop_on_error = true
+send_interrupt = true
+kill_delay = 500
+
+[log]
+time = true
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+clean_on_exit = true

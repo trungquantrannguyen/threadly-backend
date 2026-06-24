@@ -1,0 +1,30 @@
+root = "."
+tmp_dir = "tmp/feed-service"
+env_file = ".env"
+
+[build]
+cmd = "go build -o ./tmp/feed-service/main ./services/feed-service/cmd/server"
+bin = "./tmp/feed-service/main"
+full_bin = "./tmp/feed-service/main"
+
+include_ext = ["go", "env", "proto"]
+include_dir = ["services/feed-service", "pkg", "proto"]
+
+exclude_dir = ["tmp", "vendor", "node_modules", "db/data"]
+
+delay = 1000
+stop_on_error = true
+send_interrupt = true
+kill_delay = 500
+
+[log]
+time = true
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+clean_on_exit = true

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package feed;
+option go_package = "threadly/proto/feed;feedv1";
+
+service FeedService {
+    rpc GetHealth(GetFeedServiceHealthRequest) returns (GetFeedServiceHealthResponse);
+}
+
+message GetFeedServiceHealthRequest {}
+
+message GetFeedServiceHealthResponse {
+    string service = 1;
+    string status = 2;
+    string env = 3;
+    string checked_at = 4;
+}

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package storage;
+option go_package = "threadly/proto/storage;storagev1";
+
+service StorageService {
+    rpc GetHealth(GetStorageServiceHealthRequest) returns (GetStorageServiceHealthResponse);
+}
+
+message GetStorageServiceHealthRequest {}
+
+message GetStorageServiceHealthResponse {
+    string service = 1;
+    string status = 2;
+    string env = 3;
+    string checked_at = 4;
+}

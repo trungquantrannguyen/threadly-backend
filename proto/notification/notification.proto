@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package notification;
+option go_package = "threadly/proto/notification;notificationv1";
+
+service NotificationService {
+    rpc GetHealth(GetNotificationServiceHealthRequest) returns (GetNotificationServiceHealthResponse);
+}
+
+message GetNotificationServiceHealthRequest {}
+
+message GetNotificationServiceHealthResponse {
+    string service = 1;
+    string status = 2;
+    string env = 3;
+    string checked_at = 4;
+}

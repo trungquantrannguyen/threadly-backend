@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package content;
+option go_package = "threadly/proto/content;contentv1";
+
+service ContentService {
+    rpc GetHealth(GetContentServiceHealthRequest) returns (GetContentServiceHealthResponse);
+}
+
+message GetContentServiceHealthRequest {}
+
+message GetContentServiceHealthResponse {
+    string service = 1;
+    string status = 2;
+    string env = 3;
+    string checked_at = 4;
+}
