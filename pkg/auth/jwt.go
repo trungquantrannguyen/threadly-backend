@@ -37,7 +37,7 @@ func GenerateAccessToken(
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(secret))
 }
@@ -47,7 +47,7 @@ func ValidateAccessToken(tokenString string, secret string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(
 		tokenString, claims,
 		func(token *jwt.Token) (interface{}, error) {
-			if token.Method != jwt.SigningMethodES256 {
+			if token.Method != jwt.SigningMethodHS256 {
 				return nil, errors.New("Unexpected signing method")
 			}
 			return []byte(secret), nil

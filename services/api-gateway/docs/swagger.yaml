@@ -1,0 +1,356 @@
+basePath: /api
+definitions:
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserData'
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse:
+    properties:
+      errors: {}
+      message:
+        type: string
+      success:
+        type: string
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetMeResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthData:
+    properties:
+      checked_at:
+        type: string
+      env:
+        type: string
+      service:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginRequest:
+    properties:
+      email_or_username:
+        type: string
+      password:
+        type: string
+    required:
+    - email_or_username
+    - password
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenResponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterRequest:
+    properties:
+      display_name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - display_name
+    - email
+    - password
+    - username
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse:
+    properties:
+      data:
+        $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserData:
+    properties:
+      avatar_url:
+        type: string
+      display_name:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: |-
+    Public REST API documentation for Threadly.
+    Threadly is a Twitter/X-style social media platform using Go microservices, gRPC, PostgreSQL, Redis, and RabbitMQ.
+  title: Threadly API Gateway
+  version: "1.0"
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Get the status of user service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+  /users/health:
+    get:
+      consumes:
+      - application/json
+      description: Get the status of user service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user using email/username and password.
+      parameters:
+      - description: Login request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      summary: Login user
+      tags:
+      - Users
+  /users/logout:
+    post:
+      consumes:
+      - application/json
+      description: Revokes the current refresh token session.
+      parameters:
+      - description: Logout request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout user
+      tags:
+      - Users
+  /users/me:
+    get:
+      description: Returns the authenticated user's profile.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetMeResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - Users
+  /users/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Uses a valid refresh token to issue a new access token.
+      parameters:
+      - description: Refresh token request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new Threadly user account and returns access and refresh
+        tokens.
+      parameters:
+      - description: Register request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    description: 'Enter your JWT access token as: Bearer <token>'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

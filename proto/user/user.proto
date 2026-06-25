@@ -5,6 +5,11 @@ option go_package = "threadly/proto/user;userv1";
 
 service UserService {
     rpc GetHealth(GetUserServiceHealthRequest) returns (GetUserServiceHealthResponse);
+    rpc Register(RegisterRequest) returns (AuthResponse);
+    rpc Login(LoginRequest) returns (AuthResponse);
+    rpc RefreshToken(RefreshTokenRequest) returns (AuthResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
+    rpc GetMe(GetMeRequest) returns (AuthUserResponse);
 }
 
 message GetUserServiceHealthRequest {}
@@ -14,4 +19,51 @@ message GetUserServiceHealthResponse {
     string status = 2;
     string env = 3;
     string checked_at = 4;
+}
+
+message RegisterRequest {
+    string email = 1;
+    string username = 2;
+    string password = 3;
+    string displayName = 4;
+    string userAgent = 5;
+    string ipAddress = 6;
+}
+
+message LoginRequest {
+    string emailOrUsername = 1;
+    string password = 2;
+    string userAgent = 3;
+    string ipAddress = 4;
+}
+
+message RefreshTokenRequest {
+    string refreshToken = 1;
+    string userAgent = 2;
+    string ipAddress = 3;
+}
+
+message LogoutRequest {
+    string refreshToken = 1;
+}
+
+message GetMeRequest {
+    string userID = 1;
+}
+
+message LogoutResponse {}
+
+message AuthUserResponse {
+    string id = 1;
+    string email = 2;
+    string username = 3;
+    string displayName= 4;
+    string role = 5;
+    string avatarURL = 6;
+}
+
+message AuthResponse {
+    AuthUserResponse user = 1;
+    string accessToken = 2;
+    string refreshToken = 3;
 }

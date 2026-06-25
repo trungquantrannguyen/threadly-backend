@@ -42,6 +42,56 @@ func (c *UserClient) GetHealth(ctx context.Context) (*userpb.GetUserServiceHealt
 	return c.client.GetHealth(ctx, &userpb.GetUserServiceHealthRequest{})
 }
 
+func (c *UserClient) Register(
+	ctx context.Context,
+	req *userpb.RegisterRequest,
+) (*userpb.AuthResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.Register(ctx, req)
+}
+
+func (c *UserClient) Login(
+	ctx context.Context,
+	req *userpb.LoginRequest,
+) (*userpb.AuthResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.Login(ctx, req)
+}
+
+func (c *UserClient) RefreshToken(
+	ctx context.Context,
+	req *userpb.RefreshTokenRequest,
+) (*userpb.AuthResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.RefreshToken(ctx, req)
+}
+
+func (c *UserClient) Logout(
+	ctx context.Context,
+	req *userpb.LogoutRequest,
+) (*userpb.LogoutResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.Logout(ctx, req)
+}
+
+func (c *UserClient) GetMe(
+	ctx context.Context,
+	req *userpb.GetMeRequest,
+) (*userpb.AuthUserResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetMe(ctx, req)
+}
+
 func (c *UserClient) Close() error {
 	return c.conn.Close()
 }

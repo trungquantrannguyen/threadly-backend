@@ -30,6 +30,7 @@ type User struct {
 	CreatedAt time.Time      `gorm:"column:created_at;not null"`
 	UpdatedAt time.Time      `gorm:"column:updated_at;not null"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;index"`
+	Role      string         `gorm:"column:role;type:varchar(20);not null;default:user"`
 }
 
 func (User) TableName() string {

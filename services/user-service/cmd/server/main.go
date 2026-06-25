@@ -9,12 +9,15 @@ import (
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
 	userpb "github.com/trungquantrannguyen/threadly/proto/user"
 	usergrpc "github.com/trungquantrannguyen/threadly/services/user-service/internal/grpc"
+	"github.com/trungquantrannguyen/threadly/services/user-service/internal/repository"
+	"github.com/trungquantrannguyen/threadly/services/user-service/internal/service"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	cfg := config.Load("user-service", "50051")
 	log := logger.New(cfg.ServiceName, cfg.AppEnv)
+
 	dtb, err := db.ConntectPostgres(cfg)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to connect to database")
@@ -28,6 +31,16 @@ func main() {
 
 	log.Info().Msg("Database connected successfully")
 
+	userRepo := repository.NewUserRepository(dtb)
+	sessionRepo := repository.NewSessionRepository(dtb)
+
+	userService := service.NewUserService(
+		userRepo,
+		sessionRepo,
+		cfg,
+		log,
+	)
+
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Port))
 	if err != nil {
 		log.Fatal().
@@ -37,7 +50,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer()
-	userGrpcServer := usergrpc.NewUserServiceServer(cfg, log)
+	userGrpcServer := usergrpc.NewUserServiceServer(cfg, log, userService)
 	userpb.RegisterUserServiceServer(grpcServer, userGrpcServer)
 
 	log.Info().

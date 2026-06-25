@@ -31,6 +31,7 @@ help:
 	@echo "  make tidy"
 	@echo "  make fmt"
 	@echo "  make proto-user"
+	@echo "  make swagger-gen"
 
 .PHONY: run-gateway
 run-gateway:
@@ -182,3 +183,11 @@ proto-storage:
 		--go-grpc_out=. \
 		--go-grpc_opt=paths=source_relative \
 		proto/storage/storage.proto
+.PHONY: swagger-gen
+swagger-gen:
+	swag init \
+		-g cmd/server/main.go \
+		-d services/api-gateway,services/api-gateway/internal/handlers,services/api-gateway/internal/dto \
+		-o services/api-gateway/docs \
+		--parseInternal \
+		--parseDependency

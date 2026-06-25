@@ -3,6 +3,8 @@ package app
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	"github.com/trungquantrannguyen/threadly/pkg/middleware"
 	"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
@@ -19,6 +21,7 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 	router.Use(gin.Recovery())
 	router.Use(middleware.RequestID())
 	router.Use(middleware.Logging(log))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	healthHandler := handlers.NewHealthHandler(cfg)
 
@@ -65,6 +68,15 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 		users := api.Group("/users")
 		{
 			users.GET("/health", userHandler.GetHealth)
+			users.POST("/register", userHandler.Register)
+			users.POST("/login", userHandler.Login)
+			users.POST("/refresh", userHandler.RefreshToken)
+			protectedUsers := users.Group("")
+			protectedUsers.Use(middleware.AuthMiddleware(cfg))
+			{
+				protectedUsers.POST("/logout", userHandler.Logout)
+				protectedUsers.GET("/me", userHandler.GetMe)
+			}
 		}
 		contents := api.Group("/contents")
 		{

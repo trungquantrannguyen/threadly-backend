@@ -10,12 +10,14 @@ full_bin = "./tmp/api-gateway/main"
 include_ext = ["go", "env", "proto"]
 include_dir = ["services/api-gateway", "pkg", "proto"]
 
-exclude_dir = ["tmp", "vendor", "node_modules", "db/data"]
+exclude_dir = ["tmp", "vendor", "node_modules", "db/data","services/api-gateway/docs"]
 
 delay = 1000
 stop_on_error = true
 send_interrupt = true
 kill_delay = 500
+pre_cmd = ["make swagger-gen"]
+rerun = false
 
 [log]
 time = true

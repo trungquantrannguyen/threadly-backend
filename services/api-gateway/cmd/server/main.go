@@ -7,9 +7,22 @@ import (
 
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
+	_ "github.com/trungquantrannguyen/threadly/services/api-gateway/docs"
 	"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app"
 )
 
+// @title Threadly API Gateway
+// @version 1.0
+// @description Public REST API documentation for Threadly.
+// @description Threadly is a Twitter/X-style social media platform using Go microservices, gRPC, PostgreSQL, Redis, and RabbitMQ.
+
+// @host localhost:8080
+// @BasePath /api
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Enter your JWT access token as: Bearer <token>
 func main() {
 	cfg := config.Load("api-gateway", "8080")
 	log := logger.New(cfg.ServiceName, cfg.AppEnv)
