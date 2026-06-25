@@ -25,7 +25,7 @@ import (
 // @description Enter your JWT access token as: Bearer <token>
 func main() {
 	cfg := config.Load("api-gateway", "8080")
-	log := logger.New(cfg.ServiceName, cfg.AppEnv)
+	log := logger.New(cfg.ServiceName, cfg.AppEnv, cfg.LogLevel)
 
 	router, cleanup := app.NewRouter(cfg, log)
 

@@ -17,6 +17,7 @@ import (
 var (
 	ErrInvalidCredential   = errors.New("Invalid email/username or password")
 	ErrInvalidRefreshToken = errors.New("Invalid refresh token")
+	ErrUnauthorized        = errors.New("unauthorized")
 )
 
 type UserService interface {
@@ -120,18 +121,30 @@ func (s *userService) RefreshToken(ctx context.Context, req dto.RefreshTokenRequ
 }
 
 func (s *userService) Logout(ctx context.Context, req dto.LogoutRequest) error {
+	if req.RefreshToken == "" {
+		return ErrInvalidRefreshToken
+	}
+
 	refreshTokenHash := auth.HashRefreshToken(req.RefreshToken)
 
 	session, err := s.sessionRepo.FindActiveByRefreshTokenHash(ctx, refreshTokenHash)
 	if err != nil {
-		if errors.Is(err, repository.ErrSessionNotFound) {
+		if errors.Is(err, ErrInvalidRefreshToken) {
 			return nil
 		}
 
 		return err
 	}
 
-	return s.sessionRepo.RevokeByID(ctx, session.ID.String())
+	if session.UserID.String() != req.UserID {
+		return ErrUnauthorized
+	}
+
+	if err := s.sessionRepo.RevokeByID(ctx, session.ID.String()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *userService) GetMe(ctx context.Context, userID string) (*dto.AuthUserResponse, error) {

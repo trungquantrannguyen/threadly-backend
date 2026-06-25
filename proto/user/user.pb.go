@@ -340,6 +340,7 @@ func (x *RefreshTokenRequest) GetIpAddress() string {
 type LogoutRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	UserID        string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -377,6 +378,13 @@ func (*LogoutRequest) Descriptor() ([]byte, []int) {
 func (x *LogoutRequest) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
+	}
+	return ""
+}
+
+func (x *LogoutRequest) GetUserID() string {
+	if x != nil {
+		return x.UserID
 	}
 	return ""
 }
@@ -632,9 +640,10 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\x13RefreshTokenRequest\x12\"\n" +
 	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\x12\x1c\n" +
 	"\tuserAgent\x18\x02 \x01(\tR\tuserAgent\x12\x1c\n" +
-	"\tipAddress\x18\x03 \x01(\tR\tipAddress\"3\n" +
+	"\tipAddress\x18\x03 \x01(\tR\tipAddress\"K\n" +
 	"\rLogoutRequest\x12\"\n" +
-	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\"&\n" +
+	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\x12\x16\n" +
+	"\x06userID\x18\x02 \x01(\tR\x06userID\"&\n" +
 	"\fGetMeRequest\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\"\x10\n" +
 	"\x0eLogoutResponse\"\xa8\x01\n" +

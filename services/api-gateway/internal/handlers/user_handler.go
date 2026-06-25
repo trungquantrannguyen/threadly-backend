@@ -114,7 +114,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, http.StatusCreated, "Login successfully", res)
+	response.OK(c, http.StatusOK, "Login successfully", res)
 }
 
 // RefreshToken godoc
@@ -147,7 +147,7 @@ func (h *UserHandler) RefreshToken(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, http.StatusCreated, "Token refreshed successfully", res)
+	response.OK(c, http.StatusOK, "Token refreshed successfully", res)
 }
 
 // Logout godoc
@@ -170,8 +170,14 @@ func (h *UserHandler) Logout(c *gin.Context) {
 		return
 	}
 
+	userID := middleware.GetUserID(c)
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+	}
+
 	_, err := h.userClient.Logout(c.Request.Context(), &userpb.LogoutRequest{
 		RefreshToken: req.RefreshToken,
+		UserID:       userID,
 	})
 	if err != nil {
 		h.log.Error().Err(err).Msg("Failed to log out user")
@@ -179,7 +185,7 @@ func (h *UserHandler) Logout(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, http.StatusCreated, "Logged out successfully", nil)
+	response.OK(c, http.StatusOK, "Logged out successfully", nil)
 }
 
 // GetMe godoc
@@ -196,6 +202,7 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	if userID == "" {
 		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
 	}
 
 	res, err := h.userClient.GetMe(c.Request.Context(), &userpb.GetMeRequest{
@@ -207,5 +214,5 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, http.StatusCreated, "Get user successfully", res)
+	response.OK(c, http.StatusOK, "Get user successfully", res)
 }

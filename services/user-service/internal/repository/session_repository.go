@@ -44,6 +44,7 @@ func (r *sessionRepository) FindActiveByRefreshTokenHash(ctx context.Context, re
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrSessionNotFound
 		}
+		return nil, err
 	}
 
 	return &session, nil
@@ -59,6 +60,10 @@ func (r *sessionRepository) RevokeByID(ctx context.Context, sessionID string) er
 		Update("revoked_at", now)
 
 	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
 		return ErrSessionNotFound
 	}
 	return nil

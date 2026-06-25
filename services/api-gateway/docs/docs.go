@@ -430,6 +430,9 @@ const docTemplate = `{
             "properties": {
                 "refresh_token": {
                     "type": "string"
+                },
+                "userID": {
+                    "type": "string"
                 }
             }
         },

@@ -14,9 +14,9 @@ import (
 
 func main() {
 	cfg := config.Load("notification-service", "50054")
-	log := logger.New(cfg.ServiceName, cfg.AppEnv)
+	log := logger.New(cfg.ServiceName, cfg.AppEnv, cfg.LogLevel)
 
-	dtb, err := db.ConntectPostgres(cfg)
+	dtb, err := db.ConnectPostgres(cfg)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to connect to database")
 	}

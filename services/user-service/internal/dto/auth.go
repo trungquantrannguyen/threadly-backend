@@ -24,6 +24,7 @@ type RefreshTokenRequest struct {
 
 type LogoutRequest struct {
 	RefreshToken string
+	UserID       string
 }
 
 type AuthUserResponse struct {

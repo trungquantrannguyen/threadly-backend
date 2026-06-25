@@ -48,7 +48,7 @@ func Load(serviceName string, defaultPort string) Config {
 
 		JWTSecret:       getEnv("JWT_SECRET", "development_secret"),
 		AccessTokenTTL:  getDurationEnv("ACCESS_TOKEN_TTL", 15*time.Minute),
-		RefreshTokenTTL: getDurationEnv("REFRESH_TOKEN_TTL", 7*24*time.Minute),
+		RefreshTokenTTL: getDurationEnv("REFRESH_TOKEN_TTL", 7*24*time.Hour),
 
 		UserServiceGRPCAddr:         getEnv("USER_SERVICE_GRPC_ADDR", "localhost:50051"),
 		ContentServiceGRPCAddr:      getEnv("CONTENT_SERVICE_GRPC_ADDR", "localhost:50052"),

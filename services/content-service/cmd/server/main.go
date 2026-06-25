@@ -14,9 +14,9 @@ import (
 
 func main() {
 	cfg := config.Load("content-service", "50052")
-	log := logger.New(cfg.ServiceName, cfg.AppEnv)
+	log := logger.New(cfg.ServiceName, cfg.AppEnv, cfg.LogLevel)
 
-	dtb, err := db.ConntectPostgres(cfg)
+	dtb, err := db.ConnectPostgres(cfg)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to connect to database")
 	}

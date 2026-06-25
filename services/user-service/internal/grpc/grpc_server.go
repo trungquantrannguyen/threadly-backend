@@ -86,6 +86,7 @@ func (s *UserServiceServer) RefreshToken(ctx context.Context, req *userpb.Refres
 func (s *UserServiceServer) Logout(ctx context.Context, req *userpb.LogoutRequest) (*userpb.LogoutResponse, error) {
 	err := s.userService.Logout(ctx, dto.LogoutRequest{
 		RefreshToken: req.GetRefreshToken(),
+		UserID:       req.GetUserID(),
 	})
 	if err != nil {
 		return nil, mapUserServiceError(err)
@@ -134,15 +135,17 @@ func mapUserServiceError(err error) error {
 		return status.Error(codes.Unauthenticated, "invalid or expired refresh token")
 
 	case errors.Is(err, repository.ErrDuplicateUser):
-		return status.Error(codes.AlreadyExists, "email or username already exists")
+		return status.Error(codes.AlreadyExists, "Email or username already exists")
 
 	case errors.Is(err, repository.ErrUserNotFound):
-		return status.Error(codes.NotFound, "user not found")
+		return status.Error(codes.NotFound, "User not found")
 
 	case errors.Is(err, repository.ErrSessionNotFound):
-		return status.Error(codes.NotFound, "session not found")
+		return status.Error(codes.NotFound, "Session not found")
 
+	case errors.Is(err, service.ErrUnauthorized):
+		return status.Error(codes.PermissionDenied, "You do not have permission to perform this action")
 	default:
-		return status.Error(codes.Internal, "internal server error")
+		return status.Error(codes.Internal, "Internal server error")
 	}
 }

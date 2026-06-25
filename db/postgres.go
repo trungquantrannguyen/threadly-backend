@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func ConntectPostgres(cfg config.Config) (*gorm.DB, error) {
+func ConnectPostgres(cfg config.Config) (*gorm.DB, error) {
 	if cfg.DatabaseURL == "" {
 		return nil, fmt.Errorf("DATABASE_URL is required")
 	}
@@ -34,7 +34,7 @@ func ConntectPostgres(cfg config.Config) (*gorm.DB, error) {
 		return nil, fmt.Errorf("Failed to get SQL database instance: %w", err)
 	}
 
-	sqlDB.SetMaxIdleConns(25)
+	sqlDB.SetMaxOpenConns(25)
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetConnMaxLifetime(30 * time.Minute)
 

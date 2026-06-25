@@ -69,6 +69,8 @@ definitions:
     properties:
       refresh_token:
         type: string
+      userID:
+        type: string
     required:
     - refresh_token
     type: object

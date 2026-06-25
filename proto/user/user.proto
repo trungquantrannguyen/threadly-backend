@@ -45,6 +45,7 @@ message RefreshTokenRequest {
 
 message LogoutRequest {
     string refreshToken = 1;
+    string userID = 2;
 }
 
 message GetMeRequest {
