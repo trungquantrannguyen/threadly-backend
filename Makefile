@@ -2,6 +2,7 @@
 
 MIGRATIONS_PATH=./db/migrations
 DB_URL=$(DATABASE_URL)
+GOCACHE ?= $(CURDIR)/tmp/go-build
 
 .PHONY: help
 help:
@@ -31,6 +32,7 @@ help:
 	@echo "  make tidy"
 	@echo "  make fmt"
 	@echo "  make proto-user"
+	@echo "  make proto-all"
 	@echo "  make swagger-gen"
 
 .PHONY: run-gateway
@@ -129,7 +131,7 @@ migrate-force:
 
 .PHONY: test
 test:
-	go test ./...
+	GOCACHE="$(GOCACHE)" go test ./...
 
 .PHONY: tidy
 tidy:
@@ -183,6 +185,10 @@ proto-storage:
 		--go-grpc_out=. \
 		--go-grpc_opt=paths=source_relative \
 		proto/storage/storage.proto
+
+.PHONY: proto-all
+proto-all: proto-user proto-content proto-feed proto-notification proto-storage
+
 .PHONY: swagger-gen
 swagger-gen:
 	swag init \

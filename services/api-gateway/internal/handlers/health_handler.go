@@ -20,7 +20,7 @@ func NewHealthHandler(cfg config.Config) *HealthHandler {
 }
 
 // Register godoc
-// @Sumart Get User service health
+// @Summary Get User service health
 // @Description Get the status of user service
 // @Accept json
 // @Produce json

@@ -27,6 +27,7 @@ const docTemplate = `{
                 "tags": [
                     "Contents"
                 ],
+                "summary": "Get Content service health",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -157,7 +158,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Returns the delett post status.",
+                "description": "Returns the delete post status.",
                 "produces": [
                     "application/json"
                 ],
@@ -354,6 +355,7 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "summary": "Get User service health",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -384,6 +386,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
+                "summary": "Get User service health",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -626,7 +629,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse"
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterResponse"
                         }
                     },
                     "400": {
@@ -896,7 +899,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse": {
+        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterResponse": {
             "type": "object",
             "properties": {
                 "data": {

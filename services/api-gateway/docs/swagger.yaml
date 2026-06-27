@@ -161,7 +161,7 @@ definitions:
     - password
     - username
     type: object
-  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse:
+  github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterResponse:
     properties:
       data:
         $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData'
@@ -223,6 +223,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      summary: Get Content service health
       tags:
       - Contents
   /contents/posts:
@@ -263,7 +264,7 @@ paths:
       - Contents
   /contents/posts/{postID}:
     delete:
-      description: Returns the delett post status.
+      description: Returns the delete post status.
       parameters:
       - description: postID
         in: path
@@ -437,6 +438,7 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      summary: Get User service health
   /users/health:
     get:
       consumes:
@@ -453,6 +455,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse'
+      summary: Get User service health
       tags:
       - Users
   /users/login:
@@ -601,7 +604,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse'
+            $ref: '#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterResponse'
         "400":
           description: Bad Request
           schema:

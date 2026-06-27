@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"log"
 	"strings"
 	"time"
 
@@ -74,7 +73,6 @@ func (s *contentService) GetPost(ctx context.Context, req dto.GetPostRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	log.Println("Author", post.Author)
 
 	return toPostResponse(post), nil
 }

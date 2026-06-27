@@ -26,7 +26,7 @@ func NewContentHandler(contentClient *client.ContentClient, log zerolog.Logger) 
 }
 
 // Register godoc
-// @Sumart Get Content service health
+// @Summary Get Content service health
 // @Description Get the status of content service
 // @Tags Contents
 // @Accept json
@@ -71,6 +71,7 @@ func (h *ContentHandler) CreatePost(c *gin.Context) {
 	authorID := middleware.GetUserID(c)
 	if authorID == "" {
 		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
 	}
 
 	res, err := h.contentClient.CreatePost(c.Request.Context(), &contentpb.CreatePostRequest{
@@ -120,7 +121,7 @@ func (h *ContentHandler) GetPost(c *gin.Context) {
 
 // DeletePost godoc
 // @Summary Delete a post
-// @Description Returns the delett post status.
+// @Description Returns the delete post status.
 // @Tags Contents
 // @Produce json
 // @Security BearerAuth
@@ -183,6 +184,7 @@ func (h *ContentHandler) CreateReply(c *gin.Context) {
 	authorID := middleware.GetUserID(c)
 	if authorID == "" {
 		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
 	}
 
 	res, err := h.contentClient.CreateReply(c.Request.Context(), &contentpb.CreateReplyRequest{
@@ -215,10 +217,15 @@ func (h *ContentHandler) CreateReply(c *gin.Context) {
 // @Failure 500 {object} dto.ErrorResponse
 // @Router /contents/posts/{postID}/replies [get]
 func (h *ContentHandler) GetReplies(c *gin.Context) {
-	limit, err := strconv.ParseInt(c.Query("limit"), 10, 32)
-	if err != nil {
-		response.Error(c, http.StatusInternalServerError, "Internal server error", nil)
-		return
+	limit := int64(20)
+	limitQuery := c.Query("limit")
+	if limitQuery != "" {
+		parsedLimit, err := strconv.ParseInt(limitQuery, 10, 32)
+		if err != nil || parsedLimit < 0 || parsedLimit > 50 {
+			response.Error(c, http.StatusBadRequest, "Invalid limit", err)
+			return
+		}
+		limit = parsedLimit
 	}
 	cursor := c.Query("cursor")
 	postID := c.Param("postID")
@@ -242,7 +249,6 @@ func (h *ContentHandler) GetReplies(c *gin.Context) {
 
 	for _, post := range res.GetPosts() {
 		posts = append(posts, toPostResponse(post))
-		h.log.Info().Interface("Post", toPostResponse(post)).Send()
 	}
 
 	response.OK(c, http.StatusOK, "Get replies successfully", posts)

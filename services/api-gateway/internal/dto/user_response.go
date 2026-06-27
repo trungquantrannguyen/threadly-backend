@@ -1,6 +1,6 @@
 package dto
 
-type ResgisterReponse struct {
+type RegisterResponse struct {
 	Success bool     `json:"success"`
 	Message string   `json:"message"`
 	Data    AuthData `json:"data"`
