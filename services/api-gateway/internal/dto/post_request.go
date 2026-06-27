@@ -30,12 +30,51 @@ type PostResponse struct {
 }
 
 type GetContentServiceHealthResponse struct {
-	Success bool                     `json:"success"`
-	Message string                   `json:"message"`
-	Data    GetUserServiceHealthData `json:"data"`
+	Success bool                        `json:"success"`
+	Message string                      `json:"message"`
+	Data    GetContentServiceHealthData `json:"data"`
 }
 
 type GetContentServiceHealthData struct {
+	Service   string `json:"service"`
+	Status    string `json:"status"`
+	Env       string `json:"env"`
+	CheckedAt string `json:"checked_at"`
+}
+
+type GetFeedServiceHealthResponse struct {
+	Success bool                     `json:"success"`
+	Message string                   `json:"message"`
+	Data    GetFeedServiceHealthData `json:"data"`
+}
+
+type GetFeedServiceHealthData struct {
+	Service   string `json:"service"`
+	Status    string `json:"status"`
+	Env       string `json:"env"`
+	CheckedAt string `json:"checked_at"`
+}
+
+type GetNotificationServiceHealthResponse struct {
+	Success bool                             `json:"success"`
+	Message string                           `json:"message"`
+	Data    GetNotificationServiceHealthData `json:"data"`
+}
+
+type GetNotificationServiceHealthData struct {
+	Service   string `json:"service"`
+	Status    string `json:"status"`
+	Env       string `json:"env"`
+	CheckedAt string `json:"checked_at"`
+}
+
+type GetStorageServiceHealthResponse struct {
+	Success bool                        `json:"success"`
+	Message string                      `json:"message"`
+	Data    GetStorageServiceHealthData `json:"data"`
+}
+
+type GetStorageServiceHealthData struct {
 	Service   string `json:"service"`
 	Status    string `json:"status"`
 	Env       string `json:"env"`

@@ -192,8 +192,8 @@ proto-all: proto-user proto-content proto-feed proto-notification proto-storage
 .PHONY: swagger-gen
 swagger-gen:
 	swag init \
-		-g cmd/server/main.go \
-		-d services/api-gateway,services/api-gateway/internal/handlers,services/api-gateway/internal/dto \
+		-g main.go \
+		-d services/api-gateway/cmd/server,services/api-gateway/internal/handlers,services/api-gateway/internal/dto \
 		-o services/api-gateway/docs \
 		--parseInternal \
 		--parseDependency

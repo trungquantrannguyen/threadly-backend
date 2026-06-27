@@ -198,19 +198,19 @@ func (h *ContentHandler) CreateReply(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, http.StatusOK, "Create reply successfully", res)
+	response.OK(c, http.StatusCreated, "Create reply successfully", res)
 }
 
 // GetReplies godoc
 // @Summary Get replies of a post
-// @Description Creates a new reply to a post and returns the new reply.
+// @Description Returns replies for a post.
 // @Tags Contents
 // @Accept json
 // @Produce json
 // @Security BearerAuth
 // @Param postID path string true "postID"
 // @Param request query dto.GetRepliesRequest true "Get replies request body"
-// @Success 201 {object} []dto.PostResponse
+// @Success 200 {object} []dto.PostResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 404 {object} dto.ErrorResponse
 // @Failure 409 {object} dto.ErrorResponse
