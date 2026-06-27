@@ -15,6 +15,336 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/contents/health": {
+            "get": {
+                "description": "Get the status of content service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contents"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetContentServiceHealthResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/contents/posts": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new Threadly post of a user and returns the new post.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contents"
+                ],
+                "summary": "Create a post",
+                "parameters": [
+                    {
+                        "description": "Create post request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.CreatePostRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/contents/posts/{postID}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns the requested post.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contents"
+                ],
+                "summary": "Get a post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "postID",
+                        "name": "postID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns the delett post status.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contents"
+                ],
+                "summary": "Delete a post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "postID",
+                        "name": "postID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {}
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/contents/posts/{postID}/replies": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new reply to a post and returns the new reply.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contents"
+                ],
+                "summary": "Get replies of a post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "postID",
+                        "name": "postID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "cursor",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 50,
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Creates a new reply to a post and returns the new reply.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Contents"
+                ],
+                "summary": "Create a reply post",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "postID",
+                        "name": "postID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Create reply request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.CreatePostRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Get the status of user service",
@@ -336,6 +666,20 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.CreatePostRequest": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "visibility": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -345,6 +689,20 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetContentServiceHealthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },
@@ -430,9 +788,6 @@ const docTemplate = `{
             "properties": {
                 "refresh_token": {
                     "type": "string"
-                },
-                "userID": {
-                    "type": "string"
                 }
             }
         },
@@ -444,6 +799,47 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserSummary"
+                },
+                "author_id": {
+                    "type": "string"
+                },
+                "bookmark_count": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "like_count": {
+                    "type": "integer"
+                },
+                "reply_count": {
+                    "type": "integer"
+                },
+                "reply_to_post_id": {
+                    "type": "string"
+                },
+                "repost_count": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "visibility": {
+                    "type": "string"
                 }
             }
         },
@@ -531,6 +927,26 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserSummary": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
+                "display_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_verified": {
+                    "type": "boolean"
                 },
                 "username": {
                     "type": "string"

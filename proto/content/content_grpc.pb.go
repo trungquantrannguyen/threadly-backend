@@ -19,7 +19,22 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ContentService_GetHealth_FullMethodName = "/content.ContentService/GetHealth"
+	ContentService_GetHealth_FullMethodName      = "/content.ContentService/GetHealth"
+	ContentService_CreatePost_FullMethodName     = "/content.ContentService/CreatePost"
+	ContentService_GetPost_FullMethodName        = "/content.ContentService/GetPost"
+	ContentService_DeletePost_FullMethodName     = "/content.ContentService/DeletePost"
+	ContentService_CreateReply_FullMethodName    = "/content.ContentService/CreateReply"
+	ContentService_GetReplies_FullMethodName     = "/content.ContentService/GetReplies"
+	ContentService_LikePost_FullMethodName       = "/content.ContentService/LikePost"
+	ContentService_UnlikePost_FullMethodName     = "/content.ContentService/UnlikePost"
+	ContentService_BookmarkPost_FullMethodName   = "/content.ContentService/BookmarkPost"
+	ContentService_UnbookmarkPost_FullMethodName = "/content.ContentService/UnbookmarkPost"
+	ContentService_RepostPost_FullMethodName     = "/content.ContentService/RepostPost"
+	ContentService_UndoRepost_FullMethodName     = "/content.ContentService/UndoRepost"
+	ContentService_FollowUser_FullMethodName     = "/content.ContentService/FollowUser"
+	ContentService_UnfollowUser_FullMethodName   = "/content.ContentService/UnfollowUser"
+	ContentService_GetFollowers_FullMethodName   = "/content.ContentService/GetFollowers"
+	ContentService_GetFollowing_FullMethodName   = "/content.ContentService/GetFollowing"
 )
 
 // ContentServiceClient is the client API for ContentService service.
@@ -27,6 +42,27 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentServiceClient interface {
 	GetHealth(ctx context.Context, in *GetContentServiceHealthRequest, opts ...grpc.CallOption) (*GetContentServiceHealthResponse, error)
+	// Posts
+	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*PostResponse, error)
+	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*PostResponse, error)
+	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
+	// Replies
+	CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*PostResponse, error)
+	GetReplies(ctx context.Context, in *GetRepliesRequest, opts ...grpc.CallOption) (*PostListResponse, error)
+	// Likes
+	LikePost(ctx context.Context, in *LikePostRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	UnlikePost(ctx context.Context, in *UnlikePostRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	// Bookmarks
+	BookmarkPost(ctx context.Context, in *BookmarkPostRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	UnbookmarkPost(ctx context.Context, in *UnbookmarkPostRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	// Reposts
+	RepostPost(ctx context.Context, in *RepostPostRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	UndoRepost(ctx context.Context, in *UndoRepostRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	// Follows
+	FollowUser(ctx context.Context, in *FollowUserRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	UnfollowUser(ctx context.Context, in *UnfollowUserRequest, opts ...grpc.CallOption) (*ActionResponse, error)
+	GetFollowers(ctx context.Context, in *GetFollowersRequest, opts ...grpc.CallOption) (*UserListResponse, error)
+	GetFollowing(ctx context.Context, in *GetFollowingRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 }
 
 type contentServiceClient struct {
@@ -47,11 +83,182 @@ func (c *contentServiceClient) GetHealth(ctx context.Context, in *GetContentServ
 	return out, nil
 }
 
+func (c *contentServiceClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*PostResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostResponse)
+	err := c.cc.Invoke(ctx, ContentService_CreatePost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*PostResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostResponse)
+	err := c.cc.Invoke(ctx, ContentService_GetPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePostResponse)
+	err := c.cc.Invoke(ctx, ContentService_DeletePost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*PostResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostResponse)
+	err := c.cc.Invoke(ctx, ContentService_CreateReply_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) GetReplies(ctx context.Context, in *GetRepliesRequest, opts ...grpc.CallOption) (*PostListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostListResponse)
+	err := c.cc.Invoke(ctx, ContentService_GetReplies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) LikePost(ctx context.Context, in *LikePostRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_LikePost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) UnlikePost(ctx context.Context, in *UnlikePostRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_UnlikePost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) BookmarkPost(ctx context.Context, in *BookmarkPostRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_BookmarkPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) UnbookmarkPost(ctx context.Context, in *UnbookmarkPostRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_UnbookmarkPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) RepostPost(ctx context.Context, in *RepostPostRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_RepostPost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) UndoRepost(ctx context.Context, in *UndoRepostRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_UndoRepost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) FollowUser(ctx context.Context, in *FollowUserRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_FollowUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) UnfollowUser(ctx context.Context, in *UnfollowUserRequest, opts ...grpc.CallOption) (*ActionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ActionResponse)
+	err := c.cc.Invoke(ctx, ContentService_UnfollowUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) GetFollowers(ctx context.Context, in *GetFollowersRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserListResponse)
+	err := c.cc.Invoke(ctx, ContentService_GetFollowers_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) GetFollowing(ctx context.Context, in *GetFollowingRequest, opts ...grpc.CallOption) (*UserListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserListResponse)
+	err := c.cc.Invoke(ctx, ContentService_GetFollowing_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ContentServiceServer is the server API for ContentService service.
 // All implementations must embed UnimplementedContentServiceServer
 // for forward compatibility.
 type ContentServiceServer interface {
 	GetHealth(context.Context, *GetContentServiceHealthRequest) (*GetContentServiceHealthResponse, error)
+	// Posts
+	CreatePost(context.Context, *CreatePostRequest) (*PostResponse, error)
+	GetPost(context.Context, *GetPostRequest) (*PostResponse, error)
+	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
+	// Replies
+	CreateReply(context.Context, *CreateReplyRequest) (*PostResponse, error)
+	GetReplies(context.Context, *GetRepliesRequest) (*PostListResponse, error)
+	// Likes
+	LikePost(context.Context, *LikePostRequest) (*ActionResponse, error)
+	UnlikePost(context.Context, *UnlikePostRequest) (*ActionResponse, error)
+	// Bookmarks
+	BookmarkPost(context.Context, *BookmarkPostRequest) (*ActionResponse, error)
+	UnbookmarkPost(context.Context, *UnbookmarkPostRequest) (*ActionResponse, error)
+	// Reposts
+	RepostPost(context.Context, *RepostPostRequest) (*ActionResponse, error)
+	UndoRepost(context.Context, *UndoRepostRequest) (*ActionResponse, error)
+	// Follows
+	FollowUser(context.Context, *FollowUserRequest) (*ActionResponse, error)
+	UnfollowUser(context.Context, *UnfollowUserRequest) (*ActionResponse, error)
+	GetFollowers(context.Context, *GetFollowersRequest) (*UserListResponse, error)
+	GetFollowing(context.Context, *GetFollowingRequest) (*UserListResponse, error)
 	mustEmbedUnimplementedContentServiceServer()
 }
 
@@ -64,6 +271,51 @@ type UnimplementedContentServiceServer struct{}
 
 func (UnimplementedContentServiceServer) GetHealth(context.Context, *GetContentServiceHealthRequest) (*GetContentServiceHealthResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetHealth not implemented")
+}
+func (UnimplementedContentServiceServer) CreatePost(context.Context, *CreatePostRequest) (*PostResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreatePost not implemented")
+}
+func (UnimplementedContentServiceServer) GetPost(context.Context, *GetPostRequest) (*PostResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPost not implemented")
+}
+func (UnimplementedContentServiceServer) DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePost not implemented")
+}
+func (UnimplementedContentServiceServer) CreateReply(context.Context, *CreateReplyRequest) (*PostResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateReply not implemented")
+}
+func (UnimplementedContentServiceServer) GetReplies(context.Context, *GetRepliesRequest) (*PostListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetReplies not implemented")
+}
+func (UnimplementedContentServiceServer) LikePost(context.Context, *LikePostRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method LikePost not implemented")
+}
+func (UnimplementedContentServiceServer) UnlikePost(context.Context, *UnlikePostRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UnlikePost not implemented")
+}
+func (UnimplementedContentServiceServer) BookmarkPost(context.Context, *BookmarkPostRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BookmarkPost not implemented")
+}
+func (UnimplementedContentServiceServer) UnbookmarkPost(context.Context, *UnbookmarkPostRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UnbookmarkPost not implemented")
+}
+func (UnimplementedContentServiceServer) RepostPost(context.Context, *RepostPostRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method RepostPost not implemented")
+}
+func (UnimplementedContentServiceServer) UndoRepost(context.Context, *UndoRepostRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UndoRepost not implemented")
+}
+func (UnimplementedContentServiceServer) FollowUser(context.Context, *FollowUserRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method FollowUser not implemented")
+}
+func (UnimplementedContentServiceServer) UnfollowUser(context.Context, *UnfollowUserRequest) (*ActionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UnfollowUser not implemented")
+}
+func (UnimplementedContentServiceServer) GetFollowers(context.Context, *GetFollowersRequest) (*UserListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFollowers not implemented")
+}
+func (UnimplementedContentServiceServer) GetFollowing(context.Context, *GetFollowingRequest) (*UserListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFollowing not implemented")
 }
 func (UnimplementedContentServiceServer) mustEmbedUnimplementedContentServiceServer() {}
 func (UnimplementedContentServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +356,276 @@ func _ContentService_GetHealth_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ContentService_CreatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).CreatePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_CreatePost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).CreatePost(ctx, req.(*CreatePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_GetPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).GetPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_GetPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).GetPost(ctx, req.(*GetPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_DeletePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).DeletePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_DeletePost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).DeletePost(ctx, req.(*DeletePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_CreateReply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReplyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).CreateReply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_CreateReply_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).CreateReply(ctx, req.(*CreateReplyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_GetReplies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRepliesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).GetReplies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_GetReplies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).GetReplies(ctx, req.(*GetRepliesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_LikePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikePostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).LikePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_LikePost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).LikePost(ctx, req.(*LikePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_UnlikePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnlikePostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).UnlikePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_UnlikePost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).UnlikePost(ctx, req.(*UnlikePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_BookmarkPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BookmarkPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).BookmarkPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_BookmarkPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).BookmarkPost(ctx, req.(*BookmarkPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_UnbookmarkPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnbookmarkPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).UnbookmarkPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_UnbookmarkPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).UnbookmarkPost(ctx, req.(*UnbookmarkPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_RepostPost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RepostPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).RepostPost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_RepostPost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).RepostPost(ctx, req.(*RepostPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_UndoRepost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UndoRepostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).UndoRepost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_UndoRepost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).UndoRepost(ctx, req.(*UndoRepostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_FollowUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).FollowUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_FollowUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).FollowUser(ctx, req.(*FollowUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_UnfollowUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnfollowUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).UnfollowUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_UnfollowUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).UnfollowUser(ctx, req.(*UnfollowUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_GetFollowers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).GetFollowers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_GetFollowers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).GetFollowers(ctx, req.(*GetFollowersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_GetFollowing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).GetFollowing(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_GetFollowing_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).GetFollowing(ctx, req.(*GetFollowingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ContentService_ServiceDesc is the grpc.ServiceDesc for ContentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +636,66 @@ var ContentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetHealth",
 			Handler:    _ContentService_GetHealth_Handler,
+		},
+		{
+			MethodName: "CreatePost",
+			Handler:    _ContentService_CreatePost_Handler,
+		},
+		{
+			MethodName: "GetPost",
+			Handler:    _ContentService_GetPost_Handler,
+		},
+		{
+			MethodName: "DeletePost",
+			Handler:    _ContentService_DeletePost_Handler,
+		},
+		{
+			MethodName: "CreateReply",
+			Handler:    _ContentService_CreateReply_Handler,
+		},
+		{
+			MethodName: "GetReplies",
+			Handler:    _ContentService_GetReplies_Handler,
+		},
+		{
+			MethodName: "LikePost",
+			Handler:    _ContentService_LikePost_Handler,
+		},
+		{
+			MethodName: "UnlikePost",
+			Handler:    _ContentService_UnlikePost_Handler,
+		},
+		{
+			MethodName: "BookmarkPost",
+			Handler:    _ContentService_BookmarkPost_Handler,
+		},
+		{
+			MethodName: "UnbookmarkPost",
+			Handler:    _ContentService_UnbookmarkPost_Handler,
+		},
+		{
+			MethodName: "RepostPost",
+			Handler:    _ContentService_RepostPost_Handler,
+		},
+		{
+			MethodName: "UndoRepost",
+			Handler:    _ContentService_UndoRepost_Handler,
+		},
+		{
+			MethodName: "FollowUser",
+			Handler:    _ContentService_FollowUser_Handler,
+		},
+		{
+			MethodName: "UnfollowUser",
+			Handler:    _ContentService_UnfollowUser_Handler,
+		},
+		{
+			MethodName: "GetFollowers",
+			Handler:    _ContentService_GetFollowers_Handler,
+		},
+		{
+			MethodName: "GetFollowing",
+			Handler:    _ContentService_GetFollowing_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

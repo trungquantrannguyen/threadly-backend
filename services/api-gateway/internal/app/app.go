@@ -81,6 +81,22 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 		contents := api.Group("/contents")
 		{
 			contents.GET("/health", contentHandler.GetHealth)
+			protectedContent := contents.Group("/posts")
+			protectedContent.Use(middleware.AuthMiddleware(cfg))
+			{
+				protectedContent.POST("", contentHandler.CreatePost)
+				protectedPost := protectedContent.Group("/:postID")
+				{
+
+					protectedPost.GET("", contentHandler.GetPost)
+					protectedPost.DELETE("", contentHandler.DeletePost)
+					protectedPostReply := protectedPost.Group("/replies")
+					{
+						protectedPostReply.POST("", contentHandler.CreateReply)
+						protectedPostReply.GET("", contentHandler.GetReplies)
+					}
+				}
+			}
 		}
 		feeds := api.Group("/feeds")
 		{

@@ -1,10 +1,38 @@
 syntax = "proto3";
 
 package content;
+
 option go_package = "threadly/proto/content;contentv1";
 
 service ContentService {
     rpc GetHealth(GetContentServiceHealthRequest) returns (GetContentServiceHealthResponse);
+
+    // Posts
+    rpc CreatePost(CreatePostRequest) returns (PostResponse);
+    rpc GetPost(GetPostRequest) returns (PostResponse);
+    rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+
+    // Replies
+    rpc CreateReply(CreateReplyRequest) returns (PostResponse);
+    rpc GetReplies(GetRepliesRequest) returns (PostListResponse);
+
+    // Likes
+    rpc LikePost(LikePostRequest) returns (ActionResponse);
+    rpc UnlikePost(UnlikePostRequest) returns (ActionResponse);
+
+    // Bookmarks
+    rpc BookmarkPost(BookmarkPostRequest) returns (ActionResponse);
+    rpc UnbookmarkPost(UnbookmarkPostRequest) returns (ActionResponse);
+
+    // Reposts
+    rpc RepostPost(RepostPostRequest) returns (ActionResponse);
+    rpc UndoRepost(UndoRepostRequest) returns (ActionResponse);
+
+    // Follows
+    rpc FollowUser(FollowUserRequest) returns (ActionResponse);
+    rpc UnfollowUser(UnfollowUserRequest) returns (ActionResponse);
+    rpc GetFollowers(GetFollowersRequest) returns (UserListResponse);
+    rpc GetFollowing(GetFollowingRequest) returns (UserListResponse);
 }
 
 message GetContentServiceHealthRequest {}
@@ -14,4 +42,144 @@ message GetContentServiceHealthResponse {
     string status = 2;
     string env = 3;
     string checked_at = 4;
+}
+
+// Shared responses
+
+message PostResponse {
+    string id = 1;
+    string author_id = 2;
+    string reply_to_post_id = 3;
+    string content = 4;
+    string visibility = 5;
+
+    int32 like_count = 6;
+    int32 reply_count = 7;
+    int32 repost_count = 8;
+    int32 bookmark_count = 9;
+
+    string created_at = 10;
+    string updated_at = 11;
+    UserSummary author = 12;
+}
+
+message PostListResponse {
+    repeated PostResponse posts = 1;
+    string next_cursor = 2;
+}
+
+message UserSummary {
+    string id = 1;
+    string username = 2;
+    string display_name = 3;
+    string avatar_url = 4;
+    bool is_verified = 5;
+}
+
+message UserListResponse {
+    repeated UserSummary users = 1;
+    string next_cursor = 2;
+}
+
+message ActionResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message DeletePostResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Post requests
+
+message CreatePostRequest {
+    string author_id = 1;
+    string content = 2;
+    string visibility = 3;
+}
+
+message GetPostRequest {
+    string post_id = 1;
+    string viewer_id = 2;
+}
+
+message DeletePostRequest {
+    string post_id = 1;
+    string requester_id = 2;
+}
+
+// Reply requests
+
+message CreateReplyRequest {
+    string author_id = 1;
+    string reply_to_post_id = 2;
+    string content = 3;
+    string visibility = 4;
+}
+
+message GetRepliesRequest {
+    string post_id = 1;
+    int32 limit = 2;
+    string cursor = 3;
+}
+
+// Like requests
+
+message LikePostRequest {
+    string user_id = 1;
+    string post_id = 2;
+}
+
+message UnlikePostRequest {
+    string user_id = 1;
+    string post_id = 2;
+}
+
+// Bookmark requests
+
+message BookmarkPostRequest {
+    string user_id = 1;
+    string post_id = 2;
+}
+
+message UnbookmarkPostRequest {
+    string user_id = 1;
+    string post_id = 2;
+}
+
+// Repost requests
+
+message RepostPostRequest {
+    string user_id = 1;
+    string post_id = 2;
+}
+
+message UndoRepostRequest {
+    string user_id = 1;
+    string post_id = 2;
+}
+
+// Follow requests
+
+message FollowUserRequest {
+    string follower_id = 1;
+    string following_id = 2;
+}
+
+message UnfollowUserRequest {
+    string follower_id = 1;
+    string following_id = 2;
+}
+
+message GetFollowersRequest {
+    string user_id = 1;
+    int32 limit = 2;
+    string cursor = 3;
+}
+
+message GetFollowingRequest {
+    string user_id = 1;
+    int32 limit = 2;
+    string cursor = 3;
 }

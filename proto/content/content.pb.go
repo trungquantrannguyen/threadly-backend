@@ -125,6 +125,1250 @@ func (x *GetContentServiceHealthResponse) GetCheckedAt() string {
 	return ""
 }
 
+type PostResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	AuthorId      string                 `protobuf:"bytes,2,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	ReplyToPostId string                 `protobuf:"bytes,3,opt,name=reply_to_post_id,json=replyToPostId,proto3" json:"reply_to_post_id,omitempty"`
+	Content       string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Visibility    string                 `protobuf:"bytes,5,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	LikeCount     int32                  `protobuf:"varint,6,opt,name=like_count,json=likeCount,proto3" json:"like_count,omitempty"`
+	ReplyCount    int32                  `protobuf:"varint,7,opt,name=reply_count,json=replyCount,proto3" json:"reply_count,omitempty"`
+	RepostCount   int32                  `protobuf:"varint,8,opt,name=repost_count,json=repostCount,proto3" json:"repost_count,omitempty"`
+	BookmarkCount int32                  `protobuf:"varint,9,opt,name=bookmark_count,json=bookmarkCount,proto3" json:"bookmark_count,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     string                 `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Author        *UserSummary           `protobuf:"bytes,12,opt,name=author,proto3" json:"author,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PostResponse) Reset() {
+	*x = PostResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PostResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostResponse) ProtoMessage() {}
+
+func (x *PostResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostResponse.ProtoReflect.Descriptor instead.
+func (*PostResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PostResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *PostResponse) GetAuthorId() string {
+	if x != nil {
+		return x.AuthorId
+	}
+	return ""
+}
+
+func (x *PostResponse) GetReplyToPostId() string {
+	if x != nil {
+		return x.ReplyToPostId
+	}
+	return ""
+}
+
+func (x *PostResponse) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *PostResponse) GetVisibility() string {
+	if x != nil {
+		return x.Visibility
+	}
+	return ""
+}
+
+func (x *PostResponse) GetLikeCount() int32 {
+	if x != nil {
+		return x.LikeCount
+	}
+	return 0
+}
+
+func (x *PostResponse) GetReplyCount() int32 {
+	if x != nil {
+		return x.ReplyCount
+	}
+	return 0
+}
+
+func (x *PostResponse) GetRepostCount() int32 {
+	if x != nil {
+		return x.RepostCount
+	}
+	return 0
+}
+
+func (x *PostResponse) GetBookmarkCount() int32 {
+	if x != nil {
+		return x.BookmarkCount
+	}
+	return 0
+}
+
+func (x *PostResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *PostResponse) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
+func (x *PostResponse) GetAuthor() *UserSummary {
+	if x != nil {
+		return x.Author
+	}
+	return nil
+}
+
+type PostListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Posts         []*PostResponse        `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
+	NextCursor    string                 `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PostListResponse) Reset() {
+	*x = PostListResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PostListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostListResponse) ProtoMessage() {}
+
+func (x *PostListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostListResponse.ProtoReflect.Descriptor instead.
+func (*PostListResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PostListResponse) GetPosts() []*PostResponse {
+	if x != nil {
+		return x.Posts
+	}
+	return nil
+}
+
+func (x *PostListResponse) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
+}
+
+type UserSummary struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	AvatarUrl     string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
+	IsVerified    bool                   `protobuf:"varint,5,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserSummary) Reset() {
+	*x = UserSummary{}
+	mi := &file_proto_content_content_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserSummary) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserSummary) ProtoMessage() {}
+
+func (x *UserSummary) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserSummary.ProtoReflect.Descriptor instead.
+func (*UserSummary) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UserSummary) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *UserSummary) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *UserSummary) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *UserSummary) GetAvatarUrl() string {
+	if x != nil {
+		return x.AvatarUrl
+	}
+	return ""
+}
+
+func (x *UserSummary) GetIsVerified() bool {
+	if x != nil {
+		return x.IsVerified
+	}
+	return false
+}
+
+type UserListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Users         []*UserSummary         `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+	NextCursor    string                 `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserListResponse) Reset() {
+	*x = UserListResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserListResponse) ProtoMessage() {}
+
+func (x *UserListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserListResponse.ProtoReflect.Descriptor instead.
+func (*UserListResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UserListResponse) GetUsers() []*UserSummary {
+	if x != nil {
+		return x.Users
+	}
+	return nil
+}
+
+func (x *UserListResponse) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
+}
+
+type ActionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ActionResponse) Reset() {
+	*x = ActionResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ActionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ActionResponse) ProtoMessage() {}
+
+func (x *ActionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ActionResponse.ProtoReflect.Descriptor instead.
+func (*ActionResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ActionResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ActionResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type DeletePostResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePostResponse) Reset() {
+	*x = DeletePostResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePostResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePostResponse) ProtoMessage() {}
+
+func (x *DeletePostResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePostResponse.ProtoReflect.Descriptor instead.
+func (*DeletePostResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeletePostResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *DeletePostResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type CreatePostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AuthorId      string                 `protobuf:"bytes,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Visibility    string                 `protobuf:"bytes,3,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreatePostRequest) Reset() {
+	*x = CreatePostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreatePostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreatePostRequest) ProtoMessage() {}
+
+func (x *CreatePostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreatePostRequest.ProtoReflect.Descriptor instead.
+func (*CreatePostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *CreatePostRequest) GetAuthorId() string {
+	if x != nil {
+		return x.AuthorId
+	}
+	return ""
+}
+
+func (x *CreatePostRequest) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *CreatePostRequest) GetVisibility() string {
+	if x != nil {
+		return x.Visibility
+	}
+	return ""
+}
+
+type GetPostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PostId        string                 `protobuf:"bytes,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	ViewerId      string                 `protobuf:"bytes,2,opt,name=viewer_id,json=viewerId,proto3" json:"viewer_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPostRequest) Reset() {
+	*x = GetPostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPostRequest) ProtoMessage() {}
+
+func (x *GetPostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPostRequest.ProtoReflect.Descriptor instead.
+func (*GetPostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetPostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+func (x *GetPostRequest) GetViewerId() string {
+	if x != nil {
+		return x.ViewerId
+	}
+	return ""
+}
+
+type DeletePostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PostId        string                 `protobuf:"bytes,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	RequesterId   string                 `protobuf:"bytes,2,opt,name=requester_id,json=requesterId,proto3" json:"requester_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePostRequest) Reset() {
+	*x = DeletePostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePostRequest) ProtoMessage() {}
+
+func (x *DeletePostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePostRequest.ProtoReflect.Descriptor instead.
+func (*DeletePostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DeletePostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+func (x *DeletePostRequest) GetRequesterId() string {
+	if x != nil {
+		return x.RequesterId
+	}
+	return ""
+}
+
+type CreateReplyRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AuthorId      string                 `protobuf:"bytes,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	ReplyToPostId string                 `protobuf:"bytes,2,opt,name=reply_to_post_id,json=replyToPostId,proto3" json:"reply_to_post_id,omitempty"`
+	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateReplyRequest) Reset() {
+	*x = CreateReplyRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReplyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReplyRequest) ProtoMessage() {}
+
+func (x *CreateReplyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReplyRequest.ProtoReflect.Descriptor instead.
+func (*CreateReplyRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *CreateReplyRequest) GetAuthorId() string {
+	if x != nil {
+		return x.AuthorId
+	}
+	return ""
+}
+
+func (x *CreateReplyRequest) GetReplyToPostId() string {
+	if x != nil {
+		return x.ReplyToPostId
+	}
+	return ""
+}
+
+func (x *CreateReplyRequest) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *CreateReplyRequest) GetVisibility() string {
+	if x != nil {
+		return x.Visibility
+	}
+	return ""
+}
+
+type GetRepliesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PostId        string                 `protobuf:"bytes,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Cursor        string                 `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRepliesRequest) Reset() {
+	*x = GetRepliesRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRepliesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRepliesRequest) ProtoMessage() {}
+
+func (x *GetRepliesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRepliesRequest.ProtoReflect.Descriptor instead.
+func (*GetRepliesRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetRepliesRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+func (x *GetRepliesRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetRepliesRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
+type LikePostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PostId        string                 `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LikePostRequest) Reset() {
+	*x = LikePostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LikePostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LikePostRequest) ProtoMessage() {}
+
+func (x *LikePostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LikePostRequest.ProtoReflect.Descriptor instead.
+func (*LikePostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *LikePostRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *LikePostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+type UnlikePostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PostId        string                 `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnlikePostRequest) Reset() {
+	*x = UnlikePostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnlikePostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnlikePostRequest) ProtoMessage() {}
+
+func (x *UnlikePostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnlikePostRequest.ProtoReflect.Descriptor instead.
+func (*UnlikePostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *UnlikePostRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *UnlikePostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+type BookmarkPostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PostId        string                 `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BookmarkPostRequest) Reset() {
+	*x = BookmarkPostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BookmarkPostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BookmarkPostRequest) ProtoMessage() {}
+
+func (x *BookmarkPostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BookmarkPostRequest.ProtoReflect.Descriptor instead.
+func (*BookmarkPostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *BookmarkPostRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *BookmarkPostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+type UnbookmarkPostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PostId        string                 `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnbookmarkPostRequest) Reset() {
+	*x = UnbookmarkPostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnbookmarkPostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnbookmarkPostRequest) ProtoMessage() {}
+
+func (x *UnbookmarkPostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnbookmarkPostRequest.ProtoReflect.Descriptor instead.
+func (*UnbookmarkPostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *UnbookmarkPostRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *UnbookmarkPostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+type RepostPostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PostId        string                 `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RepostPostRequest) Reset() {
+	*x = RepostPostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RepostPostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RepostPostRequest) ProtoMessage() {}
+
+func (x *RepostPostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RepostPostRequest.ProtoReflect.Descriptor instead.
+func (*RepostPostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *RepostPostRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *RepostPostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+type UndoRepostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	PostId        string                 `protobuf:"bytes,2,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UndoRepostRequest) Reset() {
+	*x = UndoRepostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UndoRepostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UndoRepostRequest) ProtoMessage() {}
+
+func (x *UndoRepostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UndoRepostRequest.ProtoReflect.Descriptor instead.
+func (*UndoRepostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *UndoRepostRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *UndoRepostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+type FollowUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FollowerId    string                 `protobuf:"bytes,1,opt,name=follower_id,json=followerId,proto3" json:"follower_id,omitempty"`
+	FollowingId   string                 `protobuf:"bytes,2,opt,name=following_id,json=followingId,proto3" json:"following_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FollowUserRequest) Reset() {
+	*x = FollowUserRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FollowUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FollowUserRequest) ProtoMessage() {}
+
+func (x *FollowUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FollowUserRequest.ProtoReflect.Descriptor instead.
+func (*FollowUserRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *FollowUserRequest) GetFollowerId() string {
+	if x != nil {
+		return x.FollowerId
+	}
+	return ""
+}
+
+func (x *FollowUserRequest) GetFollowingId() string {
+	if x != nil {
+		return x.FollowingId
+	}
+	return ""
+}
+
+type UnfollowUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FollowerId    string                 `protobuf:"bytes,1,opt,name=follower_id,json=followerId,proto3" json:"follower_id,omitempty"`
+	FollowingId   string                 `protobuf:"bytes,2,opt,name=following_id,json=followingId,proto3" json:"following_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnfollowUserRequest) Reset() {
+	*x = UnfollowUserRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnfollowUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnfollowUserRequest) ProtoMessage() {}
+
+func (x *UnfollowUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnfollowUserRequest.ProtoReflect.Descriptor instead.
+func (*UnfollowUserRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *UnfollowUserRequest) GetFollowerId() string {
+	if x != nil {
+		return x.FollowerId
+	}
+	return ""
+}
+
+func (x *UnfollowUserRequest) GetFollowingId() string {
+	if x != nil {
+		return x.FollowingId
+	}
+	return ""
+}
+
+type GetFollowersRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Cursor        string                 `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFollowersRequest) Reset() {
+	*x = GetFollowersRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFollowersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFollowersRequest) ProtoMessage() {}
+
+func (x *GetFollowersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFollowersRequest.ProtoReflect.Descriptor instead.
+func (*GetFollowersRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetFollowersRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetFollowersRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetFollowersRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
+type GetFollowingRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Cursor        string                 `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFollowingRequest) Reset() {
+	*x = GetFollowingRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFollowingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFollowingRequest) ProtoMessage() {}
+
+func (x *GetFollowingRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFollowingRequest.ProtoReflect.Descriptor instead.
+func (*GetFollowingRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *GetFollowingRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetFollowingRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetFollowingRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
 var File_proto_content_content_proto protoreflect.FileDescriptor
 
 const file_proto_content_content_proto_rawDesc = "" +
@@ -136,9 +1380,130 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x10\n" +
 	"\x03env\x18\x03 \x01(\tR\x03env\x12\x1d\n" +
 	"\n" +
-	"checked_at\x18\x04 \x01(\tR\tcheckedAt2p\n" +
+	"checked_at\x18\x04 \x01(\tR\tcheckedAt\"\x94\x03\n" +
+	"\fPostResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
+	"\tauthor_id\x18\x02 \x01(\tR\bauthorId\x12'\n" +
+	"\x10reply_to_post_id\x18\x03 \x01(\tR\rreplyToPostId\x12\x18\n" +
+	"\acontent\x18\x04 \x01(\tR\acontent\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\x05 \x01(\tR\n" +
+	"visibility\x12\x1d\n" +
+	"\n" +
+	"like_count\x18\x06 \x01(\x05R\tlikeCount\x12\x1f\n" +
+	"\vreply_count\x18\a \x01(\x05R\n" +
+	"replyCount\x12!\n" +
+	"\frepost_count\x18\b \x01(\x05R\vrepostCount\x12%\n" +
+	"\x0ebookmark_count\x18\t \x01(\x05R\rbookmarkCount\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\n" +
+	" \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\v \x01(\tR\tupdatedAt\x12,\n" +
+	"\x06author\x18\f \x01(\v2\x14.content.UserSummaryR\x06author\"`\n" +
+	"\x10PostListResponse\x12+\n" +
+	"\x05posts\x18\x01 \x03(\v2\x15.content.PostResponseR\x05posts\x12\x1f\n" +
+	"\vnext_cursor\x18\x02 \x01(\tR\n" +
+	"nextCursor\"\x9c\x01\n" +
+	"\vUserSummary\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12!\n" +
+	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\x1d\n" +
+	"\n" +
+	"avatar_url\x18\x04 \x01(\tR\tavatarUrl\x12\x1f\n" +
+	"\vis_verified\x18\x05 \x01(\bR\n" +
+	"isVerified\"_\n" +
+	"\x10UserListResponse\x12*\n" +
+	"\x05users\x18\x01 \x03(\v2\x14.content.UserSummaryR\x05users\x12\x1f\n" +
+	"\vnext_cursor\x18\x02 \x01(\tR\n" +
+	"nextCursor\"D\n" +
+	"\x0eActionResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"H\n" +
+	"\x12DeletePostResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"j\n" +
+	"\x11CreatePostRequest\x12\x1b\n" +
+	"\tauthor_id\x18\x01 \x01(\tR\bauthorId\x12\x18\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\x03 \x01(\tR\n" +
+	"visibility\"F\n" +
+	"\x0eGetPostRequest\x12\x17\n" +
+	"\apost_id\x18\x01 \x01(\tR\x06postId\x12\x1b\n" +
+	"\tviewer_id\x18\x02 \x01(\tR\bviewerId\"O\n" +
+	"\x11DeletePostRequest\x12\x17\n" +
+	"\apost_id\x18\x01 \x01(\tR\x06postId\x12!\n" +
+	"\frequester_id\x18\x02 \x01(\tR\vrequesterId\"\x94\x01\n" +
+	"\x12CreateReplyRequest\x12\x1b\n" +
+	"\tauthor_id\x18\x01 \x01(\tR\bauthorId\x12'\n" +
+	"\x10reply_to_post_id\x18\x02 \x01(\tR\rreplyToPostId\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\x04 \x01(\tR\n" +
+	"visibility\"Z\n" +
+	"\x11GetRepliesRequest\x12\x17\n" +
+	"\apost_id\x18\x01 \x01(\tR\x06postId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06cursor\x18\x03 \x01(\tR\x06cursor\"C\n" +
+	"\x0fLikePostRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\apost_id\x18\x02 \x01(\tR\x06postId\"E\n" +
+	"\x11UnlikePostRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\apost_id\x18\x02 \x01(\tR\x06postId\"G\n" +
+	"\x13BookmarkPostRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\apost_id\x18\x02 \x01(\tR\x06postId\"I\n" +
+	"\x15UnbookmarkPostRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\apost_id\x18\x02 \x01(\tR\x06postId\"E\n" +
+	"\x11RepostPostRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\apost_id\x18\x02 \x01(\tR\x06postId\"E\n" +
+	"\x11UndoRepostRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x17\n" +
+	"\apost_id\x18\x02 \x01(\tR\x06postId\"W\n" +
+	"\x11FollowUserRequest\x12\x1f\n" +
+	"\vfollower_id\x18\x01 \x01(\tR\n" +
+	"followerId\x12!\n" +
+	"\ffollowing_id\x18\x02 \x01(\tR\vfollowingId\"Y\n" +
+	"\x13UnfollowUserRequest\x12\x1f\n" +
+	"\vfollower_id\x18\x01 \x01(\tR\n" +
+	"followerId\x12!\n" +
+	"\ffollowing_id\x18\x02 \x01(\tR\vfollowingId\"\\\n" +
+	"\x13GetFollowersRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06cursor\x18\x03 \x01(\tR\x06cursor\"\\\n" +
+	"\x13GetFollowingRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06cursor\x18\x03 \x01(\tR\x06cursor2\xf1\b\n" +
 	"\x0eContentService\x12^\n" +
-	"\tGetHealth\x12'.content.GetContentServiceHealthRequest\x1a(.content.GetContentServiceHealthResponseB\"Z threadly/proto/content;contentv1b\x06proto3"
+	"\tGetHealth\x12'.content.GetContentServiceHealthRequest\x1a(.content.GetContentServiceHealthResponse\x12?\n" +
+	"\n" +
+	"CreatePost\x12\x1a.content.CreatePostRequest\x1a\x15.content.PostResponse\x129\n" +
+	"\aGetPost\x12\x17.content.GetPostRequest\x1a\x15.content.PostResponse\x12E\n" +
+	"\n" +
+	"DeletePost\x12\x1a.content.DeletePostRequest\x1a\x1b.content.DeletePostResponse\x12A\n" +
+	"\vCreateReply\x12\x1b.content.CreateReplyRequest\x1a\x15.content.PostResponse\x12C\n" +
+	"\n" +
+	"GetReplies\x12\x1a.content.GetRepliesRequest\x1a\x19.content.PostListResponse\x12=\n" +
+	"\bLikePost\x12\x18.content.LikePostRequest\x1a\x17.content.ActionResponse\x12A\n" +
+	"\n" +
+	"UnlikePost\x12\x1a.content.UnlikePostRequest\x1a\x17.content.ActionResponse\x12E\n" +
+	"\fBookmarkPost\x12\x1c.content.BookmarkPostRequest\x1a\x17.content.ActionResponse\x12I\n" +
+	"\x0eUnbookmarkPost\x12\x1e.content.UnbookmarkPostRequest\x1a\x17.content.ActionResponse\x12A\n" +
+	"\n" +
+	"RepostPost\x12\x1a.content.RepostPostRequest\x1a\x17.content.ActionResponse\x12A\n" +
+	"\n" +
+	"UndoRepost\x12\x1a.content.UndoRepostRequest\x1a\x17.content.ActionResponse\x12A\n" +
+	"\n" +
+	"FollowUser\x12\x1a.content.FollowUserRequest\x1a\x17.content.ActionResponse\x12E\n" +
+	"\fUnfollowUser\x12\x1c.content.UnfollowUserRequest\x1a\x17.content.ActionResponse\x12G\n" +
+	"\fGetFollowers\x12\x1c.content.GetFollowersRequest\x1a\x19.content.UserListResponse\x12G\n" +
+	"\fGetFollowing\x12\x1c.content.GetFollowingRequest\x1a\x19.content.UserListResponseB\"Z threadly/proto/content;contentv1b\x06proto3"
 
 var (
 	file_proto_content_content_proto_rawDescOnce sync.Once
@@ -152,19 +1517,73 @@ func file_proto_content_content_proto_rawDescGZIP() []byte {
 	return file_proto_content_content_proto_rawDescData
 }
 
-var file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_proto_content_content_proto_goTypes = []any{
 	(*GetContentServiceHealthRequest)(nil),  // 0: content.GetContentServiceHealthRequest
 	(*GetContentServiceHealthResponse)(nil), // 1: content.GetContentServiceHealthResponse
+	(*PostResponse)(nil),                    // 2: content.PostResponse
+	(*PostListResponse)(nil),                // 3: content.PostListResponse
+	(*UserSummary)(nil),                     // 4: content.UserSummary
+	(*UserListResponse)(nil),                // 5: content.UserListResponse
+	(*ActionResponse)(nil),                  // 6: content.ActionResponse
+	(*DeletePostResponse)(nil),              // 7: content.DeletePostResponse
+	(*CreatePostRequest)(nil),               // 8: content.CreatePostRequest
+	(*GetPostRequest)(nil),                  // 9: content.GetPostRequest
+	(*DeletePostRequest)(nil),               // 10: content.DeletePostRequest
+	(*CreateReplyRequest)(nil),              // 11: content.CreateReplyRequest
+	(*GetRepliesRequest)(nil),               // 12: content.GetRepliesRequest
+	(*LikePostRequest)(nil),                 // 13: content.LikePostRequest
+	(*UnlikePostRequest)(nil),               // 14: content.UnlikePostRequest
+	(*BookmarkPostRequest)(nil),             // 15: content.BookmarkPostRequest
+	(*UnbookmarkPostRequest)(nil),           // 16: content.UnbookmarkPostRequest
+	(*RepostPostRequest)(nil),               // 17: content.RepostPostRequest
+	(*UndoRepostRequest)(nil),               // 18: content.UndoRepostRequest
+	(*FollowUserRequest)(nil),               // 19: content.FollowUserRequest
+	(*UnfollowUserRequest)(nil),             // 20: content.UnfollowUserRequest
+	(*GetFollowersRequest)(nil),             // 21: content.GetFollowersRequest
+	(*GetFollowingRequest)(nil),             // 22: content.GetFollowingRequest
 }
 var file_proto_content_content_proto_depIdxs = []int32{
-	0, // 0: content.ContentService.GetHealth:input_type -> content.GetContentServiceHealthRequest
-	1, // 1: content.ContentService.GetHealth:output_type -> content.GetContentServiceHealthResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4,  // 0: content.PostResponse.author:type_name -> content.UserSummary
+	2,  // 1: content.PostListResponse.posts:type_name -> content.PostResponse
+	4,  // 2: content.UserListResponse.users:type_name -> content.UserSummary
+	0,  // 3: content.ContentService.GetHealth:input_type -> content.GetContentServiceHealthRequest
+	8,  // 4: content.ContentService.CreatePost:input_type -> content.CreatePostRequest
+	9,  // 5: content.ContentService.GetPost:input_type -> content.GetPostRequest
+	10, // 6: content.ContentService.DeletePost:input_type -> content.DeletePostRequest
+	11, // 7: content.ContentService.CreateReply:input_type -> content.CreateReplyRequest
+	12, // 8: content.ContentService.GetReplies:input_type -> content.GetRepliesRequest
+	13, // 9: content.ContentService.LikePost:input_type -> content.LikePostRequest
+	14, // 10: content.ContentService.UnlikePost:input_type -> content.UnlikePostRequest
+	15, // 11: content.ContentService.BookmarkPost:input_type -> content.BookmarkPostRequest
+	16, // 12: content.ContentService.UnbookmarkPost:input_type -> content.UnbookmarkPostRequest
+	17, // 13: content.ContentService.RepostPost:input_type -> content.RepostPostRequest
+	18, // 14: content.ContentService.UndoRepost:input_type -> content.UndoRepostRequest
+	19, // 15: content.ContentService.FollowUser:input_type -> content.FollowUserRequest
+	20, // 16: content.ContentService.UnfollowUser:input_type -> content.UnfollowUserRequest
+	21, // 17: content.ContentService.GetFollowers:input_type -> content.GetFollowersRequest
+	22, // 18: content.ContentService.GetFollowing:input_type -> content.GetFollowingRequest
+	1,  // 19: content.ContentService.GetHealth:output_type -> content.GetContentServiceHealthResponse
+	2,  // 20: content.ContentService.CreatePost:output_type -> content.PostResponse
+	2,  // 21: content.ContentService.GetPost:output_type -> content.PostResponse
+	7,  // 22: content.ContentService.DeletePost:output_type -> content.DeletePostResponse
+	2,  // 23: content.ContentService.CreateReply:output_type -> content.PostResponse
+	3,  // 24: content.ContentService.GetReplies:output_type -> content.PostListResponse
+	6,  // 25: content.ContentService.LikePost:output_type -> content.ActionResponse
+	6,  // 26: content.ContentService.UnlikePost:output_type -> content.ActionResponse
+	6,  // 27: content.ContentService.BookmarkPost:output_type -> content.ActionResponse
+	6,  // 28: content.ContentService.UnbookmarkPost:output_type -> content.ActionResponse
+	6,  // 29: content.ContentService.RepostPost:output_type -> content.ActionResponse
+	6,  // 30: content.ContentService.UndoRepost:output_type -> content.ActionResponse
+	6,  // 31: content.ContentService.FollowUser:output_type -> content.ActionResponse
+	6,  // 32: content.ContentService.UnfollowUser:output_type -> content.ActionResponse
+	5,  // 33: content.ContentService.GetFollowers:output_type -> content.UserListResponse
+	5,  // 34: content.ContentService.GetFollowing:output_type -> content.UserListResponse
+	19, // [19:35] is the sub-list for method output_type
+	3,  // [3:19] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto_content_content_proto_init() }
@@ -178,7 +1597,7 @@ func file_proto_content_content_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_content_content_proto_rawDesc), len(file_proto_content_content_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

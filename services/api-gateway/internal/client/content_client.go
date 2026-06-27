@@ -42,6 +42,41 @@ func (c *ContentClient) GetHealth(ctx context.Context) (*contentpb.GetContentSer
 	return c.client.GetHealth(ctx, &contentpb.GetContentServiceHealthRequest{})
 }
 
+func (c *ContentClient) CreatePost(ctx context.Context, req *contentpb.CreatePostRequest) (*contentpb.PostResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.CreatePost(ctx, req)
+}
+
+func (c *ContentClient) GetPost(ctx context.Context, req *contentpb.GetPostRequest) (*contentpb.PostResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetPost(ctx, req)
+}
+
+func (c *ContentClient) DeletePost(ctx context.Context, req *contentpb.DeletePostRequest) (*contentpb.DeletePostResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.DeletePost(ctx, req)
+}
+
+func (c *ContentClient) CreateReply(ctx context.Context, req *contentpb.CreateReplyRequest) (*contentpb.PostResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.CreateReply(ctx, req)
+}
+
+func (c *ContentClient) GetReplies(ctx context.Context, req *contentpb.GetRepliesRequest) (*contentpb.PostListResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetReplies(ctx, req)
+}
+
 func (c *ContentClient) Close() error {
 	return c.conn.Close()
 }

@@ -9,6 +9,8 @@ import (
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
 	contentpb "github.com/trungquantrannguyen/threadly/proto/content"
 	contentgrpc "github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc"
+	"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository"
+	"github.com/trungquantrannguyen/threadly/services/content-service/internal/service"
 	"google.golang.org/grpc"
 )
 
@@ -37,8 +39,11 @@ func main() {
 			Msg("Failed to listen for content service grpc server")
 	}
 
+	postRepo := repository.NewPostRepository(dtb)
+	contentService := service.NewContentService(postRepo)
+
 	grpcServer := grpc.NewServer()
-	contentGrpcServer := contentgrpc.NewContentServiceServer(cfg, log)
+	contentGrpcServer := contentgrpc.NewContentServiceServer(cfg, log, contentService)
 	contentpb.RegisterContentServiceServer(grpcServer, contentGrpcServer)
 
 	log.Info().
