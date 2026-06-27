@@ -21,6 +21,15 @@ func NewNotificationHandler(notificationClient *client.NotificationClient, log z
 	}
 }
 
+// GetHealth godoc
+// @Summary Get Notification service health
+// @Description Get the status of notification service
+// @Tags Notifications
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetNotificationServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /notifications/health [get]
 func (h *NotificationHandler) GetHealth(c *gin.Context) {
 	health, err := h.notificationClient.GetHealth(c.Request.Context())
 	if err != nil {

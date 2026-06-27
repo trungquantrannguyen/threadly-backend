@@ -25,7 +25,7 @@ func NewUserHandler(userClient *client.UserClient, log zerolog.Logger) *UserHand
 }
 
 // Register godoc
-// @Sumart Get User service health
+// @Summary Get User service health
 // @Description Get the status of user service
 // @Tags Users
 // @Accept json
@@ -54,7 +54,7 @@ func (h *UserHandler) GetHealth(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param request body dto.RegisterRequest true "Register request body"
-// @Success 201 {object} dto.ResgisterReponse
+// @Success 201 {object} dto.RegisterResponse
 // @Failure 400 {object} dto.ErrorResponse
 // @Failure 409 {object} dto.ErrorResponse
 // @Failure 500 {object} dto.ErrorResponse
@@ -173,6 +173,7 @@ func (h *UserHandler) Logout(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	if userID == "" {
 		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
 	}
 
 	_, err := h.userClient.Logout(c.Request.Context(), &userpb.LogoutRequest{

@@ -21,6 +21,15 @@ func NewFeedHandler(FeedClient *client.FeedClient, log zerolog.Logger) *FeedHand
 	}
 }
 
+// GetHealth godoc
+// @Summary Get Feed service health
+// @Description Get the status of feed service
+// @Tags Feeds
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetFeedServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /feeds/health [get]
 func (h *FeedHandler) GetHealth(c *gin.Context) {
 	health, err := h.FeedClient.GetHealth(c.Request.Context())
 	if err != nil {

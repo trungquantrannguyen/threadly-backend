@@ -48,14 +48,14 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 
 	notificationClient, err := client.NewNotificationClient(cfg, log)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to create feed service grpc client")
+		log.Fatal().Err(err).Msg("Failed to create notification service grpc client")
 	}
 
 	notificationHandler := handlers.NewNotificationHandler(notificationClient, log)
 
 	storageClient, err := client.NewStorageClient(cfg, log)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to create feed service grpc client")
+		log.Fatal().Err(err).Msg("Failed to create storage service grpc client")
 	}
 
 	storageHandler := handlers.NewStorageHandler(storageClient, log)

@@ -21,6 +21,15 @@ func NewStorageHandler(storageClient *client.StorageClient, log zerolog.Logger) 
 	}
 }
 
+// GetHealth godoc
+// @Summary Get Storage service health
+// @Description Get the status of storage service
+// @Tags Storage
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetStorageServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /storages/health [get]
 func (h *StorageHandler) GetHealth(c *gin.Context) {
 	health, err := h.storageClient.GetHealth(c.Request.Context())
 	if err != nil {

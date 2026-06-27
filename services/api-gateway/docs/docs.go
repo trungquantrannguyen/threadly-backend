@@ -27,17 +27,18 @@ const docTemplate = `{
                 "tags": [
                     "Contents"
                 ],
+                "summary": "Get Content service health",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetContentServiceHealthResponse"
+                            "$ref": "#/definitions/dto.GetContentServiceHealthResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -68,7 +69,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.CreatePostRequest"
+                            "$ref": "#/definitions/dto.CreatePostRequest"
                         }
                     }
                 ],
@@ -76,25 +77,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                            "$ref": "#/definitions/dto.PostResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -128,25 +129,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                            "$ref": "#/definitions/dto.PostResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -157,7 +158,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Returns the delett post status.",
+                "description": "Returns the delete post status.",
                 "produces": [
                     "application/json"
                 ],
@@ -182,19 +183,19 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -207,7 +208,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Creates a new reply to a post and returns the new reply.",
+                "description": "Returns replies for a post.",
                 "consumes": [
                     "application/json"
                 ],
@@ -241,37 +242,37 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                                "$ref": "#/definitions/dto.PostResponse"
                             }
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -307,7 +308,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.CreatePostRequest"
+                            "$ref": "#/definitions/dto.CreatePostRequest"
                         }
                     }
                 ],
@@ -315,31 +316,60 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse"
+                            "$ref": "#/definitions/dto.PostResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/feeds/health": {
+            "get": {
+                "description": "Get the status of feed service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Feeds"
+                ],
+                "summary": "Get Feed service health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetFeedServiceHealthResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -354,6 +384,7 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "summary": "Get User service health",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -367,6 +398,64 @@ const docTemplate = `{
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/notifications/health": {
+            "get": {
+                "description": "Get the status of notification service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get Notification service health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetNotificationServiceHealthResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/storages/health": {
+            "get": {
+                "description": "Get the status of storage service",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Storage"
+                ],
+                "summary": "Get Storage service health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetStorageServiceHealthResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -384,17 +473,18 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
+                "summary": "Get User service health",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthResponse"
+                            "$ref": "#/definitions/dto.GetUserServiceHealthResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -420,7 +510,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginRequest"
+                            "$ref": "#/definitions/dto.LoginRequest"
                         }
                     }
                 ],
@@ -428,25 +518,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginResponse"
+                            "$ref": "#/definitions/dto.LoginResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -477,7 +567,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutRequest"
+                            "$ref": "#/definitions/dto.LogoutRequest"
                         }
                     }
                 ],
@@ -485,25 +575,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutResponse"
+                            "$ref": "#/definitions/dto.LogoutResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -528,19 +618,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetMeResponse"
+                            "$ref": "#/definitions/dto.GetMeResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -566,7 +656,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenRequest"
+                            "$ref": "#/definitions/dto.RefreshTokenRequest"
                         }
                     }
                 ],
@@ -574,25 +664,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenResponse"
+                            "$ref": "#/definitions/dto.RefreshTokenResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -618,7 +708,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterRequest"
+                            "$ref": "#/definitions/dto.RegisterRequest"
                         }
                     }
                 ],
@@ -626,25 +716,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse"
+                            "$ref": "#/definitions/dto.RegisterResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse"
+                            "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     }
                 }
@@ -652,7 +742,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData": {
+        "dto.AuthData": {
             "type": "object",
             "properties": {
                 "access_token": {
@@ -662,11 +752,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "user": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserData"
+                    "$ref": "#/definitions/dto.UserData"
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.CreatePostRequest": {
+        "dto.CreatePostRequest": {
             "type": "object",
             "required": [
                 "content"
@@ -680,7 +770,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ErrorResponse": {
+        "dto.ErrorResponse": {
             "type": "object",
             "properties": {
                 "errors": {},
@@ -688,39 +778,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "success": {
-                    "type": "string"
-                }
-            }
-        },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetContentServiceHealthResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthData"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "success": {
                     "type": "boolean"
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetMeResponse": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserData"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthData": {
+        "dto.GetContentServiceHealthData": {
             "type": "object",
             "properties": {
                 "checked_at": {
@@ -737,11 +799,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthResponse": {
+        "dto.GetContentServiceHealthResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.GetUserServiceHealthData"
+                    "$ref": "#/definitions/dto.GetContentServiceHealthData"
                 },
                 "message": {
                     "type": "string"
@@ -751,7 +813,145 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginRequest": {
+        "dto.GetFeedServiceHealthData": {
+            "type": "object",
+            "properties": {
+                "checked_at": {
+                    "type": "string"
+                },
+                "env": {
+                    "type": "string"
+                },
+                "service": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetFeedServiceHealthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.GetFeedServiceHealthData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.GetMeResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.UserData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.GetNotificationServiceHealthData": {
+            "type": "object",
+            "properties": {
+                "checked_at": {
+                    "type": "string"
+                },
+                "env": {
+                    "type": "string"
+                },
+                "service": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetNotificationServiceHealthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.GetNotificationServiceHealthData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.GetStorageServiceHealthData": {
+            "type": "object",
+            "properties": {
+                "checked_at": {
+                    "type": "string"
+                },
+                "env": {
+                    "type": "string"
+                },
+                "service": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetStorageServiceHealthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.GetStorageServiceHealthData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.GetUserServiceHealthData": {
+            "type": "object",
+            "properties": {
+                "checked_at": {
+                    "type": "string"
+                },
+                "env": {
+                    "type": "string"
+                },
+                "service": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.GetUserServiceHealthResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.GetUserServiceHealthData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.LoginRequest": {
             "type": "object",
             "required": [
                 "email_or_username",
@@ -766,11 +966,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LoginResponse": {
+        "dto.LoginResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData"
+                    "$ref": "#/definitions/dto.AuthData"
                 },
                 "message": {
                     "type": "string"
@@ -780,7 +980,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutRequest": {
+        "dto.LogoutRequest": {
             "type": "object",
             "required": [
                 "refresh_token"
@@ -791,7 +991,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.LogoutResponse": {
+        "dto.LogoutResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -802,11 +1002,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.PostResponse": {
+        "dto.PostResponse": {
             "type": "object",
             "properties": {
                 "author": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserSummary"
+                    "$ref": "#/definitions/dto.UserSummary"
                 },
                 "author_id": {
                     "type": "string"
@@ -843,7 +1043,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenRequest": {
+        "dto.RefreshTokenRequest": {
             "type": "object",
             "required": [
                 "refresh_token"
@@ -854,11 +1054,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RefreshTokenResponse": {
+        "dto.RefreshTokenResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData"
+                    "$ref": "#/definitions/dto.AuthData"
                 },
                 "message": {
                     "type": "string"
@@ -868,7 +1068,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.RegisterRequest": {
+        "dto.RegisterRequest": {
             "type": "object",
             "required": [
                 "display_name",
@@ -896,11 +1096,11 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.ResgisterReponse": {
+        "dto.RegisterResponse": {
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.AuthData"
+                    "$ref": "#/definitions/dto.AuthData"
                 },
                 "message": {
                     "type": "string"
@@ -910,7 +1110,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserData": {
+        "dto.UserData": {
             "type": "object",
             "properties": {
                 "avatar_url": {
@@ -933,7 +1133,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_trungquantrannguyen_threadly_services_api-gateway_internal_dto.UserSummary": {
+        "dto.UserSummary": {
             "type": "object",
             "properties": {
                 "avatar_url": {
