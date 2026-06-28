@@ -53,13 +53,55 @@ type UserSummary struct {
 }
 
 type LikePostRequest struct {
-	PostID string
 	UserID string
+	PostID string
 }
 
 type UnlikePostRequest struct {
-	PostID string
 	UserID string
+	PostID string
+}
+
+type BookmarkPostRequest struct {
+	UserID string
+	PostID string
+}
+
+type UnbookmarkPostRequest struct {
+	UserID string
+	PostID string
+}
+
+type RepostPostRequest struct {
+	UserID string
+	PostID string
+}
+
+type UndoRepostRequest struct {
+	UserID string
+	PostID string
+}
+
+type FollowUserRequest struct {
+	FollowerID  string
+	FollowingID string
+}
+
+type UnfollowUserRequest struct {
+	FollowerID  string
+	FollowingID string
+}
+
+type GetFollowersRequest struct {
+	UserID string
+	Limit  int
+	Cursor string
+}
+
+type GetFollowingRequest struct {
+	UserID string
+	Limit  int
+	Cursor string
 }
 
 type ActionResponse struct {

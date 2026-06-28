@@ -91,6 +91,62 @@ func (c *ContentClient) UnlikePost(ctx context.Context, req *contentpb.UnlikePos
 	return c.client.UnlikePost(ctx, req)
 }
 
+func (c *ContentClient) BookmarkPost(ctx context.Context, req *contentpb.BookmarkPostRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.BookmarkPost(ctx, req)
+}
+
+func (c *ContentClient) UnbookmarkPost(ctx context.Context, req *contentpb.UnbookmarkPostRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.UnbookmarkPost(ctx, req)
+}
+
+func (c *ContentClient) RepostPost(ctx context.Context, req *contentpb.RepostPostRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.RepostPost(ctx, req)
+}
+
+func (c *ContentClient) UndoRepost(ctx context.Context, req *contentpb.UndoRepostRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.UndoRepost(ctx, req)
+}
+
+func (c *ContentClient) FollowUser(ctx context.Context, req *contentpb.FollowUserRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.FollowUser(ctx, req)
+}
+
+func (c *ContentClient) UnfollowUser(ctx context.Context, req *contentpb.UnfollowUserRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.UnfollowUser(ctx, req)
+}
+
+func (c *ContentClient) GetFollowers(ctx context.Context, req *contentpb.GetFollowersRequest) (*contentpb.UserListResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetFollowers(ctx, req)
+}
+
+func (c *ContentClient) GetFollowing(ctx context.Context, req *contentpb.GetFollowingRequest) (*contentpb.UserListResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetFollowing(ctx, req)
+}
+
 func (c *ContentClient) Close() error {
 	return c.conn.Close()
 }

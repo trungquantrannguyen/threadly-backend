@@ -97,7 +97,20 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 					}
 					protectedPost.POST("/likes", contentHandler.LikePost)
 					protectedPost.DELETE("/likes", contentHandler.UnlikePost)
+
+					protectedPost.POST("/bookmarks", contentHandler.BookmarkPost)
+					protectedPost.DELETE("/bookmarks", contentHandler.UnbookmarkPost)
+
+					protectedPost.POST("/reposts", contentHandler.RepostPost)
+					protectedPost.DELETE("/reposts", contentHandler.UndoRepost)
 				}
+			}
+			protectedContentUsers := protectedContent.Group("/users")
+			{
+				protectedContentUsers.POST("/:userID/follow", contentHandler.FollowUser)
+				protectedContentUsers.DELETE("/:userID/follow", contentHandler.UnfollowUser)
+				protectedContentUsers.GET("/:userID/followers", contentHandler.GetFollowers)
+				protectedContentUsers.GET("/:userID/following", contentHandler.GetFollowing)
 			}
 		}
 		feeds := api.Group("/feeds")

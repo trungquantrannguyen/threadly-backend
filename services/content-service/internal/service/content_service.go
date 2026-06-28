@@ -16,6 +16,8 @@ var (
 	ErrInvalidPostContent = errors.New("post content is required")
 	ErrInvalidPostID      = errors.New("invalid post id")
 	ErrInvalidAuthorID    = errors.New("invalid author id")
+	ErrInvalidUserID      = errors.New("invalid user id")
+	ErrCannotFollowSelf   = errors.New("user cannot follow themselves")
 )
 
 type ContentService interface {
@@ -24,19 +26,31 @@ type ContentService interface {
 	DeletePost(ctx context.Context, req dto.DeletePostRequest) error
 	CreateReply(ctx context.Context, req dto.CreateReplyRequest) (*dto.PostResponse, error)
 	GetReplies(ctx context.Context, req dto.GetRepliesRequest) ([]dto.PostResponse, error)
+
 	LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error)
 	UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error)
+
+	BookmarkPost(ctx context.Context, req dto.BookmarkPostRequest) (*dto.ActionResponse, error)
+	UnbookmarkPost(ctx context.Context, req dto.UnbookmarkPostRequest) (*dto.ActionResponse, error)
+
+	RepostPost(ctx context.Context, req dto.RepostPostRequest) (*dto.ActionResponse, error)
+	UndoRepost(ctx context.Context, req dto.UndoRepostRequest) (*dto.ActionResponse, error)
+
+	FollowUser(ctx context.Context, req dto.FollowUserRequest) (*dto.ActionResponse, error)
+	UnfollowUser(ctx context.Context, req dto.UnfollowUserRequest) (*dto.ActionResponse, error)
+	GetFollowers(ctx context.Context, req dto.GetFollowersRequest) ([]dto.UserSummary, error)
+	GetFollowing(ctx context.Context, req dto.GetFollowingRequest) ([]dto.UserSummary, error)
 }
 
 type contentService struct {
-	postRepo repository.PostRepository
-	likeRepo repository.LikeRepository
+	postRepo        repository.PostRepository
+	interactionRepo repository.InteractionRepository
 }
 
-func NewContentService(postRepo repository.PostRepository, likeRepo repository.LikeRepository) ContentService {
+func NewContentService(postRepo repository.PostRepository, interactionRepo repository.InteractionRepository) ContentService {
 	return &contentService{
-		postRepo: postRepo,
-		likeRepo: likeRepo,
+		postRepo:        postRepo,
+		interactionRepo: interactionRepo,
 	}
 }
 
@@ -150,6 +164,291 @@ func (s *contentService) GetReplies(ctx context.Context, req dto.GetRepliesReque
 	return responses, nil
 }
 
+func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error) {
+	userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+		return nil, err
+	}
+
+	created, err := s.interactionRepo.LikePost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !created {
+		return actionResponse("post already liked"), nil
+	}
+
+	return actionResponse("post liked successfully"), nil
+}
+
+func (s *contentService) UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error) {
+	userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+		return nil, err
+	}
+
+	deleted, err := s.interactionRepo.UnlikePost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !deleted {
+		return actionResponse("post was not liked"), nil
+	}
+
+	return actionResponse("post unliked successfully"), nil
+}
+
+func (s *contentService) BookmarkPost(ctx context.Context, req dto.BookmarkPostRequest) (*dto.ActionResponse, error) {
+	userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+		return nil, err
+	}
+
+	created, err := s.interactionRepo.BookmarkPost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !created {
+		return actionResponse("post already bookmarked"), nil
+	}
+
+	return actionResponse("post bookmarked successfully"), nil
+}
+
+func (s *contentService) UnbookmarkPost(ctx context.Context, req dto.UnbookmarkPostRequest) (*dto.ActionResponse, error) {
+	userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+		return nil, err
+	}
+
+	deleted, err := s.interactionRepo.UnbookmarkPost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !deleted {
+		return actionResponse("post was not bookmarked"), nil
+	}
+
+	return actionResponse("post unbookmarked successfully"), nil
+}
+
+func (s *contentService) RepostPost(ctx context.Context, req dto.RepostPostRequest) (*dto.ActionResponse, error) {
+	userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+		return nil, err
+	}
+
+	created, err := s.interactionRepo.RepostPost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !created {
+		return actionResponse("post already reposted"), nil
+	}
+
+	return actionResponse("post reposted successfully"), nil
+}
+
+func (s *contentService) UndoRepost(ctx context.Context, req dto.UndoRepostRequest) (*dto.ActionResponse, error) {
+	userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+		return nil, err
+	}
+
+	deleted, err := s.interactionRepo.UndoRepost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !deleted {
+		return actionResponse("post was not reposted"), nil
+	}
+
+	return actionResponse("repost removed successfully"), nil
+}
+
+func (s *contentService) FollowUser(ctx context.Context, req dto.FollowUserRequest) (*dto.ActionResponse, error) {
+	followerID, err := uuid.Parse(req.FollowerID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	followingID, err := uuid.Parse(req.FollowingID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	if followerID == followingID {
+		return nil, ErrCannotFollowSelf
+	}
+
+	if err := s.ensureUserExists(ctx, followerID); err != nil {
+		return nil, err
+	}
+
+	if err := s.ensureUserExists(ctx, followingID); err != nil {
+		return nil, err
+	}
+
+	created, err := s.interactionRepo.FollowUser(ctx, followerID, followingID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !created {
+		return actionResponse("user already followed"), nil
+	}
+
+	return actionResponse("user followed successfully"), nil
+}
+
+func (s *contentService) UnfollowUser(ctx context.Context, req dto.UnfollowUserRequest) (*dto.ActionResponse, error) {
+	followerID, err := uuid.Parse(req.FollowerID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	followingID, err := uuid.Parse(req.FollowingID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	if followerID == followingID {
+		return nil, ErrCannotFollowSelf
+	}
+
+	if err := s.ensureUserExists(ctx, followerID); err != nil {
+		return nil, err
+	}
+
+	if err := s.ensureUserExists(ctx, followingID); err != nil {
+		return nil, err
+	}
+
+	deleted, err := s.interactionRepo.UnfollowUser(ctx, followerID, followingID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !deleted {
+		return actionResponse("user was not followed"), nil
+	}
+
+	return actionResponse("user unfollowed successfully"), nil
+}
+
+func (s *contentService) GetFollowers(ctx context.Context, req dto.GetFollowersRequest) ([]dto.UserSummary, error) {
+	userID, err := uuid.Parse(req.UserID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	if err := s.ensureUserExists(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	users, err := s.interactionRepo.GetFollowers(ctx, userID, normalizeLimit(req.Limit))
+	if err != nil {
+		return nil, err
+	}
+
+	return toUserSummaryResponses(users), nil
+}
+
+func (s *contentService) GetFollowing(ctx context.Context, req dto.GetFollowingRequest) ([]dto.UserSummary, error) {
+	userID, err := uuid.Parse(req.UserID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	if err := s.ensureUserExists(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	users, err := s.interactionRepo.GetFollowing(ctx, userID, normalizeLimit(req.Limit))
+	if err != nil {
+		return nil, err
+	}
+
+	return toUserSummaryResponses(users), nil
+}
+
+func parseUserAndPostID(userIDValue string, postIDValue string) (uuid.UUID, uuid.UUID, error) {
+	userID, err := uuid.Parse(userIDValue)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, ErrInvalidUserID
+	}
+
+	postID, err := uuid.Parse(postIDValue)
+	if err != nil {
+		return uuid.Nil, uuid.Nil, ErrInvalidPostID
+	}
+
+	return userID, postID, nil
+}
+
+func (s *contentService) ensurePostExists(ctx context.Context, postID string) error {
+	_, err := s.postRepo.FindByID(ctx, postID)
+	return err
+}
+
+func (s *contentService) ensureUserExists(ctx context.Context, userID uuid.UUID) error {
+	exists, err := s.interactionRepo.UserExists(ctx, userID)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		return repository.ErrUserNotFound
+	}
+
+	return nil
+}
+
+func normalizeLimit(limit int) int {
+	if limit <= 0 || limit > 50 {
+		return 20
+	}
+
+	return limit
+}
+
+func actionResponse(message string) *dto.ActionResponse {
+	return &dto.ActionResponse{
+		Success: true,
+		Message: message,
+	}
+}
+
 func toPostResponse(post *dbmodel.Post) *dto.PostResponse {
 	replyToPostID := ""
 	if post.ReplyToPostID != nil {
@@ -183,60 +482,27 @@ func toPostResponse(post *dbmodel.Post) *dto.PostResponse {
 	}
 }
 
-func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error) {
-	userID, err := uuid.Parse(req.UserID)
-	if err != nil {
-		return nil, ErrInvalidAuthorID
+func toUserSummaryResponses(users []dbmodel.User) []dto.UserSummary {
+	responses := make([]dto.UserSummary, 0, len(users))
+
+	for _, user := range users {
+		responses = append(responses, toUserSummaryResponse(&user))
 	}
 
-	postID, err := uuid.Parse(req.PostID)
-	if err != nil {
-		return nil, ErrInvalidPostID
-	}
-
-	liked, err := s.likeRepo.LikePost(ctx, userID, postID)
-	if err != nil {
-		return nil, err
-	}
-
-	if !liked {
-		return &dto.ActionResponse{
-			Success: true,
-			Message: "Post already liked",
-		}, nil
-	}
-
-	return &dto.ActionResponse{
-		Success: true,
-		Message: "Post liked successfully",
-	}, nil
+	return responses
 }
 
-func (s *contentService) UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error) {
-	userID, err := uuid.Parse(req.UserID)
-	if err != nil {
-		return nil, ErrInvalidAuthorID
+func toUserSummaryResponse(user *dbmodel.User) dto.UserSummary {
+	avatarURL := ""
+	if user.AvatarURL != nil {
+		avatarURL = *user.AvatarURL
 	}
 
-	postID, err := uuid.Parse(req.PostID)
-	if err != nil {
-		return nil, ErrInvalidPostID
+	return dto.UserSummary{
+		ID:          user.ID.String(),
+		Username:    user.Username,
+		DisplayName: user.DisplayName,
+		AvatarURL:   avatarURL,
+		IsVerified:  user.IsVerified,
 	}
-
-	unliked, err := s.likeRepo.UnlikePost(ctx, userID, postID)
-	if err != nil {
-		return nil, err
-	}
-
-	if !unliked {
-		return &dto.ActionResponse{
-			Success: true,
-			Message: "post was not liked",
-		}, nil
-	}
-
-	return &dto.ActionResponse{
-		Success: true,
-		Message: "post unliked successfully",
-	}, nil
 }

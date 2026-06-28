@@ -146,35 +146,101 @@ func (s *ContentServiceServer) UnlikePost(ctx context.Context, req *contentpb.Un
 }
 
 func (s *ContentServiceServer) BookmarkPost(ctx context.Context, req *contentpb.BookmarkPostRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "BookmarkPost not implemented yet")
+	res, err := s.contentService.BookmarkPost(ctx, dto.BookmarkPostRequest{
+		UserID: req.GetUserId(),
+		PostID: req.GetPostId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoActionResponse(res), nil
 }
 
 func (s *ContentServiceServer) UnbookmarkPost(ctx context.Context, req *contentpb.UnbookmarkPostRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "UnbookmarkPost not implemented yet")
+	res, err := s.contentService.UnbookmarkPost(ctx, dto.UnbookmarkPostRequest{
+		UserID: req.GetUserId(),
+		PostID: req.GetPostId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoActionResponse(res), nil
 }
 
 func (s *ContentServiceServer) RepostPost(ctx context.Context, req *contentpb.RepostPostRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "RepostPost not implemented yet")
+	res, err := s.contentService.RepostPost(ctx, dto.RepostPostRequest{
+		UserID: req.GetUserId(),
+		PostID: req.GetPostId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoActionResponse(res), nil
 }
 
 func (s *ContentServiceServer) UndoRepost(ctx context.Context, req *contentpb.UndoRepostRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "UndoRepost not implemented yet")
+	res, err := s.contentService.UndoRepost(ctx, dto.UndoRepostRequest{
+		UserID: req.GetUserId(),
+		PostID: req.GetPostId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoActionResponse(res), nil
 }
 
 func (s *ContentServiceServer) FollowUser(ctx context.Context, req *contentpb.FollowUserRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "FollowUser not implemented yet")
+	res, err := s.contentService.FollowUser(ctx, dto.FollowUserRequest{
+		FollowerID:  req.GetFollowerId(),
+		FollowingID: req.GetFollowingId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoActionResponse(res), nil
 }
 
 func (s *ContentServiceServer) UnfollowUser(ctx context.Context, req *contentpb.UnfollowUserRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "UnfollowUser not implemented yet")
+	res, err := s.contentService.UnfollowUser(ctx, dto.UnfollowUserRequest{
+		FollowerID:  req.GetFollowerId(),
+		FollowingID: req.GetFollowingId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoActionResponse(res), nil
 }
 
 func (s *ContentServiceServer) GetFollowers(ctx context.Context, req *contentpb.GetFollowersRequest) (*contentpb.UserListResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "GetFollowers not implemented yet")
+	res, err := s.contentService.GetFollowers(ctx, dto.GetFollowersRequest{
+		UserID: req.GetUserId(),
+		Limit:  int(req.GetLimit()),
+		Cursor: req.GetCursor(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoUserListResponse(res), nil
 }
 
 func (s *ContentServiceServer) GetFollowing(ctx context.Context, req *contentpb.GetFollowingRequest) (*contentpb.UserListResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "GetFollowing not implemented yet")
+	res, err := s.contentService.GetFollowing(ctx, dto.GetFollowingRequest{
+		UserID: req.GetUserId(),
+		Limit:  int(req.GetLimit()),
+		Cursor: req.GetCursor(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return toProtoUserListResponse(res), nil
 }
 
 func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
@@ -200,15 +266,49 @@ func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
 	}
 }
 
+func toProtoActionResponse(res *dto.ActionResponse) *contentpb.ActionResponse {
+	return &contentpb.ActionResponse{
+		Success: res.Success,
+		Message: res.Message,
+	}
+}
+
+func toProtoUserListResponse(users []dto.UserSummary) *contentpb.UserListResponse {
+	protoUsers := make([]*contentpb.UserSummary, 0, len(users))
+
+	for _, user := range users {
+		protoUsers = append(protoUsers, toProtoUserSummary(user))
+	}
+
+	return &contentpb.UserListResponse{
+		Users: protoUsers,
+	}
+}
+
+func toProtoUserSummary(user dto.UserSummary) *contentpb.UserSummary {
+	return &contentpb.UserSummary{
+		Id:          user.ID,
+		Username:    user.Username,
+		DisplayName: user.DisplayName,
+		AvatarUrl:   user.AvatarURL,
+		IsVerified:  user.IsVerified,
+	}
+}
+
 func mapContentServiceError(err error) error {
 	switch {
 	case errors.Is(err, service.ErrInvalidPostContent),
 		errors.Is(err, service.ErrInvalidPostID),
-		errors.Is(err, service.ErrInvalidAuthorID):
+		errors.Is(err, service.ErrInvalidAuthorID),
+		errors.Is(err, service.ErrInvalidUserID),
+		errors.Is(err, service.ErrCannotFollowSelf):
 		return status.Error(codes.InvalidArgument, err.Error())
 
 	case errors.Is(err, repository.ErrPostNotFound):
 		return status.Error(codes.NotFound, "post not found")
+
+	case errors.Is(err, repository.ErrUserNotFound):
+		return status.Error(codes.NotFound, "user not found")
 
 	case errors.Is(err, repository.ErrForbidden):
 		return status.Error(codes.PermissionDenied, "you do not have permission to perform this action")
