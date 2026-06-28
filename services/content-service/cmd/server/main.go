@@ -40,7 +40,8 @@ func main() {
 	}
 
 	postRepo := repository.NewPostRepository(dtb)
-	contentService := service.NewContentService(postRepo)
+	likeRepo := repository.NewLikeRepository(dtb)
+	contentService := service.NewContentService(postRepo, likeRepo)
 
 	grpcServer := grpc.NewServer()
 	contentGrpcServer := contentgrpc.NewContentServiceServer(cfg, log, contentService)

@@ -95,6 +95,8 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 						protectedPostReply.POST("", contentHandler.CreateReply)
 						protectedPostReply.GET("", contentHandler.GetReplies)
 					}
+					protectedPost.POST("/likes", contentHandler.LikePost)
+					protectedPost.DELETE("/likes", contentHandler.UnlikePost)
 				}
 			}
 		}

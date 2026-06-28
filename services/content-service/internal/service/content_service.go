@@ -24,15 +24,19 @@ type ContentService interface {
 	DeletePost(ctx context.Context, req dto.DeletePostRequest) error
 	CreateReply(ctx context.Context, req dto.CreateReplyRequest) (*dto.PostResponse, error)
 	GetReplies(ctx context.Context, req dto.GetRepliesRequest) ([]dto.PostResponse, error)
+	LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error)
+	UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error)
 }
 
 type contentService struct {
 	postRepo repository.PostRepository
+	likeRepo repository.LikeRepository
 }
 
-func NewContentService(postRepo repository.PostRepository) ContentService {
+func NewContentService(postRepo repository.PostRepository, likeRepo repository.LikeRepository) ContentService {
 	return &contentService{
 		postRepo: postRepo,
+		likeRepo: likeRepo,
 	}
 }
 
@@ -177,4 +181,62 @@ func toPostResponse(post *dbmodel.Post) *dto.PostResponse {
 			IsVerified:  post.Author.IsVerified,
 		},
 	}
+}
+
+func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error) {
+	userID, err := uuid.Parse(req.UserID)
+	if err != nil {
+		return nil, ErrInvalidAuthorID
+	}
+
+	postID, err := uuid.Parse(req.PostID)
+	if err != nil {
+		return nil, ErrInvalidPostID
+	}
+
+	liked, err := s.likeRepo.LikePost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !liked {
+		return &dto.ActionResponse{
+			Success: true,
+			Message: "Post already liked",
+		}, nil
+	}
+
+	return &dto.ActionResponse{
+		Success: true,
+		Message: "Post liked successfully",
+	}, nil
+}
+
+func (s *contentService) UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error) {
+	userID, err := uuid.Parse(req.UserID)
+	if err != nil {
+		return nil, ErrInvalidAuthorID
+	}
+
+	postID, err := uuid.Parse(req.PostID)
+	if err != nil {
+		return nil, ErrInvalidPostID
+	}
+
+	unliked, err := s.likeRepo.UnlikePost(ctx, userID, postID)
+	if err != nil {
+		return nil, err
+	}
+
+	if !unliked {
+		return &dto.ActionResponse{
+			Success: true,
+			Message: "post was not liked",
+		}, nil
+	}
+
+	return &dto.ActionResponse{
+		Success: true,
+		Message: "post unliked successfully",
+	}, nil
 }

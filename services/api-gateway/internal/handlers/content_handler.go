@@ -254,6 +254,84 @@ func (h *ContentHandler) GetReplies(c *gin.Context) {
 	response.OK(c, http.StatusOK, "Get replies successfully", posts)
 }
 
+// LikePost godoc
+// @Summary Like a post
+// @Description Likes a post as the authenticated user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/likes [post]
+func (h *ContentHandler) LikePost(c *gin.Context) {
+	postID := c.Param("postID")
+	if postID == "" {
+		response.Error(c, http.StatusBadRequest, "Missing postID", nil)
+		return
+	}
+
+	userID := middleware.GetUserID(c)
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
+	res, err := h.contentClient.LikePost(c.Request.Context(), &contentpb.LikePostRequest{
+		UserId: userID,
+		PostId: postID,
+	})
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to like post")
+		HandleGRPCError(c, err)
+		return
+	}
+
+	response.OK(c, http.StatusOK, res.GetMessage(), res)
+}
+
+// UnlikePost godoc
+// @Summary Unlike a post
+// @Description Removes the authenticated user's like from a post.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/likes [delete]
+func (h *ContentHandler) UnlikePost(c *gin.Context) {
+	postID := c.Param("postID")
+	if postID == "" {
+		response.Error(c, http.StatusBadRequest, "Missing postID", nil)
+		return
+	}
+
+	userID := middleware.GetUserID(c)
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
+	res, err := h.contentClient.UnlikePost(c.Request.Context(), &contentpb.UnlikePostRequest{
+		UserId: userID,
+		PostId: postID,
+	})
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to unlike post")
+		HandleGRPCError(c, err)
+		return
+	}
+
+	response.OK(c, http.StatusOK, res.GetMessage(), res)
+}
+
 func toPostResponse(post *contentpb.PostResponse) dto.PostResponse {
 	author := post.GetAuthor()
 

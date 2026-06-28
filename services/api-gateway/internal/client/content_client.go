@@ -77,6 +77,20 @@ func (c *ContentClient) GetReplies(ctx context.Context, req *contentpb.GetReplie
 	return c.client.GetReplies(ctx, req)
 }
 
+func (c *ContentClient) LikePost(ctx context.Context, req *contentpb.LikePostRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.LikePost(ctx, req)
+}
+
+func (c *ContentClient) UnlikePost(ctx context.Context, req *contentpb.UnlikePostRequest) (*contentpb.ActionResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.UnlikePost(ctx, req)
+}
+
 func (c *ContentClient) Close() error {
 	return c.conn.Close()
 }

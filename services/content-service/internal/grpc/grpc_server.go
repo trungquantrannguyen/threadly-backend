@@ -116,11 +116,33 @@ func (s *ContentServiceServer) GetReplies(ctx context.Context, req *contentpb.Ge
 }
 
 func (s *ContentServiceServer) LikePost(ctx context.Context, req *contentpb.LikePostRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "LikePost not implemented yet")
+	res, err := s.contentService.LikePost(ctx, dto.LikePostRequest{
+		UserID: req.GetUserId(),
+		PostID: req.GetPostId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return &contentpb.ActionResponse{
+		Success: res.Success,
+		Message: res.Message,
+	}, nil
 }
 
 func (s *ContentServiceServer) UnlikePost(ctx context.Context, req *contentpb.UnlikePostRequest) (*contentpb.ActionResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "UnlikePost not implemented yet")
+	res, err := s.contentService.UnlikePost(ctx, dto.UnlikePostRequest{
+		UserID: req.GetUserId(),
+		PostID: req.GetPostId(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	return &contentpb.ActionResponse{
+		Success: res.Success,
+		Message: res.Message,
+	}, nil
 }
 
 func (s *ContentServiceServer) BookmarkPost(ctx context.Context, req *contentpb.BookmarkPostRequest) (*contentpb.ActionResponse, error) {

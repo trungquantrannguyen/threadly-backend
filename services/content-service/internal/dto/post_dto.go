@@ -51,3 +51,18 @@ type UserSummary struct {
 	AvatarURL   string
 	IsVerified  bool
 }
+
+type LikePostRequest struct {
+	PostID string
+	UserID string
+}
+
+type UnlikePostRequest struct {
+	PostID string
+	UserID string
+}
+
+type ActionResponse struct {
+	Success bool
+	Message string
+}
