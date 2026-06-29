@@ -9,11 +9,13 @@ import (
 	"github.com/trungquantrannguyen/threadly/db"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
+	"github.com/trungquantrannguyen/threadly/pkg/messaging"
 	"google.golang.org/grpc"
 
 	sharedcache "github.com/trungquantrannguyen/threadly/pkg/cache"
 	feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
 	feedcache "github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache"
+	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/events"
 	feedgrpc "github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc"
 	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository"
 	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/service"
@@ -53,6 +55,20 @@ func main() {
 
 	if err := sharedcache.Ping(context.Background(), redisClient); err != nil {
 		log.Warn().Err(err).Msg("Redis unavailable, feed cache disabled or degraded")
+	}
+
+	eventBus, err := messaging.NewRabbitMQ(cfg, log)
+	if err != nil {
+		log.Warn().Err(err).Msg("RabbitMQ unavailable, feed cache invalidation disabled")
+	} else {
+		defer eventBus.Close()
+
+		feedEventConsumer := events.NewFeedEventConsumer(eventBus, homeFeedCache, log)
+		if err := feedEventConsumer.Start(context.Background()); err != nil {
+			log.Warn().Err(err).Msg("Failed to start feed event consumer")
+		} else {
+			log.Info().Msg("Feed event consumer started")
+		}
 	}
 
 	grpcServer := grpc.NewServer()

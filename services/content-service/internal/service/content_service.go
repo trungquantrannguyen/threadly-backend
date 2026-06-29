@@ -7,7 +7,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/rs/zerolog"
 	dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+	"github.com/trungquantrannguyen/threadly/pkg/messaging"
 	"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto"
 	"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository"
 )
@@ -47,12 +49,15 @@ type ContentService interface {
 type contentService struct {
 	postRepo        repository.PostRepository
 	interactionRepo repository.InteractionRepository
+	eventPublisher  messaging.Publisher
+	log             zerolog.Logger
 }
 
-func NewContentService(postRepo repository.PostRepository, interactionRepo repository.InteractionRepository) ContentService {
+func NewContentService(postRepo repository.PostRepository, interactionRepo repository.InteractionRepository, eventPublisher messaging.Publisher, log zerolog.Logger) ContentService {
 	return &contentService{
 		postRepo:        postRepo,
 		interactionRepo: interactionRepo,
+		eventPublisher:  eventPublisher,
 	}
 }
 
@@ -81,6 +86,14 @@ func (s *contentService) CreatePost(ctx context.Context, req dto.CreatePostReque
 	if err := s.postRepo.Create(ctx, post); err != nil {
 		return nil, err
 	}
+	s.publishEvent(ctx, messaging.EventPostCreated, messaging.Event{
+		EventID:   uuid.NewString(),
+		Type:      messaging.EventPostCreated,
+		ActorID:   req.AuthorID,
+		PostID:    post.ID.String(),
+		AuthorID:  post.AuthorID.String(),
+		CreatedAt: time.Now().UTC().Format(time.RFC3339),
+	})
 
 	return toPostResponse(post), nil
 }
@@ -330,6 +343,14 @@ func (s *contentService) FollowUser(ctx context.Context, req dto.FollowUserReque
 		return actionResponse("user already followed"), nil
 	}
 
+	s.publishEvent(ctx, messaging.EventUserFollowed, messaging.Event{
+		EventID:      uuid.NewString(),
+		Type:         messaging.EventUserFollowed,
+		ActorID:      followerID.String(),
+		TargetUserID: followingID.String(),
+		CreatedAt:    time.Now().UTC().Format(time.RFC3339),
+	})
+
 	return actionResponse("user followed successfully"), nil
 }
 
@@ -540,4 +561,17 @@ func (s *contentService) GetUserTimeline(ctx context.Context, req dto.GetUserTim
 	}
 
 	return responses, nil
+}
+
+func (s *contentService) publishEvent(ctx context.Context, routingKey string, event messaging.Event) {
+	if s.eventPublisher == nil {
+		return
+	}
+
+	if err := s.eventPublisher.Publish(ctx, routingKey, event); err != nil {
+		s.log.Warn().
+			Err(err).
+			Str("event_type", routingKey).
+			Msg("failed to publish content event")
+	}
 }

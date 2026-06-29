@@ -7,6 +7,7 @@ import (
 	"github.com/trungquantrannguyen/threadly/db"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
+	"github.com/trungquantrannguyen/threadly/pkg/messaging"
 	contentpb "github.com/trungquantrannguyen/threadly/proto/content"
 	contentgrpc "github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc"
 	"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository"
@@ -39,9 +40,20 @@ func main() {
 			Msg("Failed to listen for content service grpc server")
 	}
 
+	var eventPublisher messaging.Publisher
+
+	eventBus, err := messaging.NewRabbitMQ(cfg, log)
+	if err != nil {
+		log.Warn().Err(err).Msg("RabbitMQ unavailable, content events disabled")
+	} else {
+		defer eventBus.Close()
+		eventPublisher = eventBus
+		log.Info().Msg("RabbitMQ publisher connected")
+	}
+
 	postRepo := repository.NewPostRepository(dtb)
 	interactionRepo := repository.NewInteractionRepository(dtb)
-	contentService := service.NewContentService(postRepo, interactionRepo)
+	contentService := service.NewContentService(postRepo, interactionRepo, eventPublisher, log)
 
 	grpcServer := grpc.NewServer()
 	contentGrpcServer := contentgrpc.NewContentServiceServer(cfg, log, contentService)

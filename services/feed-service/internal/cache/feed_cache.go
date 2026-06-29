@@ -13,6 +13,7 @@ import (
 type FeedCache interface {
 	GetHomeFeed(ctx context.Context, userID string, limit int32, cursor string) (*feedpb.HomeFeedResponse, error)
 	SetHomeFeed(ctx context.Context, userID string, limit int32, cursor string, feed *feedpb.HomeFeedResponse) error
+	DeleteHomeFeedByUserID(ctx context.Context, userID string) error
 }
 
 type feedCache struct {
@@ -52,6 +53,19 @@ func (c *feedCache) SetHomeFeed(ctx context.Context, userID string, limit int32,
 	}
 
 	return c.redis.Set(ctx, key, bytes, c.ttl).Err()
+}
+
+func (c *feedCache) DeleteHomeFeedByUserID(ctx context.Context, userID string) error {
+	pattern := fmt.Sprintf("feed:home:%s:*", userID)
+
+	iter := c.redis.Scan(ctx, 0, pattern, 100).Iterator()
+	for iter.Next(ctx) {
+		if err := c.redis.Del(ctx, iter.Val()).Err(); err != nil {
+			return err
+		}
+	}
+
+	return iter.Err()
 }
 
 func homeFeedKey(userID string, limit int32, cursor string) string {
