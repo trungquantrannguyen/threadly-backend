@@ -156,6 +156,11 @@ func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyReq
 		return nil, ErrInvalidPostID
 	}
 
+	parentPost, err := s.postRepo.FindByID(ctx, req.ReplyToPostID)
+	if err != nil {
+		return nil, err
+	}
+
 	visibility := req.Visibility
 	if visibility == "" {
 		visibility = "public"
@@ -174,6 +179,18 @@ func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyReq
 
 	if err := s.postRepo.IncrementReplyCount(ctx, req.ReplyToPostID); err != nil {
 		return nil, err
+	}
+
+	if parentPost.AuthorID.String() != req.AuthorID {
+		s.publishEvent(ctx, messaging.EventReplyCreated, messaging.Event{
+			EventID:      uuid.NewString(),
+			Type:         messaging.EventReplyCreated,
+			ActorID:      req.AuthorID,
+			PostID:       post.ID.String(),
+			AuthorID:     post.AuthorID.String(),
+			TargetUserID: parentPost.AuthorID.String(),
+			CreatedAt:    time.Now().UTC().Format(time.RFC3339),
+		})
 	}
 
 	return toPostResponse(post), nil
@@ -207,6 +224,11 @@ func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) 
 		return nil, err
 	}
 
+	post, err := s.postRepo.FindByID(ctx, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
 	created, err := s.interactionRepo.LikePost(ctx, userID, postID)
 	if err != nil {
 		return nil, err
@@ -214,6 +236,17 @@ func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) 
 
 	if !created {
 		return actionResponse("post already liked"), nil
+	}
+
+	if post.AuthorID.String() != req.UserID {
+		s.publishEvent(ctx, messaging.EventPostLiked, messaging.Event{
+			EventID:   uuid.NewString(),
+			Type:      messaging.EventPostLiked,
+			ActorID:   req.UserID,
+			PostID:    req.PostID,
+			AuthorID:  post.AuthorID.String(),
+			CreatedAt: time.Now().UTC().Format(time.RFC3339),
+		})
 	}
 
 	return actionResponse("post liked successfully"), nil
@@ -291,7 +324,8 @@ func (s *contentService) RepostPost(ctx context.Context, req dto.RepostPostReque
 		return nil, err
 	}
 
-	if err := s.ensurePostExists(ctx, req.PostID); err != nil {
+	post, err := s.postRepo.FindByID(ctx, req.PostID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -302,6 +336,17 @@ func (s *contentService) RepostPost(ctx context.Context, req dto.RepostPostReque
 
 	if !created {
 		return actionResponse("post already reposted"), nil
+	}
+
+	if post.AuthorID.String() != req.UserID {
+		s.publishEvent(ctx, messaging.EventPostReposted, messaging.Event{
+			EventID:   uuid.NewString(),
+			Type:      messaging.EventPostReposted,
+			ActorID:   req.UserID,
+			PostID:    req.PostID,
+			AuthorID:  post.AuthorID.String(),
+			CreatedAt: time.Now().UTC().Format(time.RFC3339),
+		})
 	}
 
 	return actionResponse("post reposted successfully"), nil

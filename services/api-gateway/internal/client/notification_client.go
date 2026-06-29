@@ -42,6 +42,35 @@ func (c *NotificationClient) GetHealth(ctx context.Context) (*notificationpb.Get
 	return c.client.GetHealth(ctx, &notificationpb.GetNotificationServiceHealthRequest{})
 }
 
+func (c *NotificationClient) GetNotifications(ctx context.Context, userID string, limit int32) (*notificationpb.GetNotificationsResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetNotifications(ctx, &notificationpb.GetNotificationsRequest{
+		UserId: userID,
+		Limit:  limit,
+	})
+}
+
+func (c *NotificationClient) MarkNotificationRead(ctx context.Context, userID string, notificationID string) (*notificationpb.MarkNotificationReadResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.MarkNotificationRead(ctx, &notificationpb.MarkNotificationReadRequest{
+		UserId:         userID,
+		NotificationId: notificationID,
+	})
+}
+
+func (c *NotificationClient) MarkAllNotificationsRead(ctx context.Context, userID string) (*notificationpb.MarkAllNotificationsReadResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.MarkAllNotificationsRead(ctx, &notificationpb.MarkAllNotificationsReadRequest{
+		UserId: userID,
+	})
+}
+
 func (c *NotificationClient) Close() error {
 	return c.conn.Close()
 }

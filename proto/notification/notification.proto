@@ -5,6 +5,10 @@ option go_package = "threadly/proto/notification;notificationv1";
 
 service NotificationService {
     rpc GetHealth(GetNotificationServiceHealthRequest) returns (GetNotificationServiceHealthResponse);
+
+    rpc GetNotifications(GetNotificationsRequest) returns (GetNotificationsResponse);
+    rpc MarkNotificationRead(MarkNotificationReadRequest) returns (MarkNotificationReadResponse);
+    rpc MarkAllNotificationsRead(MarkAllNotificationsReadRequest) returns (MarkAllNotificationsReadResponse);
 }
 
 message GetNotificationServiceHealthRequest {}
@@ -14,4 +18,45 @@ message GetNotificationServiceHealthResponse {
     string status = 2;
     string env = 3;
     string checked_at = 4;
+}
+
+message GetNotificationsRequest {
+    string user_id = 1;
+    int32 limit = 2;
+}
+
+message GetNotificationsResponse {
+    repeated NotificationResponse notifications = 1;
+}
+
+message NotificationResponse {
+    string id = 1;
+    string recipient_id = 2;
+    string actor_id = 3;
+    string type = 4;
+    string entity_type = 5;
+    string entity_id = 6;
+    string payload = 7;
+    string read_at = 8;
+    string created_at = 9;
+}
+
+message MarkNotificationReadRequest {
+    string user_id = 1;
+    string notification_id = 2;
+}
+
+message MarkNotificationReadResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message MarkAllNotificationsReadRequest {
+    string user_id = 1;
+}
+
+message MarkAllNotificationsReadResponse {
+    bool success = 1;
+    string message = 2;
+    int32 updated_count = 3;
 }

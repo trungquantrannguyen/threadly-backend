@@ -130,6 +130,13 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 		notifications := api.Group("/notifications")
 		{
 			notifications.GET("/health", notificationHandler.GetHealth)
+			protectedNotifications := notifications.Group("")
+			protectedNotifications.Use(middleware.AuthMiddleware(cfg))
+			{
+				protectedNotifications.GET("", notificationHandler.GetNotifications)
+				protectedNotifications.PATCH("/:id/read", notificationHandler.MarkNotificationRead)
+				protectedNotifications.PATCH("/read-all", notificationHandler.MarkAllNotificationsRead)
+			}
 		}
 		storages := api.Group("/storages")
 		{
