@@ -109,7 +109,8 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 					protectedPost.DELETE("/reposts", contentHandler.UndoRepost)
 				}
 			}
-			protectedContentUsers := protectedContent.Group("/users")
+			protectedContentUsers := contents.Group("/users")
+			protectedContentUsers.Use(middleware.AuthMiddleware(cfg))
 			{
 				protectedContentUsers.POST("/:userID/follow", contentHandler.FollowUser)
 				protectedContentUsers.DELETE("/:userID/follow", contentHandler.UnfollowUser)
