@@ -28,6 +28,13 @@ type Config struct {
 	FeedServiceGRPCAddr         string
 	NotificationServiceGRPCAddr string
 	StorageServiceGRPCAddr      string
+
+	SupabaseStorageBucket     string
+	SupabaseS3Endpoint        string
+	SupabaseS3Region          string
+	SupabaseS3AccessKeyID     string
+	SupabaseS3SecretAccessKey string
+	SupabasePublicStorageURL  string
 }
 
 func Load(serviceName string, defaultPort string) Config {
@@ -55,6 +62,13 @@ func Load(serviceName string, defaultPort string) Config {
 		FeedServiceGRPCAddr:         getEnv("FEED_SERVICE_GRPC_ADDR", "localhost:50053"),
 		NotificationServiceGRPCAddr: getEnv("NOTIFICATION_SERVICE_GRPC_ADDR", "localhost:50054"),
 		StorageServiceGRPCAddr:      getEnv("STORAGE_SERVICE_GRPC_ADDR", "localhost:50055"),
+
+		SupabaseStorageBucket:     getEnv("SUPABASE_STORAGE_BUCKET", "threadly-media"),
+		SupabaseS3Endpoint:        getEnv("SUPABASE_S3_ENDPOINT", ""),
+		SupabaseS3Region:          getEnv("SUPABASE_S3_REGION", ""),
+		SupabaseS3AccessKeyID:     getEnv("SUPABASE_S3_ACCESS_KEY_ID", ""),
+		SupabaseS3SecretAccessKey: getEnv("SUPABASE_S3_SECRET_ACCESS_KEY", ""),
+		SupabasePublicStorageURL:  getEnv("SUPABASE_PUBLIC_STORAGE_URL", ""),
 	}
 }
 

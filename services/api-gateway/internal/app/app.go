@@ -142,6 +142,11 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 		storages := api.Group("/storages")
 		{
 			storages.GET("/health", storageHandler.GetHealth)
+			protectedStorages := storages.Group("")
+			protectedStorages.Use(middleware.AuthMiddleware(cfg))
+			{
+				protectedStorages.POST("/upload", storageHandler.UploadMedia)
+			}
 		}
 	}
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
 
@@ -9,6 +10,9 @@ import (
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
 	storagepb "github.com/trungquantrannguyen/threadly/proto/storage"
 	storagegrpc "github.com/trungquantrannguyen/threadly/services/storage-service/internal/grpc"
+	"github.com/trungquantrannguyen/threadly/services/storage-service/internal/provider"
+	"github.com/trungquantrannguyen/threadly/services/storage-service/internal/repository"
+	"github.com/trungquantrannguyen/threadly/services/storage-service/internal/service"
 	"google.golang.org/grpc"
 )
 
@@ -37,8 +41,16 @@ func main() {
 			Msg("Failed to listen for storage service grpc server")
 	}
 
+	storageProvider, err := provider.NewSupabaseStorageProvider(context.Background(), cfg)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to create Supabase storage provider")
+	}
+
+	mediaRepo := repository.NewMediaRepository(dtb)
+	storageService := service.NewStorageService(mediaRepo, storageProvider)
+
 	grpcServer := grpc.NewServer()
-	storageGrpcServer := storagegrpc.NewStorageServiceServer(cfg, log)
+	storageGrpcServer := storagegrpc.NewStorageServiceServer(cfg, log, storageService)
 	storagepb.RegisterStorageServiceServer(grpcServer, storageGrpcServer)
 
 	log.Info().

@@ -42,6 +42,18 @@ func (c *StorageClient) GetHealth(ctx context.Context) (*storagepb.GetStorageSer
 	return c.client.GetHealth(ctx, &storagepb.GetStorageServiceHealthRequest{})
 }
 
+func (c *StorageClient) UploadMedia(ctx context.Context, uploaderID string, filename string, contentType string, content []byte) (*storagepb.UploadMediaResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	return c.client.UploadMedia(ctx, &storagepb.UploadMediaRequest{
+		UploaderId:  uploaderID,
+		Filename:    filename,
+		ContentType: contentType,
+		Content:     content,
+	})
+}
+
 func (c *StorageClient) Close() error {
 	return c.conn.Close()
 }

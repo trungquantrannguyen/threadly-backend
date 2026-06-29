@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StorageService_GetHealth_FullMethodName = "/storage.StorageService/GetHealth"
+	StorageService_GetHealth_FullMethodName   = "/storage.StorageService/GetHealth"
+	StorageService_UploadMedia_FullMethodName = "/storage.StorageService/UploadMedia"
 )
 
 // StorageServiceClient is the client API for StorageService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageServiceClient interface {
 	GetHealth(ctx context.Context, in *GetStorageServiceHealthRequest, opts ...grpc.CallOption) (*GetStorageServiceHealthResponse, error)
+	UploadMedia(ctx context.Context, in *UploadMediaRequest, opts ...grpc.CallOption) (*UploadMediaResponse, error)
 }
 
 type storageServiceClient struct {
@@ -47,11 +49,22 @@ func (c *storageServiceClient) GetHealth(ctx context.Context, in *GetStorageServ
 	return out, nil
 }
 
+func (c *storageServiceClient) UploadMedia(ctx context.Context, in *UploadMediaRequest, opts ...grpc.CallOption) (*UploadMediaResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UploadMediaResponse)
+	err := c.cc.Invoke(ctx, StorageService_UploadMedia_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StorageServiceServer is the server API for StorageService service.
 // All implementations must embed UnimplementedStorageServiceServer
 // for forward compatibility.
 type StorageServiceServer interface {
 	GetHealth(context.Context, *GetStorageServiceHealthRequest) (*GetStorageServiceHealthResponse, error)
+	UploadMedia(context.Context, *UploadMediaRequest) (*UploadMediaResponse, error)
 	mustEmbedUnimplementedStorageServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedStorageServiceServer struct{}
 
 func (UnimplementedStorageServiceServer) GetHealth(context.Context, *GetStorageServiceHealthRequest) (*GetStorageServiceHealthResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetHealth not implemented")
+}
+func (UnimplementedStorageServiceServer) UploadMedia(context.Context, *UploadMediaRequest) (*UploadMediaResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UploadMedia not implemented")
 }
 func (UnimplementedStorageServiceServer) mustEmbedUnimplementedStorageServiceServer() {}
 func (UnimplementedStorageServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +120,24 @@ func _StorageService_GetHealth_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StorageService_UploadMedia_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UploadMediaRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).UploadMedia(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_UploadMedia_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).UploadMedia(ctx, req.(*UploadMediaRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StorageService_ServiceDesc is the grpc.ServiceDesc for StorageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetHealth",
 			Handler:    _StorageService_GetHealth_Handler,
+		},
+		{
+			MethodName: "UploadMedia",
+			Handler:    _StorageService_UploadMedia_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

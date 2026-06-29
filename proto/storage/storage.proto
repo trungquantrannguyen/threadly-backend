@@ -5,6 +5,7 @@ option go_package = "threadly/proto/storage;storagev1";
 
 service StorageService {
     rpc GetHealth(GetStorageServiceHealthRequest) returns (GetStorageServiceHealthResponse);
+    rpc UploadMedia(UploadMediaRequest) returns (UploadMediaResponse);
 }
 
 message GetStorageServiceHealthRequest {}
@@ -14,4 +15,20 @@ message GetStorageServiceHealthResponse {
     string status = 2;
     string env = 3;
     string checked_at = 4;
+}
+
+message UploadMediaRequest {
+    string uploader_id = 1;
+    string filename = 2;
+    string content_type = 3;
+    bytes content = 4;
+}
+
+message UploadMediaResponse {
+    string id = 1;
+    string url = 2;
+    string storage_key = 3;
+    string mime_type = 4;
+    int64 size_bytes = 5;
+    string created_at = 6;
 }

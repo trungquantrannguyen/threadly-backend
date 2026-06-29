@@ -1202,6 +1202,41 @@ paths:
       summary: Get Storage service health
       tags:
       - Storage
+  /storages/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload an image file
+      parameters:
+      - description: Media file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload media
+      tags:
+      - Storage
   /users/health:
     get:
       consumes:
