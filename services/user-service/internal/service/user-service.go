@@ -17,7 +17,7 @@ import (
 var (
 	ErrInvalidCredential   = errors.New("Invalid email/username or password")
 	ErrInvalidRefreshToken = errors.New("Invalid refresh token")
-	ErrUnauthorized        = errors.New("unauthorized")
+	ErrUnauthorized        = errors.New("Unauthorized")
 	ErrInvalidProfile      = errors.New("invalid profile data")
 )
 

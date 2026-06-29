@@ -1,10 +1,13 @@
 package app
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/trungquantrannguyen/threadly/pkg/cache"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	"github.com/trungquantrannguyen/threadly/pkg/middleware"
 	"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
@@ -15,6 +18,8 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 	if cfg.AppEnv == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
+
+	redisClient := cache.NewRedisClient(cfg)
 
 	router := gin.New()
 
@@ -58,15 +63,16 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 
 	router.GET("/health", healthHandler.Check)
 	api := router.Group("/api")
+	api.Use(middleware.RedisRateLimiter(redisClient, 100, time.Minute))
 	{
 		api.GET("/health", healthHandler.Check)
 
 		users := api.Group("/users")
 		{
 			users.GET("/health", userHandler.GetHealth)
-			users.POST("/register", userHandler.Register)
-			users.POST("/login", userHandler.Login)
-			users.POST("/refresh", userHandler.RefreshToken)
+			users.POST("/register", middleware.RedisRateLimiter(redisClient, 10, time.Minute), userHandler.Register)
+			users.POST("/login", middleware.RedisRateLimiter(redisClient, 10, time.Minute), userHandler.Login)
+			users.POST("/refresh", middleware.RedisRateLimiter(redisClient, 30, time.Minute), userHandler.RefreshToken)
 			protectedUsers := users.Group("")
 			protectedUsers.Use(middleware.AuthMiddleware(cfg))
 			{

@@ -1,15 +1,19 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/trungquantrannguyen/threadly/db"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	"github.com/trungquantrannguyen/threadly/pkg/logger"
 	"google.golang.org/grpc"
 
+	sharedcache "github.com/trungquantrannguyen/threadly/pkg/cache"
 	feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
+	feedcache "github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache"
 	feedgrpc "github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc"
 	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository"
 	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/service"
@@ -41,11 +45,19 @@ func main() {
 	}
 
 	feedRepo := repository.NewFeedRepository(dtb)
+
 	feedService := service.NewFeedService(feedRepo, log)
+	redisClient := sharedcache.NewRedisClient(cfg)
+	defer redisClient.Close()
+	homeFeedCache := feedcache.NewFeedCache(redisClient, 60*time.Second)
+
+	if err := sharedcache.Ping(context.Background(), redisClient); err != nil {
+		log.Warn().Err(err).Msg("Redis unavailable, feed cache disabled or degraded")
+	}
 
 	grpcServer := grpc.NewServer()
 
-	feedGrpcServer := feedgrpc.NewFeedServiceServer(cfg, log, feedService)
+	feedGrpcServer := feedgrpc.NewFeedServiceServer(cfg, log, feedService, homeFeedCache)
 	feedpb.RegisterFeedServiceServer(grpcServer, feedGrpcServer)
 
 	log.Info().

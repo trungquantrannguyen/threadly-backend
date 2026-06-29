@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
+	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache"
 	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -17,13 +18,15 @@ type FeedServiceServer struct {
 	cfg         config.Config
 	log         zerolog.Logger
 	feedService service.FeedService
+	feedCache   cache.FeedCache
 }
 
-func NewFeedServiceServer(cfg config.Config, log zerolog.Logger, feedService service.FeedService) *FeedServiceServer {
+func NewFeedServiceServer(cfg config.Config, log zerolog.Logger, feedService service.FeedService, feedCache cache.FeedCache) *FeedServiceServer {
 	return &FeedServiceServer{
 		cfg:         cfg,
 		log:         log,
 		feedService: feedService,
+		feedCache:   feedCache,
 	}
 }
 
@@ -38,6 +41,19 @@ func (s *FeedServiceServer) GetHealth(ctx context.Context, req *feedpb.GetFeedSe
 }
 
 func (s *FeedServiceServer) GetHomeFeed(ctx context.Context, req *feedpb.GetHomeFeedRequest) (*feedpb.HomeFeedResponse, error) {
+	cachedFeed, err := s.feedCache.GetHomeFeed(ctx, req.GetUserId(), req.GetLimit(), req.GetCursor())
+	if err == nil {
+		s.log.Info().
+			Str("user_id", req.GetUserId()).
+			Msg("home feed cache hit")
+
+		return cachedFeed, nil
+	}
+
+	s.log.Info().
+		Str("user_id", req.GetUserId()).
+		Msg("home feed cache miss")
+
 	posts, nextCursor, err := s.feedService.GetHomeFeed(
 		ctx,
 		req.GetUserId(),
@@ -74,10 +90,19 @@ func (s *FeedServiceServer) GetHomeFeed(ctx context.Context, req *feedpb.GetHome
 		})
 	}
 
-	return &feedpb.HomeFeedResponse{
+	res := &feedpb.HomeFeedResponse{
 		Posts:      resPosts,
 		NextCursor: nextCursor,
-	}, nil
+	}
+
+	if err := s.feedCache.SetHomeFeed(ctx, req.GetUserId(), req.GetLimit(), req.GetCursor(), res); err != nil {
+		s.log.Warn().
+			Err(err).
+			Str("user_id", req.GetUserId()).
+			Msg("failed to cache home feed")
+	}
+
+	return res, nil
 }
 
 func stringValue(value *string) string {
