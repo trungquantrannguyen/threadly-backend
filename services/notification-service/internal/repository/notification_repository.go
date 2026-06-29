@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	dbmodel "github.com/trungquantrannguyen/threadly/db/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type NotificationRepository interface {
@@ -27,7 +28,12 @@ func NewNotificationRepository(db *gorm.DB) NotificationRepository {
 }
 
 func (r *notificationRepository) Create(ctx context.Context, notification *dbmodel.Notification) error {
-	return r.db.WithContext(ctx).Create(notification).Error
+	return r.db.WithContext(ctx).
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "event_id"}},
+			DoNothing: true,
+		}).
+		Create(notification).Error
 }
 
 func (r *notificationRepository) FindByRecipientID(ctx context.Context, recipientID uuid.UUID, limit int) ([]dbmodel.Notification, error) {

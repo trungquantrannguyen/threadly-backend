@@ -63,6 +63,11 @@ func (s *notificationService) CreateFromEvent(ctx context.Context, event messagi
 }
 
 func (s *notificationService) createFollowNotification(ctx context.Context, event messaging.Event) error {
+	eventID, err := parseEventID(event)
+	if err != nil {
+		return err
+	}
+
 	if event.ActorID == "" || event.TargetUserID == "" {
 		return ErrInvalidNotificationEvent
 	}
@@ -89,6 +94,7 @@ func (s *notificationService) createFollowNotification(ctx context.Context, even
 	}
 
 	notification := &dbmodel.Notification{
+		EventID:     eventID,
 		RecipientID: recipientID,
 		ActorID:     &actorID,
 		Type:        NotificationTypeUserFollowed,
@@ -107,6 +113,11 @@ func (s *notificationService) createPostNotification(
 	notificationType string,
 	message string,
 ) error {
+	eventID, err := parseEventID(event)
+	if err != nil {
+		return err
+	}
+
 	if event.ActorID == "" || event.AuthorID == "" || event.PostID == "" {
 		return ErrInvalidNotificationEvent
 	}
@@ -138,6 +149,7 @@ func (s *notificationService) createPostNotification(
 	}
 
 	notification := &dbmodel.Notification{
+		EventID:     eventID,
 		RecipientID: recipientID,
 		ActorID:     &actorID,
 		Type:        notificationType,
@@ -151,6 +163,11 @@ func (s *notificationService) createPostNotification(
 }
 
 func (s *notificationService) createReplyNotification(ctx context.Context, event messaging.Event) error {
+	eventID, err := parseEventID(event)
+	if err != nil {
+		return err
+	}
+
 	if event.ActorID == "" || event.TargetUserID == "" || event.PostID == "" {
 		return ErrInvalidNotificationEvent
 	}
@@ -182,6 +199,7 @@ func (s *notificationService) createReplyNotification(ctx context.Context, event
 	}
 
 	notification := &dbmodel.Notification{
+		EventID:     eventID,
 		RecipientID: recipientID,
 		ActorID:     &actorID,
 		Type:        NotificationTypePostReplied,
@@ -267,4 +285,17 @@ func toNotificationResponse(notification dbmodel.Notification) dto.NotificationR
 		ReadAt:      readAt,
 		CreatedAt:   notification.CreatedAt.Format(time.RFC3339),
 	}
+}
+
+func parseEventID(event messaging.Event) (uuid.UUID, error) {
+	if event.EventID == "" {
+		return uuid.Nil, ErrInvalidNotificationEvent
+	}
+
+	eventID, err := uuid.Parse(event.EventID)
+	if err != nil {
+		return uuid.Nil, ErrInvalidNotificationEvent
+	}
+
+	return eventID, nil
 }
