@@ -18,6 +18,13 @@ definitions:
     required:
     - content
     type: object
+  dto.DeleteUserResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   dto.ErrorResponse:
     properties:
       errors: {}
@@ -241,9 +248,44 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.UpdateProfileRequest:
+    properties:
+      avatar_url:
+        maxLength: 2048
+        type: string
+      banner_url:
+        maxLength: 2048
+        type: string
+      bio:
+        maxLength: 280
+        type: string
+      display_name:
+        maxLength: 80
+        minLength: 1
+        type: string
+      location:
+        maxLength: 100
+        type: string
+      website_url:
+        maxLength: 2048
+        type: string
+    type: object
+  dto.UpdateProfileResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.UserData'
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   dto.UserData:
     properties:
       avatar_url:
+        type: string
+      banner_url:
+        type: string
+      bio:
         type: string
       display_name:
         type: string
@@ -251,9 +293,13 @@ definitions:
         type: string
       id:
         type: string
+      location:
+        type: string
       role:
         type: string
       username:
+        type: string
+      website_url:
         type: string
     type: object
   dto.UserSummary:
@@ -1035,6 +1081,32 @@ paths:
       tags:
       - Users
   /users/me:
+    delete:
+      description: Soft deletes the authenticated user's account.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeleteUserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete current user
+      tags:
+      - Users
     get:
       description: Returns the authenticated user's profile.
       produces:
@@ -1055,6 +1127,45 @@ paths:
       security:
       - BearerAuth: []
       summary: Get current user
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Updates the authenticated user's profile fields.
+      parameters:
+      - description: Update profile request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateProfileResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update current user profile
       tags:
       - Users
   /users/refresh:

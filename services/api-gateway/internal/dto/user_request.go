@@ -19,3 +19,12 @@ type RefreshTokenRequest struct {
 type LogoutRequest struct {
 	RefreshToken string `json:"refresh_token" binding:"required"`
 }
+
+type UpdateProfileRequest struct {
+	DisplayName *string `json:"display_name" binding:"omitempty,min=1,max=80"`
+	Bio         *string `json:"bio" binding:"omitempty,max=280"`
+	AvatarURL   *string `json:"avatar_url" binding:"omitempty,max=2048"`
+	BannerURL   *string `json:"banner_url" binding:"omitempty,max=2048"`
+	Location    *string `json:"location" binding:"omitempty,max=100"`
+	WebsiteURL  *string `json:"website_url" binding:"omitempty,max=2048"`
+}

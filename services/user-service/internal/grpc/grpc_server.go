@@ -104,6 +104,31 @@ func (s *UserServiceServer) GetMe(ctx context.Context, req *userpb.GetMeRequest)
 	return toProtoUserResponse(*res), nil
 }
 
+func (s *UserServiceServer) UpdateProfile(ctx context.Context, req *userpb.UpdateProfileRequest) (*userpb.AuthUserResponse, error) {
+	res, err := s.userService.UpdateProfile(ctx, dto.UpdateProfileRequest{
+		UserID:      req.GetUserID(),
+		DisplayName: req.DisplayName,
+		Bio:         req.Bio,
+		AvatarURL:   req.AvatarURL,
+		BannerURL:   req.BannerURL,
+		Location:    req.Location,
+		WebsiteURL:  req.WebsiteURL,
+	})
+	if err != nil {
+		return nil, mapUserServiceError(err)
+	}
+
+	return toProtoUserResponse(*res), nil
+}
+
+func (s *UserServiceServer) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequest) (*userpb.DeleteUserResponse, error) {
+	if err := s.userService.DeleteUser(ctx, req.GetUserID()); err != nil {
+		return nil, mapUserServiceError(err)
+	}
+
+	return &userpb.DeleteUserResponse{}, nil
+}
+
 func toProtoAuthResponse(res *dto.AuthResponse) *userpb.AuthResponse {
 	return &userpb.AuthResponse{
 		User:         toProtoUserResponse(res.User),
@@ -120,6 +145,10 @@ func toProtoUserResponse(user dto.AuthUserResponse) *userpb.AuthUserResponse {
 		DisplayName: user.DisplayName,
 		AvatarURL:   user.AvatarURL,
 		Role:        user.Role,
+		Bio:         user.Bio,
+		BannerURL:   user.BannerURL,
+		Location:    user.Location,
+		WebsiteURL:  user.WebsiteURL,
 	}
 }
 
@@ -145,6 +174,9 @@ func mapUserServiceError(err error) error {
 
 	case errors.Is(err, service.ErrUnauthorized):
 		return status.Error(codes.PermissionDenied, "You do not have permission to perform this action")
+
+	case errors.Is(err, service.ErrInvalidProfile):
+		return status.Error(codes.InvalidArgument, "Invalid profile data")
 	default:
 		return status.Error(codes.Internal, "Internal server error")
 	}

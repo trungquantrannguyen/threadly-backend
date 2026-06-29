@@ -34,6 +34,10 @@ type AuthUserResponse struct {
 	DisplayName string
 	Role        string
 	AvatarURL   string
+	Bio         string
+	BannerURL   string
+	Location    string
+	WebsiteURL  string
 	Message     string
 }
 
@@ -42,4 +46,14 @@ type AuthResponse struct {
 	AccessToken  string
 	RefreshToken string
 	Message      string
+}
+
+type UpdateProfileRequest struct {
+	UserID      string
+	DisplayName *string
+	Bio         *string
+	AvatarURL   *string
+	BannerURL   *string
+	Location    *string
+	WebsiteURL  *string
 }

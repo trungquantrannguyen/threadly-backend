@@ -72,6 +72,8 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 			{
 				protectedUsers.POST("/logout", userHandler.Logout)
 				protectedUsers.GET("/me", userHandler.GetMe)
+				protectedUsers.PATCH("/me", userHandler.UpdateProfile)
+				protectedUsers.DELETE("/me", userHandler.DeleteUser)
 			}
 		}
 		contents := api.Group("/contents")

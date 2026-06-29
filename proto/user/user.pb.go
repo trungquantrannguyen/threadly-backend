@@ -477,6 +477,10 @@ type AuthUserResponse struct {
 	DisplayName   string                 `protobuf:"bytes,4,opt,name=displayName,proto3" json:"displayName,omitempty"`
 	Role          string                 `protobuf:"bytes,5,opt,name=role,proto3" json:"role,omitempty"`
 	AvatarURL     string                 `protobuf:"bytes,6,opt,name=avatarURL,proto3" json:"avatarURL,omitempty"`
+	Bio           string                 `protobuf:"bytes,7,opt,name=bio,proto3" json:"bio,omitempty"`
+	BannerURL     string                 `protobuf:"bytes,8,opt,name=bannerURL,proto3" json:"bannerURL,omitempty"`
+	Location      string                 `protobuf:"bytes,9,opt,name=location,proto3" json:"location,omitempty"`
+	WebsiteURL    string                 `protobuf:"bytes,10,opt,name=websiteURL,proto3" json:"websiteURL,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -553,6 +557,34 @@ func (x *AuthUserResponse) GetAvatarURL() string {
 	return ""
 }
 
+func (x *AuthUserResponse) GetBio() string {
+	if x != nil {
+		return x.Bio
+	}
+	return ""
+}
+
+func (x *AuthUserResponse) GetBannerURL() string {
+	if x != nil {
+		return x.BannerURL
+	}
+	return ""
+}
+
+func (x *AuthUserResponse) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *AuthUserResponse) GetWebsiteURL() string {
+	if x != nil {
+		return x.WebsiteURL
+	}
+	return ""
+}
+
 type AuthResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *AuthUserResponse      `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
@@ -613,6 +645,178 @@ func (x *AuthResponse) GetRefreshToken() string {
 	return ""
 }
 
+type UpdateProfileRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	DisplayName   *string                `protobuf:"bytes,2,opt,name=displayName,proto3,oneof" json:"displayName,omitempty"`
+	Bio           *string                `protobuf:"bytes,3,opt,name=bio,proto3,oneof" json:"bio,omitempty"`
+	AvatarURL     *string                `protobuf:"bytes,4,opt,name=avatarURL,proto3,oneof" json:"avatarURL,omitempty"`
+	BannerURL     *string                `protobuf:"bytes,5,opt,name=bannerURL,proto3,oneof" json:"bannerURL,omitempty"`
+	Location      *string                `protobuf:"bytes,6,opt,name=location,proto3,oneof" json:"location,omitempty"`
+	WebsiteURL    *string                `protobuf:"bytes,7,opt,name=websiteURL,proto3,oneof" json:"websiteURL,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateProfileRequest) Reset() {
+	*x = UpdateProfileRequest{}
+	mi := &file_proto_user_user_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateProfileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateProfileRequest) ProtoMessage() {}
+
+func (x *UpdateProfileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_user_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateProfileRequest.ProtoReflect.Descriptor instead.
+func (*UpdateProfileRequest) Descriptor() ([]byte, []int) {
+	return file_proto_user_user_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *UpdateProfileRequest) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetDisplayName() string {
+	if x != nil && x.DisplayName != nil {
+		return *x.DisplayName
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetBio() string {
+	if x != nil && x.Bio != nil {
+		return *x.Bio
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetAvatarURL() string {
+	if x != nil && x.AvatarURL != nil {
+		return *x.AvatarURL
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetBannerURL() string {
+	if x != nil && x.BannerURL != nil {
+		return *x.BannerURL
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetLocation() string {
+	if x != nil && x.Location != nil {
+		return *x.Location
+	}
+	return ""
+}
+
+func (x *UpdateProfileRequest) GetWebsiteURL() string {
+	if x != nil && x.WebsiteURL != nil {
+		return *x.WebsiteURL
+	}
+	return ""
+}
+
+type DeleteUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserID        string                 `protobuf:"bytes,1,opt,name=userID,proto3" json:"userID,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteUserRequest) Reset() {
+	*x = DeleteUserRequest{}
+	mi := &file_proto_user_user_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteUserRequest) ProtoMessage() {}
+
+func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_user_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
+func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
+	return file_proto_user_user_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *DeleteUserRequest) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+type DeleteUserResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteUserResponse) Reset() {
+	*x = DeleteUserResponse{}
+	mi := &file_proto_user_user_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteUserResponse) ProtoMessage() {}
+
+func (x *DeleteUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_user_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteUserResponse.ProtoReflect.Descriptor instead.
+func (*DeleteUserResponse) Descriptor() ([]byte, []int) {
+	return file_proto_user_user_proto_rawDescGZIP(), []int{12}
+}
+
 var File_proto_user_user_proto protoreflect.FileDescriptor
 
 const file_proto_user_user_proto_rawDesc = "" +
@@ -646,25 +850,56 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\x06userID\x18\x02 \x01(\tR\x06userID\"&\n" +
 	"\fGetMeRequest\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\"\x10\n" +
-	"\x0eLogoutResponse\"\xa8\x01\n" +
+	"\x0eLogoutResponse\"\x94\x02\n" +
 	"\x10AuthUserResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1a\n" +
 	"\busername\x18\x03 \x01(\tR\busername\x12 \n" +
 	"\vdisplayName\x18\x04 \x01(\tR\vdisplayName\x12\x12\n" +
 	"\x04role\x18\x05 \x01(\tR\x04role\x12\x1c\n" +
-	"\tavatarURL\x18\x06 \x01(\tR\tavatarURL\"\x80\x01\n" +
+	"\tavatarURL\x18\x06 \x01(\tR\tavatarURL\x12\x10\n" +
+	"\x03bio\x18\a \x01(\tR\x03bio\x12\x1c\n" +
+	"\tbannerURL\x18\b \x01(\tR\tbannerURL\x12\x1a\n" +
+	"\blocation\x18\t \x01(\tR\blocation\x12\x1e\n" +
+	"\n" +
+	"websiteURL\x18\n" +
+	" \x01(\tR\n" +
+	"websiteURL\"\x80\x01\n" +
 	"\fAuthResponse\x12*\n" +
 	"\x04user\x18\x01 \x01(\v2\x16.user.AuthUserResponseR\x04user\x12 \n" +
 	"\vaccessToken\x18\x02 \x01(\tR\vaccessToken\x12\"\n" +
-	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken2\xf2\x02\n" +
+	"\frefreshToken\x18\x03 \x01(\tR\frefreshToken\"\xc8\x02\n" +
+	"\x14UpdateProfileRequest\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\x12%\n" +
+	"\vdisplayName\x18\x02 \x01(\tH\x00R\vdisplayName\x88\x01\x01\x12\x15\n" +
+	"\x03bio\x18\x03 \x01(\tH\x01R\x03bio\x88\x01\x01\x12!\n" +
+	"\tavatarURL\x18\x04 \x01(\tH\x02R\tavatarURL\x88\x01\x01\x12!\n" +
+	"\tbannerURL\x18\x05 \x01(\tH\x03R\tbannerURL\x88\x01\x01\x12\x1f\n" +
+	"\blocation\x18\x06 \x01(\tH\x04R\blocation\x88\x01\x01\x12#\n" +
+	"\n" +
+	"websiteURL\x18\a \x01(\tH\x05R\n" +
+	"websiteURL\x88\x01\x01B\x0e\n" +
+	"\f_displayNameB\x06\n" +
+	"\x04_bioB\f\n" +
+	"\n" +
+	"_avatarURLB\f\n" +
+	"\n" +
+	"_bannerURLB\v\n" +
+	"\t_locationB\r\n" +
+	"\v_websiteURL\"+\n" +
+	"\x11DeleteUserRequest\x12\x16\n" +
+	"\x06userID\x18\x01 \x01(\tR\x06userID\"\x14\n" +
+	"\x12DeleteUserResponse2\xf8\x03\n" +
 	"\vUserService\x12R\n" +
 	"\tGetHealth\x12!.user.GetUserServiceHealthRequest\x1a\".user.GetUserServiceHealthResponse\x125\n" +
 	"\bRegister\x12\x15.user.RegisterRequest\x1a\x12.user.AuthResponse\x12/\n" +
 	"\x05Login\x12\x12.user.LoginRequest\x1a\x12.user.AuthResponse\x12=\n" +
 	"\fRefreshToken\x12\x19.user.RefreshTokenRequest\x1a\x12.user.AuthResponse\x123\n" +
 	"\x06Logout\x12\x13.user.LogoutRequest\x1a\x14.user.LogoutResponse\x123\n" +
-	"\x05GetMe\x12\x12.user.GetMeRequest\x1a\x16.user.AuthUserResponseB\x1cZ\x1athreadly/proto/user;userv1b\x06proto3"
+	"\x05GetMe\x12\x12.user.GetMeRequest\x1a\x16.user.AuthUserResponse\x12C\n" +
+	"\rUpdateProfile\x12\x1a.user.UpdateProfileRequest\x1a\x16.user.AuthUserResponse\x12?\n" +
+	"\n" +
+	"DeleteUser\x12\x17.user.DeleteUserRequest\x1a\x18.user.DeleteUserResponseB\x1cZ\x1athreadly/proto/user;userv1b\x06proto3"
 
 var (
 	file_proto_user_user_proto_rawDescOnce sync.Once
@@ -678,7 +913,7 @@ func file_proto_user_user_proto_rawDescGZIP() []byte {
 	return file_proto_user_user_proto_rawDescData
 }
 
-var file_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_proto_user_user_proto_goTypes = []any{
 	(*GetUserServiceHealthRequest)(nil),  // 0: user.GetUserServiceHealthRequest
 	(*GetUserServiceHealthResponse)(nil), // 1: user.GetUserServiceHealthResponse
@@ -690,26 +925,33 @@ var file_proto_user_user_proto_goTypes = []any{
 	(*LogoutResponse)(nil),               // 7: user.LogoutResponse
 	(*AuthUserResponse)(nil),             // 8: user.AuthUserResponse
 	(*AuthResponse)(nil),                 // 9: user.AuthResponse
+	(*UpdateProfileRequest)(nil),         // 10: user.UpdateProfileRequest
+	(*DeleteUserRequest)(nil),            // 11: user.DeleteUserRequest
+	(*DeleteUserResponse)(nil),           // 12: user.DeleteUserResponse
 }
 var file_proto_user_user_proto_depIdxs = []int32{
-	8, // 0: user.AuthResponse.user:type_name -> user.AuthUserResponse
-	0, // 1: user.UserService.GetHealth:input_type -> user.GetUserServiceHealthRequest
-	2, // 2: user.UserService.Register:input_type -> user.RegisterRequest
-	3, // 3: user.UserService.Login:input_type -> user.LoginRequest
-	4, // 4: user.UserService.RefreshToken:input_type -> user.RefreshTokenRequest
-	5, // 5: user.UserService.Logout:input_type -> user.LogoutRequest
-	6, // 6: user.UserService.GetMe:input_type -> user.GetMeRequest
-	1, // 7: user.UserService.GetHealth:output_type -> user.GetUserServiceHealthResponse
-	9, // 8: user.UserService.Register:output_type -> user.AuthResponse
-	9, // 9: user.UserService.Login:output_type -> user.AuthResponse
-	9, // 10: user.UserService.RefreshToken:output_type -> user.AuthResponse
-	7, // 11: user.UserService.Logout:output_type -> user.LogoutResponse
-	8, // 12: user.UserService.GetMe:output_type -> user.AuthUserResponse
-	7, // [7:13] is the sub-list for method output_type
-	1, // [1:7] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	8,  // 0: user.AuthResponse.user:type_name -> user.AuthUserResponse
+	0,  // 1: user.UserService.GetHealth:input_type -> user.GetUserServiceHealthRequest
+	2,  // 2: user.UserService.Register:input_type -> user.RegisterRequest
+	3,  // 3: user.UserService.Login:input_type -> user.LoginRequest
+	4,  // 4: user.UserService.RefreshToken:input_type -> user.RefreshTokenRequest
+	5,  // 5: user.UserService.Logout:input_type -> user.LogoutRequest
+	6,  // 6: user.UserService.GetMe:input_type -> user.GetMeRequest
+	10, // 7: user.UserService.UpdateProfile:input_type -> user.UpdateProfileRequest
+	11, // 8: user.UserService.DeleteUser:input_type -> user.DeleteUserRequest
+	1,  // 9: user.UserService.GetHealth:output_type -> user.GetUserServiceHealthResponse
+	9,  // 10: user.UserService.Register:output_type -> user.AuthResponse
+	9,  // 11: user.UserService.Login:output_type -> user.AuthResponse
+	9,  // 12: user.UserService.RefreshToken:output_type -> user.AuthResponse
+	7,  // 13: user.UserService.Logout:output_type -> user.LogoutResponse
+	8,  // 14: user.UserService.GetMe:output_type -> user.AuthUserResponse
+	8,  // 15: user.UserService.UpdateProfile:output_type -> user.AuthUserResponse
+	12, // 16: user.UserService.DeleteUser:output_type -> user.DeleteUserResponse
+	9,  // [9:17] is the sub-list for method output_type
+	1,  // [1:9] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_proto_user_user_proto_init() }
@@ -717,13 +959,14 @@ func file_proto_user_user_proto_init() {
 	if File_proto_user_user_proto != nil {
 		return
 	}
+	file_proto_user_user_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_user_user_proto_rawDesc), len(file_proto_user_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

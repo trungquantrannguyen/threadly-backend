@@ -18,6 +18,7 @@ var (
 	ErrInvalidCredential   = errors.New("Invalid email/username or password")
 	ErrInvalidRefreshToken = errors.New("Invalid refresh token")
 	ErrUnauthorized        = errors.New("unauthorized")
+	ErrInvalidProfile      = errors.New("invalid profile data")
 )
 
 type UserService interface {
@@ -26,6 +27,8 @@ type UserService interface {
 	RefreshToken(ctx context.Context, req dto.RefreshTokenRequest) (*dto.AuthResponse, error)
 	Logout(ctx context.Context, req dto.LogoutRequest) error
 	GetMe(ctx context.Context, userID string) (*dto.AuthUserResponse, error)
+	UpdateProfile(ctx context.Context, req dto.UpdateProfileRequest) (*dto.AuthUserResponse, error)
+	DeleteUser(ctx context.Context, userID string) error
 }
 
 type userService struct {
@@ -153,14 +156,77 @@ func (s *userService) GetMe(ctx context.Context, userID string) (*dto.AuthUserRe
 		return nil, err
 	}
 
-	return &dto.AuthUserResponse{
-		ID:          user.ID.String(),
-		Email:       user.Email,
-		Username:    user.Username,
-		DisplayName: user.DisplayName,
-		Role:        user.Role,
-		AvatarURL:   stringValue(user.AvatarURL),
-	}, nil
+	return toAuthUserResponse(user), nil
+}
+
+func (s *userService) UpdateProfile(ctx context.Context, req dto.UpdateProfileRequest) (*dto.AuthUserResponse, error) {
+	user, err := s.userRepo.FindByID(ctx, req.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	updates := map[string]interface{}{}
+
+	if req.DisplayName != nil {
+		displayName := strings.TrimSpace(*req.DisplayName)
+		if displayName == "" || len(displayName) > 80 {
+			return nil, ErrInvalidProfile
+		}
+		updates["display_name"] = displayName
+	}
+
+	if value, ok, err := nullableProfileField(req.Bio, 280); err != nil {
+		return nil, err
+	} else if ok {
+		updates["bio"] = value
+	}
+
+	if value, ok, err := nullableProfileField(req.AvatarURL, 2048); err != nil {
+		return nil, err
+	} else if ok {
+		updates["avatar_url"] = value
+	}
+
+	if value, ok, err := nullableProfileField(req.BannerURL, 2048); err != nil {
+		return nil, err
+	} else if ok {
+		updates["banner_url"] = value
+	}
+
+	if value, ok, err := nullableProfileField(req.Location, 100); err != nil {
+		return nil, err
+	} else if ok {
+		updates["location"] = value
+	}
+
+	if value, ok, err := nullableProfileField(req.WebsiteURL, 2048); err != nil {
+		return nil, err
+	} else if ok {
+		updates["website_url"] = value
+	}
+
+	if err := s.userRepo.UpdateProfile(ctx, user, updates); err != nil {
+		return nil, err
+	}
+
+	updatedUser, err := s.userRepo.FindByID(ctx, req.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toAuthUserResponse(updatedUser), nil
+}
+
+func (s *userService) DeleteUser(ctx context.Context, userID string) error {
+	if _, err := s.userRepo.FindByID(ctx, userID); err != nil {
+		return err
+	}
+
+	if err := s.userRepo.DeleteByID(ctx, userID); err != nil {
+		return err
+	}
+
+	return s.sessionRepo.RevokeAllByUserID(ctx, userID)
 }
 
 func (s *userService) createAuthResponse(
@@ -199,19 +265,45 @@ func (s *userService) createAuthResponse(
 	if err := s.sessionRepo.Create(ctx, session); err != nil {
 		return nil, err
 	}
+	returnUser := toAuthUserResponse(user)
 
 	return &dto.AuthResponse{
-		User: dto.AuthUserResponse{
-			ID:          user.ID.String(),
-			Email:       user.Email,
-			Username:    user.Username,
-			DisplayName: user.DisplayName,
-			Role:        user.Role,
-			AvatarURL:   stringValue(user.AvatarURL),
-		},
+		User:         *returnUser,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func nullableProfileField(value *string, max int) (interface{}, bool, error) {
+	if value == nil {
+		return nil, false, nil
+	}
+
+	trimmed := strings.TrimSpace(*value)
+	if len(trimmed) > max {
+		return nil, false, ErrInvalidProfile
+	}
+
+	if trimmed == "" {
+		return nil, true, nil
+	}
+
+	return trimmed, true, nil
+}
+
+func toAuthUserResponse(user *dbmodel.User) *dto.AuthUserResponse {
+	return &dto.AuthUserResponse{
+		ID:          user.ID.String(),
+		Email:       user.Email,
+		Username:    user.Username,
+		DisplayName: user.DisplayName,
+		Role:        user.Role,
+		AvatarURL:   stringValue(user.AvatarURL),
+		Bio:         stringValue(user.Bio),
+		BannerURL:   stringValue(user.BannerURL),
+		Location:    stringValue(user.Location),
+		WebsiteURL:  stringValue(user.WebsiteURL),
+	}
 }
 
 func stringValue(value *string) string {

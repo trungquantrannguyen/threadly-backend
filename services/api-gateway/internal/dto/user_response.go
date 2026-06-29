@@ -48,6 +48,17 @@ type AuthData struct {
 	RefreshToken string   `json:"refresh_token"`
 }
 
+type UpdateProfileResponse struct {
+	Success bool     `json:"success"`
+	Message string   `json:"message"`
+	Data    UserData `json:"data"`
+}
+
+type DeleteUserResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
 type UserData struct {
 	Id          string `json:"id"`
 	Email       string `json:"email"`
@@ -55,4 +66,8 @@ type UserData struct {
 	DisplayName string `json:"display_name"`
 	Role        string `json:"role"`
 	AvatarURL   string `json:"avatar_url"`
+	Bio         string `json:"bio"`
+	BannerURL   string `json:"banner_url"`
+	Location    string `json:"location"`
+	WebsiteURL  string `json:"website_url"`
 }

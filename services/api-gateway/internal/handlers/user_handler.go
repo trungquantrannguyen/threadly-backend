@@ -255,6 +255,81 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 	})
 }
 
+// UpdateProfile godoc
+// @Summary Update current user profile
+// @Description Updates the authenticated user's profile fields.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body dto.UpdateProfileRequest true "Update profile request body"
+// @Success 200 {object} dto.UpdateProfileResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/me [patch]
+func (h *UserHandler) UpdateProfile(c *gin.Context) {
+	var req dto.UpdateProfileRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+		return
+	}
+
+	userID := middleware.GetUserID(c)
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
+	res, err := h.userClient.UpdateProfile(c.Request.Context(), &userpb.UpdateProfileRequest{
+		UserID:      userID,
+		DisplayName: req.DisplayName,
+		Bio:         req.Bio,
+		AvatarURL:   req.AvatarURL,
+		BannerURL:   req.BannerURL,
+		Location:    req.Location,
+		WebsiteURL:  req.WebsiteURL,
+	})
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to update profile")
+		HandleGRPCError(c, err)
+		return
+	}
+
+	response.OK(c, http.StatusOK, "Profile updated successfully", res)
+}
+
+// DeleteUser godoc
+// @Summary Delete current user
+// @Description Soft deletes the authenticated user's account.
+// @Tags Users
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} dto.DeleteUserResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/me [delete]
+func (h *UserHandler) DeleteUser(c *gin.Context) {
+	userID := middleware.GetUserID(c)
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
+	_, err := h.userClient.DeleteUser(c.Request.Context(), &userpb.DeleteUserRequest{
+		UserID: userID,
+	})
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to delete user")
+		HandleGRPCError(c, err)
+		return
+	}
+
+	response.OK(c, http.StatusOK, "User deleted successfully", nil)
+}
+
 func toGatewayPostResponse(post *contentpb.PostResponse) dto.PostResponse {
 	author := post.GetAuthor()
 

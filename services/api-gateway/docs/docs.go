@@ -1220,6 +1220,108 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Soft deletes the authenticated user's account.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteUserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Updates the authenticated user's profile fields.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update current user profile",
+                "parameters": [
+                    {
+                        "description": "Update profile request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateProfileResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
             }
         },
         "/users/refresh": {
@@ -1353,6 +1455,17 @@ const docTemplate = `{
                 },
                 "visibility": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.DeleteUserResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
                 }
             }
         },
@@ -1696,10 +1809,60 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.UpdateProfileRequest": {
+            "type": "object",
+            "properties": {
+                "avatar_url": {
+                    "type": "string",
+                    "maxLength": 2048
+                },
+                "banner_url": {
+                    "type": "string",
+                    "maxLength": 2048
+                },
+                "bio": {
+                    "type": "string",
+                    "maxLength": 280
+                },
+                "display_name": {
+                    "type": "string",
+                    "maxLength": 80,
+                    "minLength": 1
+                },
+                "location": {
+                    "type": "string",
+                    "maxLength": 100
+                },
+                "website_url": {
+                    "type": "string",
+                    "maxLength": 2048
+                }
+            }
+        },
+        "dto.UpdateProfileResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/dto.UserData"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "dto.UserData": {
             "type": "object",
             "properties": {
                 "avatar_url": {
+                    "type": "string"
+                },
+                "banner_url": {
+                    "type": "string"
+                },
+                "bio": {
                     "type": "string"
                 },
                 "display_name": {
@@ -1711,10 +1874,16 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "location": {
+                    "type": "string"
+                },
                 "role": {
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                },
+                "website_url": {
                     "type": "string"
                 }
             }

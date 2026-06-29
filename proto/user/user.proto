@@ -10,6 +10,8 @@ service UserService {
     rpc RefreshToken(RefreshTokenRequest) returns (AuthResponse);
     rpc Logout(LogoutRequest) returns (LogoutResponse);
     rpc GetMe(GetMeRequest) returns (AuthUserResponse);
+    rpc UpdateProfile(UpdateProfileRequest) returns (AuthUserResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 }
 
 message GetUserServiceHealthRequest {}
@@ -61,6 +63,10 @@ message AuthUserResponse {
     string displayName= 4;
     string role = 5;
     string avatarURL = 6;
+    string bio = 7;
+    string bannerURL = 8;
+    string location = 9;
+    string websiteURL = 10;
 }
 
 message AuthResponse {
@@ -68,3 +74,19 @@ message AuthResponse {
     string accessToken = 2;
     string refreshToken = 3;
 }
+
+message UpdateProfileRequest {
+    string userID = 1;
+    optional string displayName = 2;
+    optional string bio = 3;
+    optional string avatarURL = 4;
+    optional string bannerURL = 5;
+    optional string location = 6;
+    optional string websiteURL = 7;
+}
+
+message DeleteUserRequest {
+    string userID = 1;
+}
+
+message DeleteUserResponse {}

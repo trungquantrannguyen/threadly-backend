@@ -19,6 +19,8 @@ type UserRepository interface {
 	FindByID(ctx context.Context, id string) (*dbmodel.User, error)
 	FindByEmail(ctx context.Context, email string) (*dbmodel.User, error)
 	FindByUsername(ctx context.Context, username string) (*dbmodel.User, error)
+	UpdateProfile(ctx context.Context, user *dbmodel.User, updates map[string]interface{}) error
+	DeleteByID(ctx context.Context, id string) error
 }
 
 type userRepository struct {
@@ -83,6 +85,41 @@ func (r *userRepository) FindByUsername(ctx context.Context, username string) (*
 	}
 
 	return &user, nil
+}
+
+func (r *userRepository) UpdateProfile(ctx context.Context, user *dbmodel.User, updates map[string]interface{}) error {
+	if len(updates) == 0 {
+		return nil
+	}
+
+	err := r.db.WithContext(ctx).
+		Model(user).
+		Updates(updates).
+		Error
+	if err != nil {
+		if isDuplicateKeyError(err) {
+			return ErrDuplicateUser
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (r *userRepository) DeleteByID(ctx context.Context, id string) error {
+	result := r.db.WithContext(ctx).
+		Where("id = ?", id).
+		Delete(&dbmodel.User{})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return ErrUserNotFound
+	}
+
+	return nil
 }
 
 func isDuplicateKeyError(err error) bool {

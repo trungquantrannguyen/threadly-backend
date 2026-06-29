@@ -92,6 +92,26 @@ func (c *UserClient) GetMe(
 	return c.client.GetMe(ctx, req)
 }
 
+func (c *UserClient) UpdateProfile(
+	ctx context.Context,
+	req *userpb.UpdateProfileRequest,
+) (*userpb.AuthUserResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.UpdateProfile(ctx, req)
+}
+
+func (c *UserClient) DeleteUser(
+	ctx context.Context,
+	req *userpb.DeleteUserRequest,
+) (*userpb.DeleteUserResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.DeleteUser(ctx, req)
+}
+
 func (c *UserClient) Close() error {
 	return c.conn.Close()
 }
