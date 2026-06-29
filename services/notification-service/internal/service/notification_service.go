@@ -29,6 +29,7 @@ const (
 type NotificationService interface {
 	CreateFromEvent(ctx context.Context, event messaging.Event) error
 	GetNotifications(ctx context.Context, userID string, limit int) ([]dto.NotificationResponse, error)
+	GetUnreadNotificationCount(ctx context.Context, userID string) (int64, error)
 	MarkNotificationRead(ctx context.Context, userID string, notificationID string) (bool, error)
 	MarkAllNotificationsRead(ctx context.Context, userID string) (int64, error)
 }
@@ -212,6 +213,15 @@ func (s *notificationService) createReplyNotification(ctx context.Context, event
 	return s.notificationRepo.Create(ctx, notification)
 }
 
+func (s *notificationService) GetUnreadNotificationCount(ctx context.Context, userID string) (int64, error) {
+	recipientID, err := uuid.Parse(userID)
+	if err != nil {
+		return 0, ErrInvalidNotificationEvent
+	}
+
+	return s.notificationRepo.CountUnreadByRecipientID(ctx, recipientID)
+}
+
 func (s *notificationService) GetNotifications(ctx context.Context, userID string, limit int) ([]dto.NotificationResponse, error) {
 	recipientID, err := uuid.Parse(userID)
 	if err != nil {
@@ -274,6 +284,22 @@ func toNotificationResponse(notification dbmodel.Notification) dto.NotificationR
 		readAt = notification.ReadAt.Format(time.RFC3339)
 	}
 
+	var actor *dto.NotificationActorResponse
+	if notification.Actor != nil {
+		avatarURL := ""
+		if notification.Actor.AvatarURL != nil {
+			avatarURL = *notification.Actor.AvatarURL
+		}
+
+		actor = &dto.NotificationActorResponse{
+			ID:          notification.Actor.ID.String(),
+			Username:    notification.Actor.Username,
+			DisplayName: notification.Actor.DisplayName,
+			AvatarURL:   avatarURL,
+			IsVerified:  notification.Actor.IsVerified,
+		}
+	}
+
 	return dto.NotificationResponse{
 		ID:          notification.ID.String(),
 		RecipientID: notification.RecipientID.String(),
@@ -284,6 +310,7 @@ func toNotificationResponse(notification dbmodel.Notification) dto.NotificationR
 		Payload:     string(notification.Payload),
 		ReadAt:      readAt,
 		CreatedAt:   notification.CreatedAt.Format(time.RFC3339),
+		Actor:       actor,
 	}
 }
 

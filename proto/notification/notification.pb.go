@@ -232,6 +232,7 @@ type NotificationResponse struct {
 	Payload       string                 `protobuf:"bytes,7,opt,name=payload,proto3" json:"payload,omitempty"`
 	ReadAt        string                 `protobuf:"bytes,8,opt,name=read_at,json=readAt,proto3" json:"read_at,omitempty"`
 	CreatedAt     string                 `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Actor         *NotificationActor     `protobuf:"bytes,10,opt,name=actor,proto3" json:"actor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -327,6 +328,13 @@ func (x *NotificationResponse) GetCreatedAt() string {
 		return x.CreatedAt
 	}
 	return ""
+}
+
+func (x *NotificationResponse) GetActor() *NotificationActor {
+	if x != nil {
+		return x.Actor
+	}
+	return nil
 }
 
 type MarkNotificationReadRequest struct {
@@ -537,6 +545,170 @@ func (x *MarkAllNotificationsReadResponse) GetUpdatedCount() int32 {
 	return 0
 }
 
+type NotificationActor struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	AvatarUrl     string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
+	IsVerified    bool                   `protobuf:"varint,5,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NotificationActor) Reset() {
+	*x = NotificationActor{}
+	mi := &file_proto_notification_notification_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NotificationActor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NotificationActor) ProtoMessage() {}
+
+func (x *NotificationActor) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_notification_notification_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NotificationActor.ProtoReflect.Descriptor instead.
+func (*NotificationActor) Descriptor() ([]byte, []int) {
+	return file_proto_notification_notification_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *NotificationActor) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *NotificationActor) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *NotificationActor) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *NotificationActor) GetAvatarUrl() string {
+	if x != nil {
+		return x.AvatarUrl
+	}
+	return ""
+}
+
+func (x *NotificationActor) GetIsVerified() bool {
+	if x != nil {
+		return x.IsVerified
+	}
+	return false
+}
+
+type GetUnreadNotificationCountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUnreadNotificationCountRequest) Reset() {
+	*x = GetUnreadNotificationCountRequest{}
+	mi := &file_proto_notification_notification_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUnreadNotificationCountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUnreadNotificationCountRequest) ProtoMessage() {}
+
+func (x *GetUnreadNotificationCountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_notification_notification_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUnreadNotificationCountRequest.ProtoReflect.Descriptor instead.
+func (*GetUnreadNotificationCountRequest) Descriptor() ([]byte, []int) {
+	return file_proto_notification_notification_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetUnreadNotificationCountRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type GetUnreadNotificationCountResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Count         int64                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUnreadNotificationCountResponse) Reset() {
+	*x = GetUnreadNotificationCountResponse{}
+	mi := &file_proto_notification_notification_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUnreadNotificationCountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUnreadNotificationCountResponse) ProtoMessage() {}
+
+func (x *GetUnreadNotificationCountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_notification_notification_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUnreadNotificationCountResponse.ProtoReflect.Descriptor instead.
+func (*GetUnreadNotificationCountResponse) Descriptor() ([]byte, []int) {
+	return file_proto_notification_notification_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetUnreadNotificationCountResponse) GetCount() int64 {
+	if x != nil {
+		return x.Count
+	}
+	return 0
+}
+
 var File_proto_notification_notification_proto protoreflect.FileDescriptor
 
 const file_proto_notification_notification_proto_rawDesc = "" +
@@ -553,7 +725,7 @@ const file_proto_notification_notification_proto_rawDesc = "" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"d\n" +
 	"\x18GetNotificationsResponse\x12H\n" +
-	"\rnotifications\x18\x01 \x03(\v2\".notification.NotificationResponseR\rnotifications\"\x88\x02\n" +
+	"\rnotifications\x18\x01 \x03(\v2\".notification.NotificationResponseR\rnotifications\"\xbf\x02\n" +
 	"\x14NotificationResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
 	"\frecipient_id\x18\x02 \x01(\tR\vrecipientId\x12\x19\n" +
@@ -565,7 +737,9 @@ const file_proto_notification_notification_proto_rawDesc = "" +
 	"\apayload\x18\a \x01(\tR\apayload\x12\x17\n" +
 	"\aread_at\x18\b \x01(\tR\x06readAt\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\t \x01(\tR\tcreatedAt\"_\n" +
+	"created_at\x18\t \x01(\tR\tcreatedAt\x125\n" +
+	"\x05actor\x18\n" +
+	" \x01(\v2\x1f.notification.NotificationActorR\x05actor\"_\n" +
 	"\x1bMarkNotificationReadRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12'\n" +
 	"\x0fnotification_id\x18\x02 \x01(\tR\x0enotificationId\"R\n" +
@@ -577,10 +751,23 @@ const file_proto_notification_notification_proto_rawDesc = "" +
 	" MarkAllNotificationsReadResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12#\n" +
-	"\rupdated_count\x18\x03 \x01(\x05R\fupdatedCount2\xd6\x03\n" +
+	"\rupdated_count\x18\x03 \x01(\x05R\fupdatedCount\"\xa2\x01\n" +
+	"\x11NotificationActor\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12!\n" +
+	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\x1d\n" +
+	"\n" +
+	"avatar_url\x18\x04 \x01(\tR\tavatarUrl\x12\x1f\n" +
+	"\vis_verified\x18\x05 \x01(\bR\n" +
+	"isVerified\"<\n" +
+	"!GetUnreadNotificationCountRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\":\n" +
+	"\"GetUnreadNotificationCountResponse\x12\x14\n" +
+	"\x05count\x18\x01 \x01(\x03R\x05count2\xd7\x04\n" +
 	"\x13NotificationService\x12r\n" +
 	"\tGetHealth\x121.notification.GetNotificationServiceHealthRequest\x1a2.notification.GetNotificationServiceHealthResponse\x12a\n" +
-	"\x10GetNotifications\x12%.notification.GetNotificationsRequest\x1a&.notification.GetNotificationsResponse\x12m\n" +
+	"\x10GetNotifications\x12%.notification.GetNotificationsRequest\x1a&.notification.GetNotificationsResponse\x12\x7f\n" +
+	"\x1aGetUnreadNotificationCount\x12/.notification.GetUnreadNotificationCountRequest\x1a0.notification.GetUnreadNotificationCountResponse\x12m\n" +
 	"\x14MarkNotificationRead\x12).notification.MarkNotificationReadRequest\x1a*.notification.MarkNotificationReadResponse\x12y\n" +
 	"\x18MarkAllNotificationsRead\x12-.notification.MarkAllNotificationsReadRequest\x1a..notification.MarkAllNotificationsReadResponseB,Z*threadly/proto/notification;notificationv1b\x06proto3"
 
@@ -596,7 +783,7 @@ func file_proto_notification_notification_proto_rawDescGZIP() []byte {
 	return file_proto_notification_notification_proto_rawDescData
 }
 
-var file_proto_notification_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_proto_notification_notification_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_proto_notification_notification_proto_goTypes = []any{
 	(*GetNotificationServiceHealthRequest)(nil),  // 0: notification.GetNotificationServiceHealthRequest
 	(*GetNotificationServiceHealthResponse)(nil), // 1: notification.GetNotificationServiceHealthResponse
@@ -607,22 +794,28 @@ var file_proto_notification_notification_proto_goTypes = []any{
 	(*MarkNotificationReadResponse)(nil),         // 6: notification.MarkNotificationReadResponse
 	(*MarkAllNotificationsReadRequest)(nil),      // 7: notification.MarkAllNotificationsReadRequest
 	(*MarkAllNotificationsReadResponse)(nil),     // 8: notification.MarkAllNotificationsReadResponse
+	(*NotificationActor)(nil),                    // 9: notification.NotificationActor
+	(*GetUnreadNotificationCountRequest)(nil),    // 10: notification.GetUnreadNotificationCountRequest
+	(*GetUnreadNotificationCountResponse)(nil),   // 11: notification.GetUnreadNotificationCountResponse
 }
 var file_proto_notification_notification_proto_depIdxs = []int32{
-	4, // 0: notification.GetNotificationsResponse.notifications:type_name -> notification.NotificationResponse
-	0, // 1: notification.NotificationService.GetHealth:input_type -> notification.GetNotificationServiceHealthRequest
-	2, // 2: notification.NotificationService.GetNotifications:input_type -> notification.GetNotificationsRequest
-	5, // 3: notification.NotificationService.MarkNotificationRead:input_type -> notification.MarkNotificationReadRequest
-	7, // 4: notification.NotificationService.MarkAllNotificationsRead:input_type -> notification.MarkAllNotificationsReadRequest
-	1, // 5: notification.NotificationService.GetHealth:output_type -> notification.GetNotificationServiceHealthResponse
-	3, // 6: notification.NotificationService.GetNotifications:output_type -> notification.GetNotificationsResponse
-	6, // 7: notification.NotificationService.MarkNotificationRead:output_type -> notification.MarkNotificationReadResponse
-	8, // 8: notification.NotificationService.MarkAllNotificationsRead:output_type -> notification.MarkAllNotificationsReadResponse
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	4,  // 0: notification.GetNotificationsResponse.notifications:type_name -> notification.NotificationResponse
+	9,  // 1: notification.NotificationResponse.actor:type_name -> notification.NotificationActor
+	0,  // 2: notification.NotificationService.GetHealth:input_type -> notification.GetNotificationServiceHealthRequest
+	2,  // 3: notification.NotificationService.GetNotifications:input_type -> notification.GetNotificationsRequest
+	10, // 4: notification.NotificationService.GetUnreadNotificationCount:input_type -> notification.GetUnreadNotificationCountRequest
+	5,  // 5: notification.NotificationService.MarkNotificationRead:input_type -> notification.MarkNotificationReadRequest
+	7,  // 6: notification.NotificationService.MarkAllNotificationsRead:input_type -> notification.MarkAllNotificationsReadRequest
+	1,  // 7: notification.NotificationService.GetHealth:output_type -> notification.GetNotificationServiceHealthResponse
+	3,  // 8: notification.NotificationService.GetNotifications:output_type -> notification.GetNotificationsResponse
+	11, // 9: notification.NotificationService.GetUnreadNotificationCount:output_type -> notification.GetUnreadNotificationCountResponse
+	6,  // 10: notification.NotificationService.MarkNotificationRead:output_type -> notification.MarkNotificationReadResponse
+	8,  // 11: notification.NotificationService.MarkAllNotificationsRead:output_type -> notification.MarkAllNotificationsReadResponse
+	7,  // [7:12] is the sub-list for method output_type
+	2,  // [2:7] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_notification_notification_proto_init() }
@@ -636,7 +829,7 @@ func file_proto_notification_notification_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_notification_notification_proto_rawDesc), len(file_proto_notification_notification_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_GetHealth_FullMethodName                = "/notification.NotificationService/GetHealth"
-	NotificationService_GetNotifications_FullMethodName         = "/notification.NotificationService/GetNotifications"
-	NotificationService_MarkNotificationRead_FullMethodName     = "/notification.NotificationService/MarkNotificationRead"
-	NotificationService_MarkAllNotificationsRead_FullMethodName = "/notification.NotificationService/MarkAllNotificationsRead"
+	NotificationService_GetHealth_FullMethodName                  = "/notification.NotificationService/GetHealth"
+	NotificationService_GetNotifications_FullMethodName           = "/notification.NotificationService/GetNotifications"
+	NotificationService_GetUnreadNotificationCount_FullMethodName = "/notification.NotificationService/GetUnreadNotificationCount"
+	NotificationService_MarkNotificationRead_FullMethodName       = "/notification.NotificationService/MarkNotificationRead"
+	NotificationService_MarkAllNotificationsRead_FullMethodName   = "/notification.NotificationService/MarkAllNotificationsRead"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -31,6 +32,7 @@ const (
 type NotificationServiceClient interface {
 	GetHealth(ctx context.Context, in *GetNotificationServiceHealthRequest, opts ...grpc.CallOption) (*GetNotificationServiceHealthResponse, error)
 	GetNotifications(ctx context.Context, in *GetNotificationsRequest, opts ...grpc.CallOption) (*GetNotificationsResponse, error)
+	GetUnreadNotificationCount(ctx context.Context, in *GetUnreadNotificationCountRequest, opts ...grpc.CallOption) (*GetUnreadNotificationCountResponse, error)
 	MarkNotificationRead(ctx context.Context, in *MarkNotificationReadRequest, opts ...grpc.CallOption) (*MarkNotificationReadResponse, error)
 	MarkAllNotificationsRead(ctx context.Context, in *MarkAllNotificationsReadRequest, opts ...grpc.CallOption) (*MarkAllNotificationsReadResponse, error)
 }
@@ -63,6 +65,16 @@ func (c *notificationServiceClient) GetNotifications(ctx context.Context, in *Ge
 	return out, nil
 }
 
+func (c *notificationServiceClient) GetUnreadNotificationCount(ctx context.Context, in *GetUnreadNotificationCountRequest, opts ...grpc.CallOption) (*GetUnreadNotificationCountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUnreadNotificationCountResponse)
+	err := c.cc.Invoke(ctx, NotificationService_GetUnreadNotificationCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *notificationServiceClient) MarkNotificationRead(ctx context.Context, in *MarkNotificationReadRequest, opts ...grpc.CallOption) (*MarkNotificationReadResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(MarkNotificationReadResponse)
@@ -89,6 +101,7 @@ func (c *notificationServiceClient) MarkAllNotificationsRead(ctx context.Context
 type NotificationServiceServer interface {
 	GetHealth(context.Context, *GetNotificationServiceHealthRequest) (*GetNotificationServiceHealthResponse, error)
 	GetNotifications(context.Context, *GetNotificationsRequest) (*GetNotificationsResponse, error)
+	GetUnreadNotificationCount(context.Context, *GetUnreadNotificationCountRequest) (*GetUnreadNotificationCountResponse, error)
 	MarkNotificationRead(context.Context, *MarkNotificationReadRequest) (*MarkNotificationReadResponse, error)
 	MarkAllNotificationsRead(context.Context, *MarkAllNotificationsReadRequest) (*MarkAllNotificationsReadResponse, error)
 	mustEmbedUnimplementedNotificationServiceServer()
@@ -106,6 +119,9 @@ func (UnimplementedNotificationServiceServer) GetHealth(context.Context, *GetNot
 }
 func (UnimplementedNotificationServiceServer) GetNotifications(context.Context, *GetNotificationsRequest) (*GetNotificationsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetNotifications not implemented")
+}
+func (UnimplementedNotificationServiceServer) GetUnreadNotificationCount(context.Context, *GetUnreadNotificationCountRequest) (*GetUnreadNotificationCountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUnreadNotificationCount not implemented")
 }
 func (UnimplementedNotificationServiceServer) MarkNotificationRead(context.Context, *MarkNotificationReadRequest) (*MarkNotificationReadResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method MarkNotificationRead not implemented")
@@ -170,6 +186,24 @@ func _NotificationService_GetNotifications_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_GetUnreadNotificationCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUnreadNotificationCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).GetUnreadNotificationCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_GetUnreadNotificationCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).GetUnreadNotificationCount(ctx, req.(*GetUnreadNotificationCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _NotificationService_MarkNotificationRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MarkNotificationReadRequest)
 	if err := dec(in); err != nil {
@@ -220,6 +254,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetNotifications",
 			Handler:    _NotificationService_GetNotifications_Handler,
+		},
+		{
+			MethodName: "GetUnreadNotificationCount",
+			Handler:    _NotificationService_GetUnreadNotificationCount_Handler,
 		},
 		{
 			MethodName: "MarkNotificationRead",

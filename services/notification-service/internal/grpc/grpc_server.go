@@ -43,6 +43,17 @@ func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *n
 
 	res := make([]*notificationpb.NotificationResponse, 0, len(notifications))
 	for _, n := range notifications {
+		var actor *notificationpb.NotificationActor
+		if n.Actor != nil {
+			actor = &notificationpb.NotificationActor{
+				Id:          n.Actor.ID,
+				Username:    n.Actor.Username,
+				DisplayName: n.Actor.DisplayName,
+				AvatarUrl:   n.Actor.AvatarURL,
+				IsVerified:  n.Actor.IsVerified,
+			}
+		}
+
 		res = append(res, &notificationpb.NotificationResponse{
 			Id:          n.ID,
 			RecipientId: n.RecipientID,
@@ -53,6 +64,7 @@ func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *n
 			Payload:     n.Payload,
 			ReadAt:      n.ReadAt,
 			CreatedAt:   n.CreatedAt,
+			Actor:       actor,
 		})
 	}
 
@@ -88,5 +100,16 @@ func (s *NotificationServiceServer) MarkAllNotificationsRead(ctx context.Context
 		Success:      true,
 		Message:      "notifications marked as read",
 		UpdatedCount: int32(count),
+	}, nil
+}
+
+func (s *NotificationServiceServer) GetUnreadNotificationCount(ctx context.Context, req *notificationpb.GetUnreadNotificationCountRequest) (*notificationpb.GetUnreadNotificationCountResponse, error) {
+	count, err := s.notificationService.GetUnreadNotificationCount(ctx, req.GetUserId())
+	if err != nil {
+		return nil, err
+	}
+
+	return &notificationpb.GetUnreadNotificationCountResponse{
+		Count: count,
 	}, nil
 }

@@ -371,6 +371,14 @@ definitions:
       username:
         type: string
     type: object
+  response.ErrorResponse:
+    properties:
+      errors: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   response.SuccessResponse:
     properties:
       data: {}
@@ -1150,6 +1158,29 @@ paths:
       security:
       - BearerAuth: []
       summary: Mark all notifications as read
+      tags:
+      - Notifications
+  /notifications/unread-count:
+    get:
+      description: Get unread notification count for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get unread notification count
       tags:
       - Notifications
   /storages/health:

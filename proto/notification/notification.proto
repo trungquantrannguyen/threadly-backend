@@ -7,6 +7,7 @@ service NotificationService {
     rpc GetHealth(GetNotificationServiceHealthRequest) returns (GetNotificationServiceHealthResponse);
 
     rpc GetNotifications(GetNotificationsRequest) returns (GetNotificationsResponse);
+    rpc GetUnreadNotificationCount(GetUnreadNotificationCountRequest) returns (GetUnreadNotificationCountResponse);
     rpc MarkNotificationRead(MarkNotificationReadRequest) returns (MarkNotificationReadResponse);
     rpc MarkAllNotificationsRead(MarkAllNotificationsReadRequest) returns (MarkAllNotificationsReadResponse);
 }
@@ -39,6 +40,7 @@ message NotificationResponse {
     string payload = 7;
     string read_at = 8;
     string created_at = 9;
+    NotificationActor actor = 10;
 }
 
 message MarkNotificationReadRequest {
@@ -59,4 +61,20 @@ message MarkAllNotificationsReadResponse {
     bool success = 1;
     string message = 2;
     int32 updated_count = 3;
+}
+
+message NotificationActor {
+    string id = 1;
+    string username = 2;
+    string display_name = 3;
+    string avatar_url = 4;
+    bool is_verified = 5;
+}
+
+message GetUnreadNotificationCountRequest {
+    string user_id = 1;
+}
+
+message GetUnreadNotificationCountResponse {
+    int64 count = 1;
 }

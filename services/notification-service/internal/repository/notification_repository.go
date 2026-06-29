@@ -13,6 +13,7 @@ import (
 type NotificationRepository interface {
 	Create(ctx context.Context, notification *dbmodel.Notification) error
 	FindByRecipientID(ctx context.Context, recipientID uuid.UUID, limit int) ([]dbmodel.Notification, error)
+	CountUnreadByRecipientID(ctx context.Context, recipientID uuid.UUID) (int64, error)
 	MarkAsRead(ctx context.Context, notificationID uuid.UUID, recipientID uuid.UUID) (bool, error)
 	MarkAllAsRead(ctx context.Context, recipientID uuid.UUID) (int64, error)
 }
@@ -40,12 +41,24 @@ func (r *notificationRepository) FindByRecipientID(ctx context.Context, recipien
 	var notifications []dbmodel.Notification
 
 	err := r.db.WithContext(ctx).
+		Preload("Actor").
 		Where("recipient_id = ?", recipientID).
 		Order("created_at DESC").
 		Limit(limit).
 		Find(&notifications).Error
 
 	return notifications, err
+}
+
+func (r *notificationRepository) CountUnreadByRecipientID(ctx context.Context, recipientID uuid.UUID) (int64, error) {
+	var count int64
+
+	err := r.db.WithContext(ctx).
+		Model(&dbmodel.Notification{}).
+		Where("recipient_id = ? AND read_at IS NULL", recipientID).
+		Count(&count).Error
+
+	return count, err
 }
 
 func (r *notificationRepository) MarkAsRead(ctx context.Context, notificationID uuid.UUID, recipientID uuid.UUID) (bool, error) {

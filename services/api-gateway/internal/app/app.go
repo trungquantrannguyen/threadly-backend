@@ -134,6 +134,7 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 			protectedNotifications.Use(middleware.AuthMiddleware(cfg))
 			{
 				protectedNotifications.GET("", notificationHandler.GetNotifications)
+				protectedNotifications.GET("/unread-count", notificationHandler.GetUnreadNotificationCount)
 				protectedNotifications.PATCH("/:id/read", notificationHandler.MarkNotificationRead)
 				protectedNotifications.PATCH("/read-all", notificationHandler.MarkAllNotificationsRead)
 			}

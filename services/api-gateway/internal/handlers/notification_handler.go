@@ -138,3 +138,32 @@ func (h *NotificationHandler) MarkAllNotificationsRead(c *gin.Context) {
 
 	response.OK(c, http.StatusOK, res.GetMessage(), res)
 }
+
+// GetUnreadNotificationCount godoc
+// @Summary Get unread notification count
+// @Description Get unread notification count for the authenticated user
+// @Tags Notifications
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 503 {object} response.ErrorResponse
+// @Router /notifications/unread-count [get]
+func (h *NotificationHandler) GetUnreadNotificationCount(c *gin.Context) {
+	userID := middleware.GetUserID(c)
+	if userID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
+	res, err := h.notificationClient.GetUnreadNotificationCount(c.Request.Context(), userID)
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to get unread notification count")
+		response.Error(c, http.StatusServiceUnavailable, "Notification service unavailable", err)
+		return
+	}
+
+	response.OK(c, http.StatusOK, "Unread notification count fetched successfully", gin.H{
+		"count": res.GetCount(),
+	})
+}

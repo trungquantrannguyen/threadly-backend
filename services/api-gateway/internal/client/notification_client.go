@@ -71,6 +71,15 @@ func (c *NotificationClient) MarkAllNotificationsRead(ctx context.Context, userI
 	})
 }
 
+func (c *NotificationClient) GetUnreadNotificationCount(ctx context.Context, userID string) (*notificationpb.GetUnreadNotificationCountResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetUnreadNotificationCount(ctx, &notificationpb.GetUnreadNotificationCountRequest{
+		UserId: userID,
+	})
+}
+
 func (c *NotificationClient) Close() error {
 	return c.conn.Close()
 }
