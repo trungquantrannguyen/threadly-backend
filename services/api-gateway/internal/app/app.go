@@ -30,34 +30,30 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 		log.Fatal().Err(err).Msg("Failed to create user service grpc client")
 	}
 
-	userHandler := handlers.NewUserHandler(userClient, log)
-
 	contentClient, err := client.NewContentClient(cfg, log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create content service grpc client")
 	}
-
-	contentHandler := handlers.NewContentHandler(contentClient, log)
 
 	feedClient, err := client.NewFeedClient(cfg, log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create feed service grpc client")
 	}
 
-	feedHandler := handlers.NewFeedHandler(feedClient, log)
-
 	notificationClient, err := client.NewNotificationClient(cfg, log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create notification service grpc client")
 	}
-
-	notificationHandler := handlers.NewNotificationHandler(notificationClient, log)
 
 	storageClient, err := client.NewStorageClient(cfg, log)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create storage service grpc client")
 	}
 
+	userHandler := handlers.NewUserHandler(userClient, log, contentClient)
+	contentHandler := handlers.NewContentHandler(contentClient, log)
+	feedHandler := handlers.NewFeedHandler(feedClient, log)
+	notificationHandler := handlers.NewNotificationHandler(notificationClient, log)
 	storageHandler := handlers.NewStorageHandler(storageClient, log)
 
 	router.GET("/health", healthHandler.Check)

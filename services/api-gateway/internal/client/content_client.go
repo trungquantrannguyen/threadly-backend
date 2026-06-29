@@ -147,6 +147,13 @@ func (c *ContentClient) GetFollowing(ctx context.Context, req *contentpb.GetFoll
 	return c.client.GetFollowing(ctx, req)
 }
 
+func (c *ContentClient) GetUserTimeline(ctx context.Context, req *contentpb.GetUserTimelineRequest) (*contentpb.TimelineResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetUserTimeline(ctx, req)
+}
+
 func (c *ContentClient) Close() error {
 	return c.conn.Close()
 }

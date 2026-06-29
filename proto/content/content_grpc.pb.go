@@ -19,22 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ContentService_GetHealth_FullMethodName      = "/content.ContentService/GetHealth"
-	ContentService_CreatePost_FullMethodName     = "/content.ContentService/CreatePost"
-	ContentService_GetPost_FullMethodName        = "/content.ContentService/GetPost"
-	ContentService_DeletePost_FullMethodName     = "/content.ContentService/DeletePost"
-	ContentService_CreateReply_FullMethodName    = "/content.ContentService/CreateReply"
-	ContentService_GetReplies_FullMethodName     = "/content.ContentService/GetReplies"
-	ContentService_LikePost_FullMethodName       = "/content.ContentService/LikePost"
-	ContentService_UnlikePost_FullMethodName     = "/content.ContentService/UnlikePost"
-	ContentService_BookmarkPost_FullMethodName   = "/content.ContentService/BookmarkPost"
-	ContentService_UnbookmarkPost_FullMethodName = "/content.ContentService/UnbookmarkPost"
-	ContentService_RepostPost_FullMethodName     = "/content.ContentService/RepostPost"
-	ContentService_UndoRepost_FullMethodName     = "/content.ContentService/UndoRepost"
-	ContentService_FollowUser_FullMethodName     = "/content.ContentService/FollowUser"
-	ContentService_UnfollowUser_FullMethodName   = "/content.ContentService/UnfollowUser"
-	ContentService_GetFollowers_FullMethodName   = "/content.ContentService/GetFollowers"
-	ContentService_GetFollowing_FullMethodName   = "/content.ContentService/GetFollowing"
+	ContentService_GetHealth_FullMethodName       = "/content.ContentService/GetHealth"
+	ContentService_CreatePost_FullMethodName      = "/content.ContentService/CreatePost"
+	ContentService_GetPost_FullMethodName         = "/content.ContentService/GetPost"
+	ContentService_DeletePost_FullMethodName      = "/content.ContentService/DeletePost"
+	ContentService_CreateReply_FullMethodName     = "/content.ContentService/CreateReply"
+	ContentService_GetReplies_FullMethodName      = "/content.ContentService/GetReplies"
+	ContentService_LikePost_FullMethodName        = "/content.ContentService/LikePost"
+	ContentService_UnlikePost_FullMethodName      = "/content.ContentService/UnlikePost"
+	ContentService_BookmarkPost_FullMethodName    = "/content.ContentService/BookmarkPost"
+	ContentService_UnbookmarkPost_FullMethodName  = "/content.ContentService/UnbookmarkPost"
+	ContentService_RepostPost_FullMethodName      = "/content.ContentService/RepostPost"
+	ContentService_UndoRepost_FullMethodName      = "/content.ContentService/UndoRepost"
+	ContentService_FollowUser_FullMethodName      = "/content.ContentService/FollowUser"
+	ContentService_UnfollowUser_FullMethodName    = "/content.ContentService/UnfollowUser"
+	ContentService_GetFollowers_FullMethodName    = "/content.ContentService/GetFollowers"
+	ContentService_GetFollowing_FullMethodName    = "/content.ContentService/GetFollowing"
+	ContentService_GetUserTimeline_FullMethodName = "/content.ContentService/GetUserTimeline"
 )
 
 // ContentServiceClient is the client API for ContentService service.
@@ -63,6 +64,8 @@ type ContentServiceClient interface {
 	UnfollowUser(ctx context.Context, in *UnfollowUserRequest, opts ...grpc.CallOption) (*ActionResponse, error)
 	GetFollowers(ctx context.Context, in *GetFollowersRequest, opts ...grpc.CallOption) (*UserListResponse, error)
 	GetFollowing(ctx context.Context, in *GetFollowingRequest, opts ...grpc.CallOption) (*UserListResponse, error)
+	// Timeline
+	GetUserTimeline(ctx context.Context, in *GetUserTimelineRequest, opts ...grpc.CallOption) (*TimelineResponse, error)
 }
 
 type contentServiceClient struct {
@@ -233,6 +236,16 @@ func (c *contentServiceClient) GetFollowing(ctx context.Context, in *GetFollowin
 	return out, nil
 }
 
+func (c *contentServiceClient) GetUserTimeline(ctx context.Context, in *GetUserTimelineRequest, opts ...grpc.CallOption) (*TimelineResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TimelineResponse)
+	err := c.cc.Invoke(ctx, ContentService_GetUserTimeline_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ContentServiceServer is the server API for ContentService service.
 // All implementations must embed UnimplementedContentServiceServer
 // for forward compatibility.
@@ -259,6 +272,8 @@ type ContentServiceServer interface {
 	UnfollowUser(context.Context, *UnfollowUserRequest) (*ActionResponse, error)
 	GetFollowers(context.Context, *GetFollowersRequest) (*UserListResponse, error)
 	GetFollowing(context.Context, *GetFollowingRequest) (*UserListResponse, error)
+	// Timeline
+	GetUserTimeline(context.Context, *GetUserTimelineRequest) (*TimelineResponse, error)
 	mustEmbedUnimplementedContentServiceServer()
 }
 
@@ -316,6 +331,9 @@ func (UnimplementedContentServiceServer) GetFollowers(context.Context, *GetFollo
 }
 func (UnimplementedContentServiceServer) GetFollowing(context.Context, *GetFollowingRequest) (*UserListResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetFollowing not implemented")
+}
+func (UnimplementedContentServiceServer) GetUserTimeline(context.Context, *GetUserTimelineRequest) (*TimelineResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserTimeline not implemented")
 }
 func (UnimplementedContentServiceServer) mustEmbedUnimplementedContentServiceServer() {}
 func (UnimplementedContentServiceServer) testEmbeddedByValue()                        {}
@@ -626,6 +644,24 @@ func _ContentService_GetFollowing_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ContentService_GetUserTimeline_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserTimelineRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).GetUserTimeline(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_GetUserTimeline_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).GetUserTimeline(ctx, req.(*GetUserTimelineRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ContentService_ServiceDesc is the grpc.ServiceDesc for ContentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -696,6 +732,10 @@ var ContentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFollowing",
 			Handler:    _ContentService_GetFollowing_Handler,
+		},
+		{
+			MethodName: "GetUserTimeline",
+			Handler:    _ContentService_GetUserTimeline_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

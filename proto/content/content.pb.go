@@ -1369,6 +1369,178 @@ func (x *GetFollowingRequest) GetCursor() string {
 	return ""
 }
 
+type GetUserTimelineRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Cursor        string                 `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetUserTimelineRequest) Reset() {
+	*x = GetUserTimelineRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetUserTimelineRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetUserTimelineRequest) ProtoMessage() {}
+
+func (x *GetUserTimelineRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetUserTimelineRequest.ProtoReflect.Descriptor instead.
+func (*GetUserTimelineRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *GetUserTimelineRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetUserTimelineRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetUserTimelineRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
+type TimelineItemResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"` // "post" or "repost"
+	Post          *PostResponse          `protobuf:"bytes,2,opt,name=post,proto3" json:"post,omitempty"`
+	RepostedAt    string                 `protobuf:"bytes,3,opt,name=reposted_at,json=repostedAt,proto3" json:"reposted_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TimelineItemResponse) Reset() {
+	*x = TimelineItemResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TimelineItemResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TimelineItemResponse) ProtoMessage() {}
+
+func (x *TimelineItemResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TimelineItemResponse.ProtoReflect.Descriptor instead.
+func (*TimelineItemResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *TimelineItemResponse) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *TimelineItemResponse) GetPost() *PostResponse {
+	if x != nil {
+		return x.Post
+	}
+	return nil
+}
+
+func (x *TimelineItemResponse) GetRepostedAt() string {
+	if x != nil {
+		return x.RepostedAt
+	}
+	return ""
+}
+
+type TimelineResponse struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Items         []*TimelineItemResponse `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	NextCursor    string                  `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TimelineResponse) Reset() {
+	*x = TimelineResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TimelineResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TimelineResponse) ProtoMessage() {}
+
+func (x *TimelineResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TimelineResponse.ProtoReflect.Descriptor instead.
+func (*TimelineResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *TimelineResponse) GetItems() []*TimelineItemResponse {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *TimelineResponse) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
+}
+
 var File_proto_content_content_proto protoreflect.FileDescriptor
 
 const file_proto_content_content_proto_rawDesc = "" +
@@ -1479,7 +1651,20 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"\x13GetFollowingRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
-	"\x06cursor\x18\x03 \x01(\tR\x06cursor2\xf1\b\n" +
+	"\x06cursor\x18\x03 \x01(\tR\x06cursor\"_\n" +
+	"\x16GetUserTimelineRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06cursor\x18\x03 \x01(\tR\x06cursor\"v\n" +
+	"\x14TimelineItemResponse\x12\x12\n" +
+	"\x04type\x18\x01 \x01(\tR\x04type\x12)\n" +
+	"\x04post\x18\x02 \x01(\v2\x15.content.PostResponseR\x04post\x12\x1f\n" +
+	"\vreposted_at\x18\x03 \x01(\tR\n" +
+	"repostedAt\"h\n" +
+	"\x10TimelineResponse\x123\n" +
+	"\x05items\x18\x01 \x03(\v2\x1d.content.TimelineItemResponseR\x05items\x12\x1f\n" +
+	"\vnext_cursor\x18\x02 \x01(\tR\n" +
+	"nextCursor2\xc0\t\n" +
 	"\x0eContentService\x12^\n" +
 	"\tGetHealth\x12'.content.GetContentServiceHealthRequest\x1a(.content.GetContentServiceHealthResponse\x12?\n" +
 	"\n" +
@@ -1503,7 +1688,8 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"FollowUser\x12\x1a.content.FollowUserRequest\x1a\x17.content.ActionResponse\x12E\n" +
 	"\fUnfollowUser\x12\x1c.content.UnfollowUserRequest\x1a\x17.content.ActionResponse\x12G\n" +
 	"\fGetFollowers\x12\x1c.content.GetFollowersRequest\x1a\x19.content.UserListResponse\x12G\n" +
-	"\fGetFollowing\x12\x1c.content.GetFollowingRequest\x1a\x19.content.UserListResponseB\"Z threadly/proto/content;contentv1b\x06proto3"
+	"\fGetFollowing\x12\x1c.content.GetFollowingRequest\x1a\x19.content.UserListResponse\x12M\n" +
+	"\x0fGetUserTimeline\x12\x1f.content.GetUserTimelineRequest\x1a\x19.content.TimelineResponseB\"Z threadly/proto/content;contentv1b\x06proto3"
 
 var (
 	file_proto_content_content_proto_rawDescOnce sync.Once
@@ -1517,7 +1703,7 @@ func file_proto_content_content_proto_rawDescGZIP() []byte {
 	return file_proto_content_content_proto_rawDescData
 }
 
-var file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_proto_content_content_proto_goTypes = []any{
 	(*GetContentServiceHealthRequest)(nil),  // 0: content.GetContentServiceHealthRequest
 	(*GetContentServiceHealthResponse)(nil), // 1: content.GetContentServiceHealthResponse
@@ -1542,48 +1728,55 @@ var file_proto_content_content_proto_goTypes = []any{
 	(*UnfollowUserRequest)(nil),             // 20: content.UnfollowUserRequest
 	(*GetFollowersRequest)(nil),             // 21: content.GetFollowersRequest
 	(*GetFollowingRequest)(nil),             // 22: content.GetFollowingRequest
+	(*GetUserTimelineRequest)(nil),          // 23: content.GetUserTimelineRequest
+	(*TimelineItemResponse)(nil),            // 24: content.TimelineItemResponse
+	(*TimelineResponse)(nil),                // 25: content.TimelineResponse
 }
 var file_proto_content_content_proto_depIdxs = []int32{
 	4,  // 0: content.PostResponse.author:type_name -> content.UserSummary
 	2,  // 1: content.PostListResponse.posts:type_name -> content.PostResponse
 	4,  // 2: content.UserListResponse.users:type_name -> content.UserSummary
-	0,  // 3: content.ContentService.GetHealth:input_type -> content.GetContentServiceHealthRequest
-	8,  // 4: content.ContentService.CreatePost:input_type -> content.CreatePostRequest
-	9,  // 5: content.ContentService.GetPost:input_type -> content.GetPostRequest
-	10, // 6: content.ContentService.DeletePost:input_type -> content.DeletePostRequest
-	11, // 7: content.ContentService.CreateReply:input_type -> content.CreateReplyRequest
-	12, // 8: content.ContentService.GetReplies:input_type -> content.GetRepliesRequest
-	13, // 9: content.ContentService.LikePost:input_type -> content.LikePostRequest
-	14, // 10: content.ContentService.UnlikePost:input_type -> content.UnlikePostRequest
-	15, // 11: content.ContentService.BookmarkPost:input_type -> content.BookmarkPostRequest
-	16, // 12: content.ContentService.UnbookmarkPost:input_type -> content.UnbookmarkPostRequest
-	17, // 13: content.ContentService.RepostPost:input_type -> content.RepostPostRequest
-	18, // 14: content.ContentService.UndoRepost:input_type -> content.UndoRepostRequest
-	19, // 15: content.ContentService.FollowUser:input_type -> content.FollowUserRequest
-	20, // 16: content.ContentService.UnfollowUser:input_type -> content.UnfollowUserRequest
-	21, // 17: content.ContentService.GetFollowers:input_type -> content.GetFollowersRequest
-	22, // 18: content.ContentService.GetFollowing:input_type -> content.GetFollowingRequest
-	1,  // 19: content.ContentService.GetHealth:output_type -> content.GetContentServiceHealthResponse
-	2,  // 20: content.ContentService.CreatePost:output_type -> content.PostResponse
-	2,  // 21: content.ContentService.GetPost:output_type -> content.PostResponse
-	7,  // 22: content.ContentService.DeletePost:output_type -> content.DeletePostResponse
-	2,  // 23: content.ContentService.CreateReply:output_type -> content.PostResponse
-	3,  // 24: content.ContentService.GetReplies:output_type -> content.PostListResponse
-	6,  // 25: content.ContentService.LikePost:output_type -> content.ActionResponse
-	6,  // 26: content.ContentService.UnlikePost:output_type -> content.ActionResponse
-	6,  // 27: content.ContentService.BookmarkPost:output_type -> content.ActionResponse
-	6,  // 28: content.ContentService.UnbookmarkPost:output_type -> content.ActionResponse
-	6,  // 29: content.ContentService.RepostPost:output_type -> content.ActionResponse
-	6,  // 30: content.ContentService.UndoRepost:output_type -> content.ActionResponse
-	6,  // 31: content.ContentService.FollowUser:output_type -> content.ActionResponse
-	6,  // 32: content.ContentService.UnfollowUser:output_type -> content.ActionResponse
-	5,  // 33: content.ContentService.GetFollowers:output_type -> content.UserListResponse
-	5,  // 34: content.ContentService.GetFollowing:output_type -> content.UserListResponse
-	19, // [19:35] is the sub-list for method output_type
-	3,  // [3:19] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	2,  // 3: content.TimelineItemResponse.post:type_name -> content.PostResponse
+	24, // 4: content.TimelineResponse.items:type_name -> content.TimelineItemResponse
+	0,  // 5: content.ContentService.GetHealth:input_type -> content.GetContentServiceHealthRequest
+	8,  // 6: content.ContentService.CreatePost:input_type -> content.CreatePostRequest
+	9,  // 7: content.ContentService.GetPost:input_type -> content.GetPostRequest
+	10, // 8: content.ContentService.DeletePost:input_type -> content.DeletePostRequest
+	11, // 9: content.ContentService.CreateReply:input_type -> content.CreateReplyRequest
+	12, // 10: content.ContentService.GetReplies:input_type -> content.GetRepliesRequest
+	13, // 11: content.ContentService.LikePost:input_type -> content.LikePostRequest
+	14, // 12: content.ContentService.UnlikePost:input_type -> content.UnlikePostRequest
+	15, // 13: content.ContentService.BookmarkPost:input_type -> content.BookmarkPostRequest
+	16, // 14: content.ContentService.UnbookmarkPost:input_type -> content.UnbookmarkPostRequest
+	17, // 15: content.ContentService.RepostPost:input_type -> content.RepostPostRequest
+	18, // 16: content.ContentService.UndoRepost:input_type -> content.UndoRepostRequest
+	19, // 17: content.ContentService.FollowUser:input_type -> content.FollowUserRequest
+	20, // 18: content.ContentService.UnfollowUser:input_type -> content.UnfollowUserRequest
+	21, // 19: content.ContentService.GetFollowers:input_type -> content.GetFollowersRequest
+	22, // 20: content.ContentService.GetFollowing:input_type -> content.GetFollowingRequest
+	23, // 21: content.ContentService.GetUserTimeline:input_type -> content.GetUserTimelineRequest
+	1,  // 22: content.ContentService.GetHealth:output_type -> content.GetContentServiceHealthResponse
+	2,  // 23: content.ContentService.CreatePost:output_type -> content.PostResponse
+	2,  // 24: content.ContentService.GetPost:output_type -> content.PostResponse
+	7,  // 25: content.ContentService.DeletePost:output_type -> content.DeletePostResponse
+	2,  // 26: content.ContentService.CreateReply:output_type -> content.PostResponse
+	3,  // 27: content.ContentService.GetReplies:output_type -> content.PostListResponse
+	6,  // 28: content.ContentService.LikePost:output_type -> content.ActionResponse
+	6,  // 29: content.ContentService.UnlikePost:output_type -> content.ActionResponse
+	6,  // 30: content.ContentService.BookmarkPost:output_type -> content.ActionResponse
+	6,  // 31: content.ContentService.UnbookmarkPost:output_type -> content.ActionResponse
+	6,  // 32: content.ContentService.RepostPost:output_type -> content.ActionResponse
+	6,  // 33: content.ContentService.UndoRepost:output_type -> content.ActionResponse
+	6,  // 34: content.ContentService.FollowUser:output_type -> content.ActionResponse
+	6,  // 35: content.ContentService.UnfollowUser:output_type -> content.ActionResponse
+	5,  // 36: content.ContentService.GetFollowers:output_type -> content.UserListResponse
+	5,  // 37: content.ContentService.GetFollowing:output_type -> content.UserListResponse
+	25, // 38: content.ContentService.GetUserTimeline:output_type -> content.TimelineResponse
+	22, // [22:39] is the sub-list for method output_type
+	5,  // [5:22] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_proto_content_content_proto_init() }
@@ -1597,7 +1790,7 @@ func file_proto_content_content_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_content_content_proto_rawDesc), len(file_proto_content_content_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

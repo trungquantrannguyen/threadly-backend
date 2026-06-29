@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"errors"
+	"sort"
+	"time"
 
 	"github.com/google/uuid"
 	dbmodel "github.com/trungquantrannguyen/threadly/db/models"
@@ -14,12 +16,20 @@ var (
 	ErrForbidden    = errors.New("Forbidden")
 )
 
+type UserTimelineItem struct {
+	Type       string
+	Post       dbmodel.Post
+	RepostedAt *time.Time
+	SortAt     time.Time
+}
+
 type PostRepository interface {
 	Create(ctx context.Context, post *dbmodel.Post) error
 	FindByID(ctx context.Context, postID string) (*dbmodel.Post, error)
 	DeleteOwnPost(ctx context.Context, postID string, requesterID string) error
 	FindReplies(ctx context.Context, postID string, limit int) ([]dbmodel.Post, error)
 	IncrementReplyCount(ctx context.Context, postID string) error
+	FindUserTimeline(ctx context.Context, userID uuid.UUID, limit int) ([]UserTimelineItem, error)
 }
 
 type postRepository struct {
@@ -100,6 +110,67 @@ func (r *postRepository) IncrementReplyCount(ctx context.Context, postID string)
 		Where("id = ?", postID).
 		UpdateColumn("reply_count", gorm.Expr("reply_count + 1")).
 		Error
+}
+
+func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID, limit int) ([]UserTimelineItem, error) {
+	if limit <= 0 || limit > 50 {
+		limit = 20
+	}
+
+	var ownPosts []dbmodel.Post
+
+	if err := r.db.WithContext(ctx).
+		Preload("Author").
+		Where("author_id = ?", userID).
+		Order("created_at DESC").
+		Limit(limit).
+		Find(&ownPosts).Error; err != nil {
+		return nil, err
+	}
+
+	var reposts []dbmodel.Repost
+
+	if err := r.db.WithContext(ctx).
+		Preload("Post.Author").
+		Joins("JOIN posts ON posts.id = reposts.post_id").
+		Where("reposts.user_id = ?", userID).
+		Where("posts.deleted_at IS NULL").
+		Order("reposts.created_at DESC").
+		Limit(limit).
+		Find(&reposts).Error; err != nil {
+		return nil, err
+	}
+
+	items := make([]UserTimelineItem, 0, len(ownPosts)+len(reposts))
+
+	for _, post := range ownPosts {
+		items = append(items, UserTimelineItem{
+			Type:   "post",
+			Post:   post,
+			SortAt: post.CreatedAt,
+		})
+	}
+
+	for _, repost := range reposts {
+		repostedAt := repost.CreatedAt
+
+		items = append(items, UserTimelineItem{
+			Type:       "repost",
+			Post:       repost.Post,
+			RepostedAt: &repostedAt,
+			SortAt:     repost.CreatedAt,
+		})
+	}
+
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].SortAt.After(items[j].SortAt)
+	})
+
+	if len(items) > limit {
+		items = items[:limit]
+	}
+
+	return items, nil
 }
 
 func ParseUUID(value string) (uuid.UUID, error) {

@@ -40,6 +40,8 @@ type ContentService interface {
 	UnfollowUser(ctx context.Context, req dto.UnfollowUserRequest) (*dto.ActionResponse, error)
 	GetFollowers(ctx context.Context, req dto.GetFollowersRequest) ([]dto.UserSummary, error)
 	GetFollowing(ctx context.Context, req dto.GetFollowingRequest) ([]dto.UserSummary, error)
+
+	GetUserTimeline(ctx context.Context, req dto.GetUserTimelineRequest) ([]dto.TimelineItemResponse, error)
 }
 
 type contentService struct {
@@ -505,4 +507,37 @@ func toUserSummaryResponse(user *dbmodel.User) dto.UserSummary {
 		AvatarURL:   avatarURL,
 		IsVerified:  user.IsVerified,
 	}
+}
+
+func (s *contentService) GetUserTimeline(ctx context.Context, req dto.GetUserTimelineRequest) ([]dto.TimelineItemResponse, error) {
+	userID, err := uuid.Parse(req.UserID)
+	if err != nil {
+		return nil, ErrInvalidUserID
+	}
+
+	if err := s.ensureUserExists(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	items, err := s.postRepo.FindUserTimeline(ctx, userID, normalizeLimit(req.Limit))
+	if err != nil {
+		return nil, err
+	}
+
+	responses := make([]dto.TimelineItemResponse, 0, len(items))
+
+	for _, item := range items {
+		repostedAt := ""
+		if item.RepostedAt != nil {
+			repostedAt = item.RepostedAt.Format(time.RFC3339)
+		}
+
+		responses = append(responses, dto.TimelineItemResponse{
+			Type:       item.Type,
+			Post:       *toPostResponse(&item.Post),
+			RepostedAt: repostedAt,
+		})
+	}
+
+	return responses, nil
 }

@@ -108,3 +108,15 @@ type ActionResponse struct {
 	Success bool
 	Message string
 }
+
+type GetUserTimelineRequest struct {
+	UserID string
+	Limit  int
+	Cursor string
+}
+
+type TimelineItemResponse struct {
+	Type       string
+	Post       PostResponse
+	RepostedAt string
+}

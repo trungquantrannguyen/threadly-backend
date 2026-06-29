@@ -7,20 +7,34 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/trungquantrannguyen/threadly/pkg/middleware"
 	"github.com/trungquantrannguyen/threadly/pkg/response"
+	contentpb "github.com/trungquantrannguyen/threadly/proto/content"
 	userpb "github.com/trungquantrannguyen/threadly/proto/user"
 	"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
 	"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto"
 )
 
-type UserHandler struct {
-	userClient *client.UserClient
-	log        zerolog.Logger
+type GetMeWithPostsResponse struct {
+	User  *userpb.AuthUserResponse `json:"user"`
+	Posts []TimelineItemResponse   `json:"posts"`
 }
 
-func NewUserHandler(userClient *client.UserClient, log zerolog.Logger) *UserHandler {
+type TimelineItemResponse struct {
+	Type       string           `json:"type"`
+	Post       dto.PostResponse `json:"post"`
+	RepostedAt string           `json:"reposted_at,omitempty"`
+}
+
+type UserHandler struct {
+	userClient    *client.UserClient
+	contentClient *client.ContentClient
+	log           zerolog.Logger
+}
+
+func NewUserHandler(userClient *client.UserClient, log zerolog.Logger, contentClient *client.ContentClient) *UserHandler {
 	return &UserHandler{
-		userClient: userClient,
-		log:        log,
+		userClient:    userClient,
+		contentClient: contentClient,
+		log:           log,
 	}
 }
 
@@ -206,7 +220,7 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userClient.GetMe(c.Request.Context(), &userpb.GetMeRequest{
+	userRes, err := h.userClient.GetMe(c.Request.Context(), &userpb.GetMeRequest{
 		UserID: userID,
 	})
 	if err != nil {
@@ -215,5 +229,56 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, http.StatusOK, "Get user successfully", res)
+	timelineRes, err := h.contentClient.GetUserTimeline(c.Request.Context(), &contentpb.GetUserTimelineRequest{
+		UserId: userID,
+		Limit:  20,
+	})
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to get user timeline")
+		HandleGRPCError(c, err)
+		return
+	}
+
+	posts := make([]TimelineItemResponse, 0, len(timelineRes.GetItems()))
+
+	for _, item := range timelineRes.GetItems() {
+		posts = append(posts, TimelineItemResponse{
+			Type:       item.GetType(),
+			Post:       toGatewayPostResponse(item.GetPost()),
+			RepostedAt: item.GetRepostedAt(),
+		})
+	}
+
+	response.OK(c, http.StatusOK, "Get user successfully", GetMeWithPostsResponse{
+		User:  userRes,
+		Posts: posts,
+	})
+}
+
+func toGatewayPostResponse(post *contentpb.PostResponse) dto.PostResponse {
+	author := post.GetAuthor()
+
+	return dto.PostResponse{
+		ID:            post.GetId(),
+		AuthorID:      post.GetAuthorId(),
+		ReplyToPostID: post.GetReplyToPostId(),
+		Content:       post.GetContent(),
+		Visibility:    post.GetVisibility(),
+
+		LikeCount:     int(post.GetLikeCount()),
+		ReplyCount:    int(post.GetReplyCount()),
+		RepostCount:   int(post.GetRepostCount()),
+		BookmarkCount: int(post.GetBookmarkCount()),
+
+		CreatedAt: post.GetCreatedAt(),
+		UpdatedAt: post.GetUpdatedAt(),
+
+		Author: dto.UserSummary{
+			ID:          author.GetId(),
+			Username:    author.GetUsername(),
+			DisplayName: author.GetDisplayName(),
+			AvatarURL:   author.GetAvatarUrl(),
+			IsVerified:  author.GetIsVerified(),
+		},
+	}
 }

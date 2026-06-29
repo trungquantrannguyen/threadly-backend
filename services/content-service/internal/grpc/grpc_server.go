@@ -243,6 +243,33 @@ func (s *ContentServiceServer) GetFollowing(ctx context.Context, req *contentpb.
 	return toProtoUserListResponse(res), nil
 }
 
+func (s *ContentServiceServer) GetUserTimeline(ctx context.Context, req *contentpb.GetUserTimelineRequest) (*contentpb.TimelineResponse, error) {
+	res, err := s.contentService.GetUserTimeline(ctx, dto.GetUserTimelineRequest{
+		UserID: req.GetUserId(),
+		Limit:  int(req.GetLimit()),
+		Cursor: req.GetCursor(),
+	})
+	if err != nil {
+		return nil, mapContentServiceError(err)
+	}
+
+	items := make([]*contentpb.TimelineItemResponse, 0, len(res))
+
+	for _, item := range res {
+		post := item.Post
+
+		items = append(items, &contentpb.TimelineItemResponse{
+			Type:       item.Type,
+			Post:       toProtoPostResponse(&post),
+			RepostedAt: item.RepostedAt,
+		})
+	}
+
+	return &contentpb.TimelineResponse{
+		Items: items,
+	}, nil
+}
+
 func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
 	return &contentpb.PostResponse{
 		Id:            post.ID,
