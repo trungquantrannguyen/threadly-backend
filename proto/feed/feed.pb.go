@@ -125,6 +125,318 @@ func (x *GetFeedServiceHealthResponse) GetCheckedAt() string {
 	return ""
 }
 
+type GetHomeFeedRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Limit         int32                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
+	Cursor        string                 `protobuf:"bytes,3,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetHomeFeedRequest) Reset() {
+	*x = GetHomeFeedRequest{}
+	mi := &file_proto_feed_feed_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetHomeFeedRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetHomeFeedRequest) ProtoMessage() {}
+
+func (x *GetHomeFeedRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_feed_feed_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetHomeFeedRequest.ProtoReflect.Descriptor instead.
+func (*GetHomeFeedRequest) Descriptor() ([]byte, []int) {
+	return file_proto_feed_feed_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetHomeFeedRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetHomeFeedRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *GetHomeFeedRequest) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
+type HomeFeedResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Posts         []*FeedPostResponse    `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
+	NextCursor    string                 `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HomeFeedResponse) Reset() {
+	*x = HomeFeedResponse{}
+	mi := &file_proto_feed_feed_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HomeFeedResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HomeFeedResponse) ProtoMessage() {}
+
+func (x *HomeFeedResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_feed_feed_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HomeFeedResponse.ProtoReflect.Descriptor instead.
+func (*HomeFeedResponse) Descriptor() ([]byte, []int) {
+	return file_proto_feed_feed_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *HomeFeedResponse) GetPosts() []*FeedPostResponse {
+	if x != nil {
+		return x.Posts
+	}
+	return nil
+}
+
+func (x *HomeFeedResponse) GetNextCursor() string {
+	if x != nil {
+		return x.NextCursor
+	}
+	return ""
+}
+
+type FeedPostResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	AuthorId      string                 `protobuf:"bytes,2,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
+	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	LikeCount     int32                  `protobuf:"varint,5,opt,name=like_count,json=likeCount,proto3" json:"like_count,omitempty"`
+	ReplyCount    int32                  `protobuf:"varint,6,opt,name=reply_count,json=replyCount,proto3" json:"reply_count,omitempty"`
+	RepostCount   int32                  `protobuf:"varint,7,opt,name=repost_count,json=repostCount,proto3" json:"repost_count,omitempty"`
+	BookmarkCount int32                  `protobuf:"varint,8,opt,name=bookmark_count,json=bookmarkCount,proto3" json:"bookmark_count,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     string                 `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	Author        *FeedUserSummary       `protobuf:"bytes,11,opt,name=author,proto3" json:"author,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FeedPostResponse) Reset() {
+	*x = FeedPostResponse{}
+	mi := &file_proto_feed_feed_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FeedPostResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FeedPostResponse) ProtoMessage() {}
+
+func (x *FeedPostResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_feed_feed_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FeedPostResponse.ProtoReflect.Descriptor instead.
+func (*FeedPostResponse) Descriptor() ([]byte, []int) {
+	return file_proto_feed_feed_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *FeedPostResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FeedPostResponse) GetAuthorId() string {
+	if x != nil {
+		return x.AuthorId
+	}
+	return ""
+}
+
+func (x *FeedPostResponse) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *FeedPostResponse) GetVisibility() string {
+	if x != nil {
+		return x.Visibility
+	}
+	return ""
+}
+
+func (x *FeedPostResponse) GetLikeCount() int32 {
+	if x != nil {
+		return x.LikeCount
+	}
+	return 0
+}
+
+func (x *FeedPostResponse) GetReplyCount() int32 {
+	if x != nil {
+		return x.ReplyCount
+	}
+	return 0
+}
+
+func (x *FeedPostResponse) GetRepostCount() int32 {
+	if x != nil {
+		return x.RepostCount
+	}
+	return 0
+}
+
+func (x *FeedPostResponse) GetBookmarkCount() int32 {
+	if x != nil {
+		return x.BookmarkCount
+	}
+	return 0
+}
+
+func (x *FeedPostResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *FeedPostResponse) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
+func (x *FeedPostResponse) GetAuthor() *FeedUserSummary {
+	if x != nil {
+		return x.Author
+	}
+	return nil
+}
+
+type FeedUserSummary struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	DisplayName   string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	AvatarUrl     string                 `protobuf:"bytes,4,opt,name=avatar_url,json=avatarUrl,proto3" json:"avatar_url,omitempty"`
+	IsVerified    bool                   `protobuf:"varint,5,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FeedUserSummary) Reset() {
+	*x = FeedUserSummary{}
+	mi := &file_proto_feed_feed_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FeedUserSummary) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FeedUserSummary) ProtoMessage() {}
+
+func (x *FeedUserSummary) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_feed_feed_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FeedUserSummary.ProtoReflect.Descriptor instead.
+func (*FeedUserSummary) Descriptor() ([]byte, []int) {
+	return file_proto_feed_feed_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *FeedUserSummary) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FeedUserSummary) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *FeedUserSummary) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *FeedUserSummary) GetAvatarUrl() string {
+	if x != nil {
+		return x.AvatarUrl
+	}
+	return ""
+}
+
+func (x *FeedUserSummary) GetIsVerified() bool {
+	if x != nil {
+		return x.IsVerified
+	}
+	return false
+}
+
 var File_proto_feed_feed_proto protoreflect.FileDescriptor
 
 const file_proto_feed_feed_proto_rawDesc = "" +
@@ -136,9 +448,45 @@ const file_proto_feed_feed_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x10\n" +
 	"\x03env\x18\x03 \x01(\tR\x03env\x12\x1d\n" +
 	"\n" +
-	"checked_at\x18\x04 \x01(\tR\tcheckedAt2a\n" +
+	"checked_at\x18\x04 \x01(\tR\tcheckedAt\"[\n" +
+	"\x12GetHomeFeedRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
+	"\x06cursor\x18\x03 \x01(\tR\x06cursor\"a\n" +
+	"\x10HomeFeedResponse\x12,\n" +
+	"\x05posts\x18\x01 \x03(\v2\x16.feed.FeedPostResponseR\x05posts\x12\x1f\n" +
+	"\vnext_cursor\x18\x02 \x01(\tR\n" +
+	"nextCursor\"\xf0\x02\n" +
+	"\x10FeedPostResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
+	"\tauthor_id\x18\x02 \x01(\tR\bauthorId\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\x04 \x01(\tR\n" +
+	"visibility\x12\x1d\n" +
+	"\n" +
+	"like_count\x18\x05 \x01(\x05R\tlikeCount\x12\x1f\n" +
+	"\vreply_count\x18\x06 \x01(\x05R\n" +
+	"replyCount\x12!\n" +
+	"\frepost_count\x18\a \x01(\x05R\vrepostCount\x12%\n" +
+	"\x0ebookmark_count\x18\b \x01(\x05R\rbookmarkCount\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\t \x01(\tR\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\n" +
+	" \x01(\tR\tupdatedAt\x12-\n" +
+	"\x06author\x18\v \x01(\v2\x15.feed.FeedUserSummaryR\x06author\"\xa0\x01\n" +
+	"\x0fFeedUserSummary\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12!\n" +
+	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\x1d\n" +
+	"\n" +
+	"avatar_url\x18\x04 \x01(\tR\tavatarUrl\x12\x1f\n" +
+	"\vis_verified\x18\x05 \x01(\bR\n" +
+	"isVerified2\xa2\x01\n" +
 	"\vFeedService\x12R\n" +
-	"\tGetHealth\x12!.feed.GetFeedServiceHealthRequest\x1a\".feed.GetFeedServiceHealthResponseB\x1cZ\x1athreadly/proto/feed;feedv1b\x06proto3"
+	"\tGetHealth\x12!.feed.GetFeedServiceHealthRequest\x1a\".feed.GetFeedServiceHealthResponse\x12?\n" +
+	"\vGetHomeFeed\x12\x18.feed.GetHomeFeedRequest\x1a\x16.feed.HomeFeedResponseB\x1cZ\x1athreadly/proto/feed;feedv1b\x06proto3"
 
 var (
 	file_proto_feed_feed_proto_rawDescOnce sync.Once
@@ -152,19 +500,27 @@ func file_proto_feed_feed_proto_rawDescGZIP() []byte {
 	return file_proto_feed_feed_proto_rawDescData
 }
 
-var file_proto_feed_feed_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_feed_feed_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_feed_feed_proto_goTypes = []any{
 	(*GetFeedServiceHealthRequest)(nil),  // 0: feed.GetFeedServiceHealthRequest
 	(*GetFeedServiceHealthResponse)(nil), // 1: feed.GetFeedServiceHealthResponse
+	(*GetHomeFeedRequest)(nil),           // 2: feed.GetHomeFeedRequest
+	(*HomeFeedResponse)(nil),             // 3: feed.HomeFeedResponse
+	(*FeedPostResponse)(nil),             // 4: feed.FeedPostResponse
+	(*FeedUserSummary)(nil),              // 5: feed.FeedUserSummary
 }
 var file_proto_feed_feed_proto_depIdxs = []int32{
-	0, // 0: feed.FeedService.GetHealth:input_type -> feed.GetFeedServiceHealthRequest
-	1, // 1: feed.FeedService.GetHealth:output_type -> feed.GetFeedServiceHealthResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	4, // 0: feed.HomeFeedResponse.posts:type_name -> feed.FeedPostResponse
+	5, // 1: feed.FeedPostResponse.author:type_name -> feed.FeedUserSummary
+	0, // 2: feed.FeedService.GetHealth:input_type -> feed.GetFeedServiceHealthRequest
+	2, // 3: feed.FeedService.GetHomeFeed:input_type -> feed.GetHomeFeedRequest
+	1, // 4: feed.FeedService.GetHealth:output_type -> feed.GetFeedServiceHealthResponse
+	3, // 5: feed.FeedService.GetHomeFeed:output_type -> feed.HomeFeedResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_feed_feed_proto_init() }
@@ -178,7 +534,7 @@ func file_proto_feed_feed_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_feed_feed_proto_rawDesc), len(file_proto_feed_feed_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

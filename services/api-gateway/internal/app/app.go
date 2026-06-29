@@ -114,6 +114,11 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 		feeds := api.Group("/feeds")
 		{
 			feeds.GET("/health", feedHandler.GetHealth)
+			protectedFeeds := feeds.Group("")
+			protectedFeeds.Use(middleware.AuthMiddleware(cfg))
+			{
+				protectedFeeds.GET("/home", feedHandler.GetHomeFeed)
+			}
 		}
 		notifications := api.Group("/notifications")
 		{

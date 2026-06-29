@@ -42,6 +42,16 @@ func (c *FeedClient) GetHealth(ctx context.Context) (*feedpb.GetFeedServiceHealt
 	return c.client.GetHealth(ctx, &feedpb.GetFeedServiceHealthRequest{})
 }
 
+func (c *FeedClient) GetHomeFeed(
+	ctx context.Context,
+	req *feedpb.GetHomeFeedRequest,
+) (*feedpb.HomeFeedResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.GetHomeFeed(ctx, req)
+}
+
 func (c *FeedClient) Close() error {
 	return c.conn.Close()
 }

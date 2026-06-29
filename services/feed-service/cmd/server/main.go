@@ -11,6 +11,8 @@ import (
 
 	feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
 	feedgrpc "github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc"
+	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository"
+	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/service"
 )
 
 func main() {
@@ -38,8 +40,12 @@ func main() {
 			Msg("Failed to listen for feed service grpc server")
 	}
 
+	feedRepo := repository.NewFeedRepository(dtb)
+	feedService := service.NewFeedService(feedRepo, log)
+
 	grpcServer := grpc.NewServer()
-	feedGrpcServer := feedgrpc.NewContentServiceServer(cfg, log)
+
+	feedGrpcServer := feedgrpc.NewFeedServiceServer(cfg, log, feedService)
 	feedpb.RegisterFeedServiceServer(grpcServer, feedGrpcServer)
 
 	log.Info().
