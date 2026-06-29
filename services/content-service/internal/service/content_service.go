@@ -119,7 +119,25 @@ func (s *contentService) DeletePost(ctx context.Context, req dto.DeletePostReque
 		return ErrInvalidAuthorID
 	}
 
-	return s.postRepo.DeleteOwnPost(ctx, req.PostID, req.RequesterID)
+	post, err := s.postRepo.FindByID(ctx, req.PostID)
+	if err != nil {
+		return err
+	}
+
+	if err := s.postRepo.DeleteOwnPost(ctx, req.PostID, req.RequesterID); err != nil {
+		return err
+	}
+
+	s.publishEvent(ctx, messaging.EventPostDeleted, messaging.Event{
+		EventID:   uuid.NewString(),
+		Type:      messaging.EventPostDeleted,
+		ActorID:   req.RequesterID,
+		PostID:    req.PostID,
+		AuthorID:  post.AuthorID.String(),
+		CreatedAt: time.Now().UTC().Format(time.RFC3339),
+	})
+
+	return nil
 }
 
 func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyRequest) (*dto.PostResponse, error) {
@@ -385,6 +403,13 @@ func (s *contentService) UnfollowUser(ctx context.Context, req dto.UnfollowUserR
 	if !deleted {
 		return actionResponse("user was not followed"), nil
 	}
+	s.publishEvent(ctx, messaging.EventUserUnfollowed, messaging.Event{
+		EventID:      uuid.NewString(),
+		Type:         messaging.EventUserUnfollowed,
+		ActorID:      followerID.String(),
+		TargetUserID: followingID.String(),
+		CreatedAt:    time.Now().UTC().Format(time.RFC3339),
+	})
 
 	return actionResponse("user unfollowed successfully"), nil
 }

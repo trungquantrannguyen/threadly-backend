@@ -34,7 +34,9 @@ func (c *FeedEventConsumer) Start(ctx context.Context) error {
 		feedCacheInvalidationQueue,
 		[]string{
 			messaging.EventPostCreated,
+			messaging.EventPostDeleted,
 			messaging.EventUserFollowed,
+			messaging.EventUserUnfollowed,
 		},
 		c.handleEvent,
 	)
@@ -45,7 +47,13 @@ func (c *FeedEventConsumer) handleEvent(ctx context.Context, event messaging.Eve
 	case messaging.EventPostCreated:
 		return c.clearUserHomeFeed(ctx, event.AuthorID, event.Type)
 
+	case messaging.EventPostDeleted:
+		return c.clearUserHomeFeed(ctx, event.AuthorID, event.Type)
+
 	case messaging.EventUserFollowed:
+		return c.clearUserHomeFeed(ctx, event.ActorID, event.Type)
+
+	case messaging.EventUserUnfollowed:
 		return c.clearUserHomeFeed(ctx, event.ActorID, event.Type)
 
 	default:
