@@ -30,6 +30,7 @@ func (r *feedRepository) FindHomeFeed(ctx context.Context, userID string, limit 
 	query := r.db.WithContext(ctx).
 		Model(&dbmodel.Post{}).
 		Preload("Author").
+		Preload("Media").
 		Joins(`
 			LEFT JOIN follows
 			ON follows.following_id = posts.author_id

@@ -2144,6 +2144,29 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.MediaResponse": {
+            "type": "object",
+            "properties": {
+                "height": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mime_type": {
+                    "type": "string"
+                },
+                "size_bytes": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "width": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.PostResponse": {
             "type": "object",
             "properties": {
@@ -2167,6 +2190,12 @@ const docTemplate = `{
                 },
                 "like_count": {
                     "type": "integer"
+                },
+                "medias": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.MediaResponse"
+                    }
                 },
                 "reply_count": {
                     "type": "integer"

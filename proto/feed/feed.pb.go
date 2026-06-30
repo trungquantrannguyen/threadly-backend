@@ -250,6 +250,7 @@ type FeedPostResponse struct {
 	CreatedAt     string                 `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt     string                 `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	Author        *FeedUserSummary       `protobuf:"bytes,11,opt,name=author,proto3" json:"author,omitempty"`
+	Media         []*FeedMediaResponse   `protobuf:"bytes,12,rep,name=media,proto3" json:"media,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,6 +362,13 @@ func (x *FeedPostResponse) GetAuthor() *FeedUserSummary {
 	return nil
 }
 
+func (x *FeedPostResponse) GetMedia() []*FeedMediaResponse {
+	if x != nil {
+		return x.Media
+	}
+	return nil
+}
+
 type FeedUserSummary struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -437,6 +445,90 @@ func (x *FeedUserSummary) GetIsVerified() bool {
 	return false
 }
 
+type FeedMediaResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	MimeType      string                 `protobuf:"bytes,3,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`
+	SizeBytes     int64                  `protobuf:"varint,4,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
+	Width         int32                  `protobuf:"varint,5,opt,name=width,proto3" json:"width,omitempty"`
+	Height        int32                  `protobuf:"varint,6,opt,name=height,proto3" json:"height,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FeedMediaResponse) Reset() {
+	*x = FeedMediaResponse{}
+	mi := &file_proto_feed_feed_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FeedMediaResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FeedMediaResponse) ProtoMessage() {}
+
+func (x *FeedMediaResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_feed_feed_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FeedMediaResponse.ProtoReflect.Descriptor instead.
+func (*FeedMediaResponse) Descriptor() ([]byte, []int) {
+	return file_proto_feed_feed_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *FeedMediaResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FeedMediaResponse) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *FeedMediaResponse) GetMimeType() string {
+	if x != nil {
+		return x.MimeType
+	}
+	return ""
+}
+
+func (x *FeedMediaResponse) GetSizeBytes() int64 {
+	if x != nil {
+		return x.SizeBytes
+	}
+	return 0
+}
+
+func (x *FeedMediaResponse) GetWidth() int32 {
+	if x != nil {
+		return x.Width
+	}
+	return 0
+}
+
+func (x *FeedMediaResponse) GetHeight() int32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
 var File_proto_feed_feed_proto protoreflect.FileDescriptor
 
 const file_proto_feed_feed_proto_rawDesc = "" +
@@ -456,7 +548,7 @@ const file_proto_feed_feed_proto_rawDesc = "" +
 	"\x10HomeFeedResponse\x12,\n" +
 	"\x05posts\x18\x01 \x03(\v2\x16.feed.FeedPostResponseR\x05posts\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor\"\xf0\x02\n" +
+	"nextCursor\"\x9f\x03\n" +
 	"\x10FeedPostResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tauthor_id\x18\x02 \x01(\tR\bauthorId\x12\x18\n" +
@@ -475,7 +567,8 @@ const file_proto_feed_feed_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\n" +
 	" \x01(\tR\tupdatedAt\x12-\n" +
-	"\x06author\x18\v \x01(\v2\x15.feed.FeedUserSummaryR\x06author\"\xa0\x01\n" +
+	"\x06author\x18\v \x01(\v2\x15.feed.FeedUserSummaryR\x06author\x12-\n" +
+	"\x05media\x18\f \x03(\v2\x17.feed.FeedMediaResponseR\x05media\"\xa0\x01\n" +
 	"\x0fFeedUserSummary\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12!\n" +
@@ -483,7 +576,15 @@ const file_proto_feed_feed_proto_rawDesc = "" +
 	"\n" +
 	"avatar_url\x18\x04 \x01(\tR\tavatarUrl\x12\x1f\n" +
 	"\vis_verified\x18\x05 \x01(\bR\n" +
-	"isVerified2\xa2\x01\n" +
+	"isVerified\"\x9f\x01\n" +
+	"\x11FeedMediaResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
+	"\x03url\x18\x02 \x01(\tR\x03url\x12\x1b\n" +
+	"\tmime_type\x18\x03 \x01(\tR\bmimeType\x12\x1d\n" +
+	"\n" +
+	"size_bytes\x18\x04 \x01(\x03R\tsizeBytes\x12\x14\n" +
+	"\x05width\x18\x05 \x01(\x05R\x05width\x12\x16\n" +
+	"\x06height\x18\x06 \x01(\x05R\x06height2\xa2\x01\n" +
 	"\vFeedService\x12R\n" +
 	"\tGetHealth\x12!.feed.GetFeedServiceHealthRequest\x1a\".feed.GetFeedServiceHealthResponse\x12?\n" +
 	"\vGetHomeFeed\x12\x18.feed.GetHomeFeedRequest\x1a\x16.feed.HomeFeedResponseB\x1cZ\x1athreadly/proto/feed;feedv1b\x06proto3"
@@ -500,7 +601,7 @@ func file_proto_feed_feed_proto_rawDescGZIP() []byte {
 	return file_proto_feed_feed_proto_rawDescData
 }
 
-var file_proto_feed_feed_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_proto_feed_feed_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_proto_feed_feed_proto_goTypes = []any{
 	(*GetFeedServiceHealthRequest)(nil),  // 0: feed.GetFeedServiceHealthRequest
 	(*GetFeedServiceHealthResponse)(nil), // 1: feed.GetFeedServiceHealthResponse
@@ -508,19 +609,21 @@ var file_proto_feed_feed_proto_goTypes = []any{
 	(*HomeFeedResponse)(nil),             // 3: feed.HomeFeedResponse
 	(*FeedPostResponse)(nil),             // 4: feed.FeedPostResponse
 	(*FeedUserSummary)(nil),              // 5: feed.FeedUserSummary
+	(*FeedMediaResponse)(nil),            // 6: feed.FeedMediaResponse
 }
 var file_proto_feed_feed_proto_depIdxs = []int32{
 	4, // 0: feed.HomeFeedResponse.posts:type_name -> feed.FeedPostResponse
 	5, // 1: feed.FeedPostResponse.author:type_name -> feed.FeedUserSummary
-	0, // 2: feed.FeedService.GetHealth:input_type -> feed.GetFeedServiceHealthRequest
-	2, // 3: feed.FeedService.GetHomeFeed:input_type -> feed.GetHomeFeedRequest
-	1, // 4: feed.FeedService.GetHealth:output_type -> feed.GetFeedServiceHealthResponse
-	3, // 5: feed.FeedService.GetHomeFeed:output_type -> feed.HomeFeedResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	6, // 2: feed.FeedPostResponse.media:type_name -> feed.FeedMediaResponse
+	0, // 3: feed.FeedService.GetHealth:input_type -> feed.GetFeedServiceHealthRequest
+	2, // 4: feed.FeedService.GetHomeFeed:input_type -> feed.GetHomeFeedRequest
+	1, // 5: feed.FeedService.GetHealth:output_type -> feed.GetFeedServiceHealthResponse
+	3, // 6: feed.FeedService.GetHomeFeed:output_type -> feed.HomeFeedResponse
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto_feed_feed_proto_init() }
@@ -534,7 +637,7 @@ func file_proto_feed_feed_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_feed_feed_proto_rawDesc), len(file_proto_feed_feed_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

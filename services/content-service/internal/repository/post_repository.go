@@ -98,6 +98,7 @@ func (r *postRepository) FindReplies(ctx context.Context, postID string, limit i
 
 	err := r.db.WithContext(ctx).
 		Preload("Author").
+		Preload("Media").
 		Where("reply_to_post_id = ?", postID).
 		Order("created_at ASC").
 		Limit(limit).
@@ -126,6 +127,7 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
 
 	if err := r.db.WithContext(ctx).
 		Preload("Author").
+		Preload("Media").
 		Where("author_id = ?", userID).
 		Order("created_at DESC").
 		Limit(limit).
@@ -137,6 +139,7 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
 
 	if err := r.db.WithContext(ctx).
 		Preload("Post.Author").
+		Preload("Post.Media").
 		Joins("JOIN posts ON posts.id = reposts.post_id").
 		Where("reposts.user_id = ?", userID).
 		Where("posts.deleted_at IS NULL").

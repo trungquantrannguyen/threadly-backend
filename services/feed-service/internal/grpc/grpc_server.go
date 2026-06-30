@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
+	dbmodel "github.com/trungquantrannguyen/threadly/db/models"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
 	"github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache"
@@ -87,6 +88,7 @@ func (s *FeedServiceServer) GetHomeFeed(ctx context.Context, req *feedpb.GetHome
 				AvatarUrl:   stringValue(author.AvatarURL),
 				IsVerified:  author.IsVerified,
 			},
+			Media: toFeedMediaResponses(post.Media),
 		})
 	}
 
@@ -103,6 +105,33 @@ func (s *FeedServiceServer) GetHomeFeed(ctx context.Context, req *feedpb.GetHome
 	}
 
 	return res, nil
+}
+
+func toFeedMediaResponses(media []dbmodel.Media) []*feedpb.FeedMediaResponse {
+	res := make([]*feedpb.FeedMediaResponse, 0, len(media))
+
+	for _, item := range media {
+		width := int32(0)
+		if item.Width != nil {
+			width = int32(*item.Width)
+		}
+
+		height := int32(0)
+		if item.Height != nil {
+			height = int32(*item.Height)
+		}
+
+		res = append(res, &feedpb.FeedMediaResponse{
+			Id:        item.ID.String(),
+			Url:       item.URL,
+			MimeType:  item.MimeType,
+			SizeBytes: item.SizeBytes,
+			Width:     width,
+			Height:    height,
+		})
+	}
+
+	return res
 }
 
 func stringValue(value *string) string {

@@ -22,18 +22,19 @@ type UpdatePostRequest struct {
 }
 
 type PostResponse struct {
-	ID            string      `json:"id"`
-	AuthorID      string      `json:"author_id"`
-	ReplyToPostID string      `json:"reply_to_post_id"`
-	Content       string      `json:"content"`
-	Visibility    string      `json:"visibility"`
-	LikeCount     int         `json:"like_count"`
-	ReplyCount    int         `json:"reply_count"`
-	RepostCount   int         `json:"repost_count"`
-	BookmarkCount int         `json:"bookmark_count"`
-	CreatedAt     string      `json:"created_at"`
-	UpdatedAt     string      `json:"updated_at"`
-	Author        UserSummary `json:"author"`
+	ID            string          `json:"id"`
+	AuthorID      string          `json:"author_id"`
+	ReplyToPostID string          `json:"reply_to_post_id"`
+	Content       string          `json:"content"`
+	Visibility    string          `json:"visibility"`
+	LikeCount     int             `json:"like_count"`
+	ReplyCount    int             `json:"reply_count"`
+	RepostCount   int             `json:"repost_count"`
+	BookmarkCount int             `json:"bookmark_count"`
+	CreatedAt     string          `json:"created_at"`
+	UpdatedAt     string          `json:"updated_at"`
+	Author        UserSummary     `json:"author"`
+	Medias        []MediaResponse `json:"medias"`
 }
 
 type GetContentServiceHealthResponse struct {
@@ -94,4 +95,13 @@ type UserSummary struct {
 	DisplayName string `json:"display_name"`
 	AvatarURL   string `json:"avatar_url"`
 	IsVerified  bool   `json:"is_verified"`
+}
+
+type MediaResponse struct {
+	ID        string `json:"id"`
+	URL       string `json:"url"`
+	MimeType  string `json:"mime_type"`
+	SizeBytes int64  `json:"size_bytes"`
+	Width     int    `json:"width"`
+	Height    int    `json:"height"`
 }

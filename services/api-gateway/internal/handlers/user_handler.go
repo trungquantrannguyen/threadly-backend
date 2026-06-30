@@ -355,5 +355,6 @@ func toGatewayPostResponse(post *contentpb.PostResponse) dto.PostResponse {
 			AvatarURL:   author.GetAvatarUrl(),
 			IsVerified:  author.GetIsVerified(),
 		},
+		Medias: toGatewayMediaResponses(post.GetMedia()),
 	}
 }

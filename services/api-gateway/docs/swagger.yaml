@@ -235,6 +235,21 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.MediaResponse:
+    properties:
+      height:
+        type: integer
+      id:
+        type: string
+      mime_type:
+        type: string
+      size_bytes:
+        type: integer
+      url:
+        type: string
+      width:
+        type: integer
+    type: object
   dto.PostResponse:
     properties:
       author:
@@ -251,6 +266,10 @@ definitions:
         type: string
       like_count:
         type: integer
+      medias:
+        items:
+          $ref: '#/definitions/dto.MediaResponse'
+        type: array
       reply_count:
         type: integer
       reply_to_post_id:

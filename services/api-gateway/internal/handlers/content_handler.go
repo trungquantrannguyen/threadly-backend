@@ -750,6 +750,7 @@ func toPostResponse(post *contentpb.PostResponse) dto.PostResponse {
 			AvatarURL:   author.GetAvatarUrl(),
 			IsVerified:  author.GetIsVerified(),
 		},
+		Medias: toGatewayMediaResponses(post.Media),
 	}
 }
 
@@ -761,4 +762,21 @@ func toUserSummary(user *contentpb.UserSummary) dto.UserSummary {
 		AvatarURL:   user.GetAvatarUrl(),
 		IsVerified:  user.GetIsVerified(),
 	}
+}
+
+func toGatewayMediaResponses(media []*contentpb.MediaResponse) []dto.MediaResponse {
+	res := make([]dto.MediaResponse, 0, len(media))
+
+	for _, item := range media {
+		res = append(res, dto.MediaResponse{
+			ID:        item.GetId(),
+			URL:       item.GetUrl(),
+			MimeType:  item.GetMimeType(),
+			SizeBytes: item.GetSizeBytes(),
+			Width:     int(item.GetWidth()),
+			Height:    int(item.GetHeight()),
+		})
+	}
+
+	return res
 }

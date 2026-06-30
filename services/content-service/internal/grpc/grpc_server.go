@@ -287,11 +287,6 @@ func (s *ContentServiceServer) UpdatePost(ctx context.Context, req *contentpb.Up
 }
 
 func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
-	mediaResponses := make([]*contentpb.MediaResponse, 0, len(post.Media))
-	for _, media := range post.Media {
-		mediaResponses = append(mediaResponses, toMediaResponse(media))
-	}
-
 	return &contentpb.PostResponse{
 		Id:            post.ID,
 		AuthorId:      post.AuthorID,
@@ -311,7 +306,7 @@ func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
 			AvatarUrl:   post.Author.AvatarURL,
 			IsVerified:  post.Author.IsVerified,
 		},
-		Media: mediaResponses,
+		Media: toProtoMediaResponses(post.Media),
 	}
 }
 
@@ -367,23 +362,19 @@ func mapContentServiceError(err error) error {
 	}
 }
 
-func toMediaResponse(media dto.MediaResponse) *contentpb.MediaResponse {
-	width := 0
-	if media.Width != 0 {
-		width = media.Width
+func toProtoMediaResponses(media []dto.MediaResponse) []*contentpb.MediaResponse {
+	res := make([]*contentpb.MediaResponse, 0, len(media))
+
+	for _, item := range media {
+		res = append(res, &contentpb.MediaResponse{
+			Id:        item.ID,
+			Url:       item.URL,
+			MimeType:  item.MimeType,
+			SizeBytes: item.SizeBytes,
+			Width:     int32(item.Width),
+			Height:    int32(item.Height),
+		})
 	}
 
-	height := 0
-	if media.Height != 0 {
-		height = media.Height
-	}
-
-	return &contentpb.MediaResponse{
-		Id:        media.ID,
-		Url:       media.URL,
-		MimeType:  media.MimeType,
-		SizeBytes: media.SizeBytes,
-		Width:     int32(width),
-		Height:    int32(height),
-	}
+	return res
 }
