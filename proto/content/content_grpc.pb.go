@@ -23,6 +23,7 @@ const (
 	ContentService_CreatePost_FullMethodName      = "/content.ContentService/CreatePost"
 	ContentService_GetPost_FullMethodName         = "/content.ContentService/GetPost"
 	ContentService_DeletePost_FullMethodName      = "/content.ContentService/DeletePost"
+	ContentService_UpdatePost_FullMethodName      = "/content.ContentService/UpdatePost"
 	ContentService_CreateReply_FullMethodName     = "/content.ContentService/CreateReply"
 	ContentService_GetReplies_FullMethodName      = "/content.ContentService/GetReplies"
 	ContentService_LikePost_FullMethodName        = "/content.ContentService/LikePost"
@@ -47,6 +48,7 @@ type ContentServiceClient interface {
 	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*PostResponse, error)
 	GetPost(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*PostResponse, error)
 	DeletePost(ctx context.Context, in *DeletePostRequest, opts ...grpc.CallOption) (*DeletePostResponse, error)
+	UpdatePost(ctx context.Context, in *UpdatePostRequest, opts ...grpc.CallOption) (*PostResponse, error)
 	// Replies
 	CreateReply(ctx context.Context, in *CreateReplyRequest, opts ...grpc.CallOption) (*PostResponse, error)
 	GetReplies(ctx context.Context, in *GetRepliesRequest, opts ...grpc.CallOption) (*PostListResponse, error)
@@ -110,6 +112,16 @@ func (c *contentServiceClient) DeletePost(ctx context.Context, in *DeletePostReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeletePostResponse)
 	err := c.cc.Invoke(ctx, ContentService_DeletePost_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentServiceClient) UpdatePost(ctx context.Context, in *UpdatePostRequest, opts ...grpc.CallOption) (*PostResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostResponse)
+	err := c.cc.Invoke(ctx, ContentService_UpdatePost_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -255,6 +267,7 @@ type ContentServiceServer interface {
 	CreatePost(context.Context, *CreatePostRequest) (*PostResponse, error)
 	GetPost(context.Context, *GetPostRequest) (*PostResponse, error)
 	DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error)
+	UpdatePost(context.Context, *UpdatePostRequest) (*PostResponse, error)
 	// Replies
 	CreateReply(context.Context, *CreateReplyRequest) (*PostResponse, error)
 	GetReplies(context.Context, *GetRepliesRequest) (*PostListResponse, error)
@@ -295,6 +308,9 @@ func (UnimplementedContentServiceServer) GetPost(context.Context, *GetPostReques
 }
 func (UnimplementedContentServiceServer) DeletePost(context.Context, *DeletePostRequest) (*DeletePostResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeletePost not implemented")
+}
+func (UnimplementedContentServiceServer) UpdatePost(context.Context, *UpdatePostRequest) (*PostResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdatePost not implemented")
 }
 func (UnimplementedContentServiceServer) CreateReply(context.Context, *CreateReplyRequest) (*PostResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateReply not implemented")
@@ -424,6 +440,24 @@ func _ContentService_DeletePost_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ContentServiceServer).DeletePost(ctx, req.(*DeletePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ContentService_UpdatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).UpdatePost(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_UpdatePost_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).UpdatePost(ctx, req.(*UpdatePostRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -684,6 +718,10 @@ var ContentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePost",
 			Handler:    _ContentService_DeletePost_Handler,
+		},
+		{
+			MethodName: "UpdatePost",
+			Handler:    _ContentService_UpdatePost_Handler,
 		},
 		{
 			MethodName: "CreateReply",

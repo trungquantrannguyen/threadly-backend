@@ -7,11 +7,12 @@
 package contentv1
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -139,6 +140,7 @@ type PostResponse struct {
 	CreatedAt     string                 `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	UpdatedAt     string                 `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	Author        *UserSummary           `protobuf:"bytes,12,opt,name=author,proto3" json:"author,omitempty"`
+	Media         []*MediaResponse       `protobuf:"bytes,13,rep,name=media,proto3" json:"media,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -253,6 +255,13 @@ func (x *PostResponse) GetUpdatedAt() string {
 func (x *PostResponse) GetAuthor() *UserSummary {
 	if x != nil {
 		return x.Author
+	}
+	return nil
+}
+
+func (x *PostResponse) GetMedia() []*MediaResponse {
+	if x != nil {
+		return x.Media
 	}
 	return nil
 }
@@ -546,6 +555,7 @@ type CreatePostRequest struct {
 	AuthorId      string                 `protobuf:"bytes,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
 	Visibility    string                 `protobuf:"bytes,3,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	MediaIds      []string               `protobuf:"bytes,4,rep,name=media_ids,json=mediaIds,proto3" json:"media_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -599,6 +609,13 @@ func (x *CreatePostRequest) GetVisibility() string {
 		return x.Visibility
 	}
 	return ""
+}
+
+func (x *CreatePostRequest) GetMediaIds() []string {
+	if x != nil {
+		return x.MediaIds
+	}
+	return nil
 }
 
 type GetPostRequest struct {
@@ -1541,6 +1558,166 @@ func (x *TimelineResponse) GetNextCursor() string {
 	return ""
 }
 
+type MediaResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	MimeType      string                 `protobuf:"bytes,3,opt,name=mime_type,json=mimeType,proto3" json:"mime_type,omitempty"`
+	SizeBytes     int64                  `protobuf:"varint,4,opt,name=size_bytes,json=sizeBytes,proto3" json:"size_bytes,omitempty"`
+	Width         int32                  `protobuf:"varint,5,opt,name=width,proto3" json:"width,omitempty"`
+	Height        int32                  `protobuf:"varint,6,opt,name=height,proto3" json:"height,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MediaResponse) Reset() {
+	*x = MediaResponse{}
+	mi := &file_proto_content_content_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MediaResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MediaResponse) ProtoMessage() {}
+
+func (x *MediaResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MediaResponse.ProtoReflect.Descriptor instead.
+func (*MediaResponse) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *MediaResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *MediaResponse) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *MediaResponse) GetMimeType() string {
+	if x != nil {
+		return x.MimeType
+	}
+	return ""
+}
+
+func (x *MediaResponse) GetSizeBytes() int64 {
+	if x != nil {
+		return x.SizeBytes
+	}
+	return 0
+}
+
+func (x *MediaResponse) GetWidth() int32 {
+	if x != nil {
+		return x.Width
+	}
+	return 0
+}
+
+func (x *MediaResponse) GetHeight() int32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
+type UpdatePostRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PostId        string                 `protobuf:"bytes,1,opt,name=post_id,json=postId,proto3" json:"post_id,omitempty"`
+	RequesterId   string                 `protobuf:"bytes,2,opt,name=requester_id,json=requesterId,proto3" json:"requester_id,omitempty"`
+	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	MediaIds      []string               `protobuf:"bytes,5,rep,name=media_ids,json=mediaIds,proto3" json:"media_ids,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdatePostRequest) Reset() {
+	*x = UpdatePostRequest{}
+	mi := &file_proto_content_content_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePostRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePostRequest) ProtoMessage() {}
+
+func (x *UpdatePostRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_content_content_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePostRequest.ProtoReflect.Descriptor instead.
+func (*UpdatePostRequest) Descriptor() ([]byte, []int) {
+	return file_proto_content_content_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *UpdatePostRequest) GetPostId() string {
+	if x != nil {
+		return x.PostId
+	}
+	return ""
+}
+
+func (x *UpdatePostRequest) GetRequesterId() string {
+	if x != nil {
+		return x.RequesterId
+	}
+	return ""
+}
+
+func (x *UpdatePostRequest) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *UpdatePostRequest) GetVisibility() string {
+	if x != nil {
+		return x.Visibility
+	}
+	return ""
+}
+
+func (x *UpdatePostRequest) GetMediaIds() []string {
+	if x != nil {
+		return x.MediaIds
+	}
+	return nil
+}
+
 var File_proto_content_content_proto protoreflect.FileDescriptor
 
 const file_proto_content_content_proto_rawDesc = "" +
@@ -1552,7 +1729,7 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"\x06status\x18\x02 \x01(\tR\x06status\x12\x10\n" +
 	"\x03env\x18\x03 \x01(\tR\x03env\x12\x1d\n" +
 	"\n" +
-	"checked_at\x18\x04 \x01(\tR\tcheckedAt\"\x94\x03\n" +
+	"checked_at\x18\x04 \x01(\tR\tcheckedAt\"\xc2\x03\n" +
 	"\fPostResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\tauthor_id\x18\x02 \x01(\tR\bauthorId\x12'\n" +
@@ -1572,7 +1749,8 @@ const file_proto_content_content_proto_rawDesc = "" +
 	" \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
 	"updated_at\x18\v \x01(\tR\tupdatedAt\x12,\n" +
-	"\x06author\x18\f \x01(\v2\x14.content.UserSummaryR\x06author\"`\n" +
+	"\x06author\x18\f \x01(\v2\x14.content.UserSummaryR\x06author\x12,\n" +
+	"\x05media\x18\r \x03(\v2\x16.content.MediaResponseR\x05media\"`\n" +
 	"\x10PostListResponse\x12+\n" +
 	"\x05posts\x18\x01 \x03(\v2\x15.content.PostResponseR\x05posts\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
@@ -1594,13 +1772,14 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"H\n" +
 	"\x12DeletePostResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"j\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\x87\x01\n" +
 	"\x11CreatePostRequest\x12\x1b\n" +
 	"\tauthor_id\x18\x01 \x01(\tR\bauthorId\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\x03 \x01(\tR\n" +
-	"visibility\"F\n" +
+	"visibility\x12\x1b\n" +
+	"\tmedia_ids\x18\x04 \x03(\tR\bmediaIds\"F\n" +
 	"\x0eGetPostRequest\x12\x17\n" +
 	"\apost_id\x18\x01 \x01(\tR\x06postId\x12\x1b\n" +
 	"\tviewer_id\x18\x02 \x01(\tR\bviewerId\"O\n" +
@@ -1664,14 +1843,33 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"\x10TimelineResponse\x123\n" +
 	"\x05items\x18\x01 \x03(\v2\x1d.content.TimelineItemResponseR\x05items\x12\x1f\n" +
 	"\vnext_cursor\x18\x02 \x01(\tR\n" +
-	"nextCursor2\xc0\t\n" +
+	"nextCursor\"\x9b\x01\n" +
+	"\rMediaResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x10\n" +
+	"\x03url\x18\x02 \x01(\tR\x03url\x12\x1b\n" +
+	"\tmime_type\x18\x03 \x01(\tR\bmimeType\x12\x1d\n" +
+	"\n" +
+	"size_bytes\x18\x04 \x01(\x03R\tsizeBytes\x12\x14\n" +
+	"\x05width\x18\x05 \x01(\x05R\x05width\x12\x16\n" +
+	"\x06height\x18\x06 \x01(\x05R\x06height\"\xa6\x01\n" +
+	"\x11UpdatePostRequest\x12\x17\n" +
+	"\apost_id\x18\x01 \x01(\tR\x06postId\x12!\n" +
+	"\frequester_id\x18\x02 \x01(\tR\vrequesterId\x12\x18\n" +
+	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1e\n" +
+	"\n" +
+	"visibility\x18\x04 \x01(\tR\n" +
+	"visibility\x12\x1b\n" +
+	"\tmedia_ids\x18\x05 \x03(\tR\bmediaIds2\x81\n" +
+	"\n" +
 	"\x0eContentService\x12^\n" +
 	"\tGetHealth\x12'.content.GetContentServiceHealthRequest\x1a(.content.GetContentServiceHealthResponse\x12?\n" +
 	"\n" +
 	"CreatePost\x12\x1a.content.CreatePostRequest\x1a\x15.content.PostResponse\x129\n" +
 	"\aGetPost\x12\x17.content.GetPostRequest\x1a\x15.content.PostResponse\x12E\n" +
 	"\n" +
-	"DeletePost\x12\x1a.content.DeletePostRequest\x1a\x1b.content.DeletePostResponse\x12A\n" +
+	"DeletePost\x12\x1a.content.DeletePostRequest\x1a\x1b.content.DeletePostResponse\x12?\n" +
+	"\n" +
+	"UpdatePost\x12\x1a.content.UpdatePostRequest\x1a\x15.content.PostResponse\x12A\n" +
 	"\vCreateReply\x12\x1b.content.CreateReplyRequest\x1a\x15.content.PostResponse\x12C\n" +
 	"\n" +
 	"GetReplies\x12\x1a.content.GetRepliesRequest\x1a\x19.content.PostListResponse\x12=\n" +
@@ -1703,80 +1901,87 @@ func file_proto_content_content_proto_rawDescGZIP() []byte {
 	return file_proto_content_content_proto_rawDescData
 }
 
-var file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
-var file_proto_content_content_proto_goTypes = []any{
-	(*GetContentServiceHealthRequest)(nil),  // 0: content.GetContentServiceHealthRequest
-	(*GetContentServiceHealthResponse)(nil), // 1: content.GetContentServiceHealthResponse
-	(*PostResponse)(nil),                    // 2: content.PostResponse
-	(*PostListResponse)(nil),                // 3: content.PostListResponse
-	(*UserSummary)(nil),                     // 4: content.UserSummary
-	(*UserListResponse)(nil),                // 5: content.UserListResponse
-	(*ActionResponse)(nil),                  // 6: content.ActionResponse
-	(*DeletePostResponse)(nil),              // 7: content.DeletePostResponse
-	(*CreatePostRequest)(nil),               // 8: content.CreatePostRequest
-	(*GetPostRequest)(nil),                  // 9: content.GetPostRequest
-	(*DeletePostRequest)(nil),               // 10: content.DeletePostRequest
-	(*CreateReplyRequest)(nil),              // 11: content.CreateReplyRequest
-	(*GetRepliesRequest)(nil),               // 12: content.GetRepliesRequest
-	(*LikePostRequest)(nil),                 // 13: content.LikePostRequest
-	(*UnlikePostRequest)(nil),               // 14: content.UnlikePostRequest
-	(*BookmarkPostRequest)(nil),             // 15: content.BookmarkPostRequest
-	(*UnbookmarkPostRequest)(nil),           // 16: content.UnbookmarkPostRequest
-	(*RepostPostRequest)(nil),               // 17: content.RepostPostRequest
-	(*UndoRepostRequest)(nil),               // 18: content.UndoRepostRequest
-	(*FollowUserRequest)(nil),               // 19: content.FollowUserRequest
-	(*UnfollowUserRequest)(nil),             // 20: content.UnfollowUserRequest
-	(*GetFollowersRequest)(nil),             // 21: content.GetFollowersRequest
-	(*GetFollowingRequest)(nil),             // 22: content.GetFollowingRequest
-	(*GetUserTimelineRequest)(nil),          // 23: content.GetUserTimelineRequest
-	(*TimelineItemResponse)(nil),            // 24: content.TimelineItemResponse
-	(*TimelineResponse)(nil),                // 25: content.TimelineResponse
-}
+var (
+	file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+	file_proto_content_content_proto_goTypes  = []any{
+		(*GetContentServiceHealthRequest)(nil),  // 0: content.GetContentServiceHealthRequest
+		(*GetContentServiceHealthResponse)(nil), // 1: content.GetContentServiceHealthResponse
+		(*PostResponse)(nil),                    // 2: content.PostResponse
+		(*PostListResponse)(nil),                // 3: content.PostListResponse
+		(*UserSummary)(nil),                     // 4: content.UserSummary
+		(*UserListResponse)(nil),                // 5: content.UserListResponse
+		(*ActionResponse)(nil),                  // 6: content.ActionResponse
+		(*DeletePostResponse)(nil),              // 7: content.DeletePostResponse
+		(*CreatePostRequest)(nil),               // 8: content.CreatePostRequest
+		(*GetPostRequest)(nil),                  // 9: content.GetPostRequest
+		(*DeletePostRequest)(nil),               // 10: content.DeletePostRequest
+		(*CreateReplyRequest)(nil),              // 11: content.CreateReplyRequest
+		(*GetRepliesRequest)(nil),               // 12: content.GetRepliesRequest
+		(*LikePostRequest)(nil),                 // 13: content.LikePostRequest
+		(*UnlikePostRequest)(nil),               // 14: content.UnlikePostRequest
+		(*BookmarkPostRequest)(nil),             // 15: content.BookmarkPostRequest
+		(*UnbookmarkPostRequest)(nil),           // 16: content.UnbookmarkPostRequest
+		(*RepostPostRequest)(nil),               // 17: content.RepostPostRequest
+		(*UndoRepostRequest)(nil),               // 18: content.UndoRepostRequest
+		(*FollowUserRequest)(nil),               // 19: content.FollowUserRequest
+		(*UnfollowUserRequest)(nil),             // 20: content.UnfollowUserRequest
+		(*GetFollowersRequest)(nil),             // 21: content.GetFollowersRequest
+		(*GetFollowingRequest)(nil),             // 22: content.GetFollowingRequest
+		(*GetUserTimelineRequest)(nil),          // 23: content.GetUserTimelineRequest
+		(*TimelineItemResponse)(nil),            // 24: content.TimelineItemResponse
+		(*TimelineResponse)(nil),                // 25: content.TimelineResponse
+		(*MediaResponse)(nil),                   // 26: content.MediaResponse
+		(*UpdatePostRequest)(nil),               // 27: content.UpdatePostRequest
+	}
+)
 var file_proto_content_content_proto_depIdxs = []int32{
 	4,  // 0: content.PostResponse.author:type_name -> content.UserSummary
-	2,  // 1: content.PostListResponse.posts:type_name -> content.PostResponse
-	4,  // 2: content.UserListResponse.users:type_name -> content.UserSummary
-	2,  // 3: content.TimelineItemResponse.post:type_name -> content.PostResponse
-	24, // 4: content.TimelineResponse.items:type_name -> content.TimelineItemResponse
-	0,  // 5: content.ContentService.GetHealth:input_type -> content.GetContentServiceHealthRequest
-	8,  // 6: content.ContentService.CreatePost:input_type -> content.CreatePostRequest
-	9,  // 7: content.ContentService.GetPost:input_type -> content.GetPostRequest
-	10, // 8: content.ContentService.DeletePost:input_type -> content.DeletePostRequest
-	11, // 9: content.ContentService.CreateReply:input_type -> content.CreateReplyRequest
-	12, // 10: content.ContentService.GetReplies:input_type -> content.GetRepliesRequest
-	13, // 11: content.ContentService.LikePost:input_type -> content.LikePostRequest
-	14, // 12: content.ContentService.UnlikePost:input_type -> content.UnlikePostRequest
-	15, // 13: content.ContentService.BookmarkPost:input_type -> content.BookmarkPostRequest
-	16, // 14: content.ContentService.UnbookmarkPost:input_type -> content.UnbookmarkPostRequest
-	17, // 15: content.ContentService.RepostPost:input_type -> content.RepostPostRequest
-	18, // 16: content.ContentService.UndoRepost:input_type -> content.UndoRepostRequest
-	19, // 17: content.ContentService.FollowUser:input_type -> content.FollowUserRequest
-	20, // 18: content.ContentService.UnfollowUser:input_type -> content.UnfollowUserRequest
-	21, // 19: content.ContentService.GetFollowers:input_type -> content.GetFollowersRequest
-	22, // 20: content.ContentService.GetFollowing:input_type -> content.GetFollowingRequest
-	23, // 21: content.ContentService.GetUserTimeline:input_type -> content.GetUserTimelineRequest
-	1,  // 22: content.ContentService.GetHealth:output_type -> content.GetContentServiceHealthResponse
-	2,  // 23: content.ContentService.CreatePost:output_type -> content.PostResponse
-	2,  // 24: content.ContentService.GetPost:output_type -> content.PostResponse
-	7,  // 25: content.ContentService.DeletePost:output_type -> content.DeletePostResponse
-	2,  // 26: content.ContentService.CreateReply:output_type -> content.PostResponse
-	3,  // 27: content.ContentService.GetReplies:output_type -> content.PostListResponse
-	6,  // 28: content.ContentService.LikePost:output_type -> content.ActionResponse
-	6,  // 29: content.ContentService.UnlikePost:output_type -> content.ActionResponse
-	6,  // 30: content.ContentService.BookmarkPost:output_type -> content.ActionResponse
-	6,  // 31: content.ContentService.UnbookmarkPost:output_type -> content.ActionResponse
-	6,  // 32: content.ContentService.RepostPost:output_type -> content.ActionResponse
-	6,  // 33: content.ContentService.UndoRepost:output_type -> content.ActionResponse
-	6,  // 34: content.ContentService.FollowUser:output_type -> content.ActionResponse
-	6,  // 35: content.ContentService.UnfollowUser:output_type -> content.ActionResponse
-	5,  // 36: content.ContentService.GetFollowers:output_type -> content.UserListResponse
-	5,  // 37: content.ContentService.GetFollowing:output_type -> content.UserListResponse
-	25, // 38: content.ContentService.GetUserTimeline:output_type -> content.TimelineResponse
-	22, // [22:39] is the sub-list for method output_type
-	5,  // [5:22] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	26, // 1: content.PostResponse.media:type_name -> content.MediaResponse
+	2,  // 2: content.PostListResponse.posts:type_name -> content.PostResponse
+	4,  // 3: content.UserListResponse.users:type_name -> content.UserSummary
+	2,  // 4: content.TimelineItemResponse.post:type_name -> content.PostResponse
+	24, // 5: content.TimelineResponse.items:type_name -> content.TimelineItemResponse
+	0,  // 6: content.ContentService.GetHealth:input_type -> content.GetContentServiceHealthRequest
+	8,  // 7: content.ContentService.CreatePost:input_type -> content.CreatePostRequest
+	9,  // 8: content.ContentService.GetPost:input_type -> content.GetPostRequest
+	10, // 9: content.ContentService.DeletePost:input_type -> content.DeletePostRequest
+	27, // 10: content.ContentService.UpdatePost:input_type -> content.UpdatePostRequest
+	11, // 11: content.ContentService.CreateReply:input_type -> content.CreateReplyRequest
+	12, // 12: content.ContentService.GetReplies:input_type -> content.GetRepliesRequest
+	13, // 13: content.ContentService.LikePost:input_type -> content.LikePostRequest
+	14, // 14: content.ContentService.UnlikePost:input_type -> content.UnlikePostRequest
+	15, // 15: content.ContentService.BookmarkPost:input_type -> content.BookmarkPostRequest
+	16, // 16: content.ContentService.UnbookmarkPost:input_type -> content.UnbookmarkPostRequest
+	17, // 17: content.ContentService.RepostPost:input_type -> content.RepostPostRequest
+	18, // 18: content.ContentService.UndoRepost:input_type -> content.UndoRepostRequest
+	19, // 19: content.ContentService.FollowUser:input_type -> content.FollowUserRequest
+	20, // 20: content.ContentService.UnfollowUser:input_type -> content.UnfollowUserRequest
+	21, // 21: content.ContentService.GetFollowers:input_type -> content.GetFollowersRequest
+	22, // 22: content.ContentService.GetFollowing:input_type -> content.GetFollowingRequest
+	23, // 23: content.ContentService.GetUserTimeline:input_type -> content.GetUserTimelineRequest
+	1,  // 24: content.ContentService.GetHealth:output_type -> content.GetContentServiceHealthResponse
+	2,  // 25: content.ContentService.CreatePost:output_type -> content.PostResponse
+	2,  // 26: content.ContentService.GetPost:output_type -> content.PostResponse
+	7,  // 27: content.ContentService.DeletePost:output_type -> content.DeletePostResponse
+	2,  // 28: content.ContentService.UpdatePost:output_type -> content.PostResponse
+	2,  // 29: content.ContentService.CreateReply:output_type -> content.PostResponse
+	3,  // 30: content.ContentService.GetReplies:output_type -> content.PostListResponse
+	6,  // 31: content.ContentService.LikePost:output_type -> content.ActionResponse
+	6,  // 32: content.ContentService.UnlikePost:output_type -> content.ActionResponse
+	6,  // 33: content.ContentService.BookmarkPost:output_type -> content.ActionResponse
+	6,  // 34: content.ContentService.UnbookmarkPost:output_type -> content.ActionResponse
+	6,  // 35: content.ContentService.RepostPost:output_type -> content.ActionResponse
+	6,  // 36: content.ContentService.UndoRepost:output_type -> content.ActionResponse
+	6,  // 37: content.ContentService.FollowUser:output_type -> content.ActionResponse
+	6,  // 38: content.ContentService.UnfollowUser:output_type -> content.ActionResponse
+	5,  // 39: content.ContentService.GetFollowers:output_type -> content.UserListResponse
+	5,  // 40: content.ContentService.GetFollowing:output_type -> content.UserListResponse
+	25, // 41: content.ContentService.GetUserTimeline:output_type -> content.TimelineResponse
+	24, // [24:42] is the sub-list for method output_type
+	6,  // [6:24] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_proto_content_content_proto_init() }
@@ -1790,7 +1995,7 @@ func file_proto_content_content_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_content_content_proto_rawDesc), len(file_proto_content_content_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   26,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

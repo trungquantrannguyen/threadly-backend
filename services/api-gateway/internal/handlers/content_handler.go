@@ -78,6 +78,7 @@ func (h *ContentHandler) CreatePost(c *gin.Context) {
 		AuthorId:   authorID,
 		Content:    req.Content,
 		Visibility: req.Visibility,
+		MediaIds:   req.MediaIDs,
 	})
 	if err != nil {
 		h.log.Error().Err(err).Msg("Failed to create post")
@@ -117,6 +118,57 @@ func (h *ContentHandler) GetPost(c *gin.Context) {
 	}
 
 	response.OK(c, http.StatusOK, "Get post successfully", toPostResponse(res))
+}
+
+// UpdatePost godoc
+// @Summary Update a post
+// @Description Updates the authenticated user's own post. Supports updating content, visibility, and attached media IDs.
+// @Tags Contents
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "Post ID"
+// @Param request body dto.UpdatePostRequest true "Update post request body"
+// @Success 200 {object} dto.PostResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /contents/posts/{postID} [patch]
+func (h *ContentHandler) UpdatePost(c *gin.Context) {
+	var req dto.UpdatePostRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+		return
+	}
+
+	postID := c.Param("postID")
+	if postID == "" {
+		response.Error(c, http.StatusBadRequest, "Missing params", nil)
+		return
+	}
+
+	requesterID := middleware.GetUserID(c)
+	if requesterID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
+	res, err := h.contentClient.UpdatePost(c.Request.Context(), &contentpb.UpdatePostRequest{
+		PostId:      postID,
+		RequesterId: requesterID,
+		Content:     req.Content,
+		Visibility:  req.Visibility,
+		MediaIds:    req.MediaIDs,
+	})
+	if err != nil {
+		h.log.Error().Err(err).Msg("Failed to update post")
+		HandleGRPCError(c, err)
+		return
+	}
+
+	response.OK(c, http.StatusOK, "Updated post successfully", res)
 }
 
 // DeletePost godoc

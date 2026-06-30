@@ -30,8 +30,9 @@ type Post struct {
 
 	Author User `gorm:"foreignKey:AuthorID"`
 
-	ReplyToPost *Post  `gorm:"foreignKey:ReplyToPostID"`
-	Replies     []Post `gorm:"foreignKey:ReplyToPostID"`
+	ReplyToPost *Post   `gorm:"foreignKey:ReplyToPostID"`
+	Replies     []Post  `gorm:"foreignKey:ReplyToPostID"`
+	Media       []Media `gorm:"foreignKey:PostID"`
 }
 
 func (Post) TableName() string {

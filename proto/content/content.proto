@@ -11,6 +11,7 @@ service ContentService {
     rpc CreatePost(CreatePostRequest) returns (PostResponse);
     rpc GetPost(GetPostRequest) returns (PostResponse);
     rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+    rpc UpdatePost(UpdatePostRequest) returns (PostResponse);
 
     // Replies
     rpc CreateReply(CreateReplyRequest) returns (PostResponse);
@@ -64,6 +65,7 @@ message PostResponse {
     string created_at = 10;
     string updated_at = 11;
     UserSummary author = 12;
+    repeated MediaResponse media = 13;
 }
 
 message PostListResponse {
@@ -100,6 +102,7 @@ message CreatePostRequest {
     string author_id = 1;
     string content = 2;
     string visibility = 3;
+    repeated string media_ids = 4;
 }
 
 message GetPostRequest {
@@ -202,4 +205,21 @@ message TimelineItemResponse {
 message TimelineResponse {
     repeated TimelineItemResponse items = 1;
     string next_cursor = 2;
+}
+
+message MediaResponse {
+    string id = 1;
+    string url = 2;
+    string mime_type = 3;
+    int64 size_bytes = 4;
+    int32 width = 5;
+    int32 height = 6;
+}
+
+message UpdatePostRequest {
+    string post_id = 1;
+    string requester_id = 2;
+    string content = 3;
+    string visibility = 4;
+    repeated string media_ids = 5;
 }

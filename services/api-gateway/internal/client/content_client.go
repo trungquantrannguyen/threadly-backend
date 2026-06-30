@@ -56,6 +56,13 @@ func (c *ContentClient) GetPost(ctx context.Context, req *contentpb.GetPostReque
 	return c.client.GetPost(ctx, req)
 }
 
+func (c *ContentClient) UpdatePost(ctx context.Context, req *contentpb.UpdatePostRequest) (*contentpb.PostResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return c.client.UpdatePost(ctx, req)
+}
+
 func (c *ContentClient) DeletePost(ctx context.Context, req *contentpb.DeletePostRequest) (*contentpb.DeletePostResponse, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()

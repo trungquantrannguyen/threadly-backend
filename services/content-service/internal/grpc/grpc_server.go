@@ -45,6 +45,7 @@ func (s *ContentServiceServer) CreatePost(ctx context.Context, req *contentpb.Cr
 		AuthorID:   req.GetAuthorId(),
 		Content:    req.GetContent(),
 		Visibility: req.GetVisibility(),
+		MediaIDs:   req.GetMediaIds(),
 	})
 	if err != nil {
 		return nil, mapContentServiceError(err)
@@ -270,7 +271,27 @@ func (s *ContentServiceServer) GetUserTimeline(ctx context.Context, req *content
 	}, nil
 }
 
+func (s *ContentServiceServer) UpdatePost(ctx context.Context, req *contentpb.UpdatePostRequest) (*contentpb.PostResponse, error) {
+	post, err := s.contentService.UpdatePost(ctx, dto.UpdatePostRequest{
+		PostID:      req.GetPostId(),
+		RequesterID: req.GetRequesterId(),
+		Content:     req.GetContent(),
+		Visibility:  req.GetVisibility(),
+		MediaIDs:    req.GetMediaIds(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return toProtoPostResponse(post), nil
+}
+
 func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
+	mediaResponses := make([]*contentpb.MediaResponse, 0, len(post.Media))
+	for _, media := range post.Media {
+		mediaResponses = append(mediaResponses, toMediaResponse(media))
+	}
+
 	return &contentpb.PostResponse{
 		Id:            post.ID,
 		AuthorId:      post.AuthorID,
@@ -290,6 +311,7 @@ func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse {
 			AvatarUrl:   post.Author.AvatarURL,
 			IsVerified:  post.Author.IsVerified,
 		},
+		Media: mediaResponses,
 	}
 }
 
@@ -342,5 +364,26 @@ func mapContentServiceError(err error) error {
 
 	default:
 		return status.Error(codes.Internal, "internal server error")
+	}
+}
+
+func toMediaResponse(media dto.MediaResponse) *contentpb.MediaResponse {
+	width := 0
+	if media.Width != 0 {
+		width = media.Width
+	}
+
+	height := 0
+	if media.Height != 0 {
+		height = media.Height
+	}
+
+	return &contentpb.MediaResponse{
+		Id:        media.ID,
+		Url:       media.URL,
+		MimeType:  media.MimeType,
+		SizeBytes: media.SizeBytes,
+		Width:     int32(width),
+		Height:    int32(height),
 	}
 }

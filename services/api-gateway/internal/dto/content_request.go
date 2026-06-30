@@ -1,8 +1,9 @@
 package dto
 
 type CreatePostRequest struct {
-	Content    string `json:"content" binding:"required"`
-	Visibility string `json:"visibility"`
+	Content    string   `json:"content" binding:"required"`
+	Visibility string   `json:"visibility"`
+	MediaIDs   []string `json:"media_ids"`
 }
 
 type GetPostRequest struct {
@@ -12,6 +13,12 @@ type GetPostRequest struct {
 type GetRepliesRequest struct {
 	Limit  int    `json:"limit" binding:"required,min=0,max=50"`
 	Cursor string `json:"cursor"`
+}
+
+type UpdatePostRequest struct {
+	Content    string   `json:"content" binding:"required"`
+	Visibility string   `json:"visibility"`
+	MediaIDs   []string `json:"media_ids"`
 }
 
 type PostResponse struct {

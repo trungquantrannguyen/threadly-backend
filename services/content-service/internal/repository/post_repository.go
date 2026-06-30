@@ -26,10 +26,14 @@ type UserTimelineItem struct {
 type PostRepository interface {
 	Create(ctx context.Context, post *dbmodel.Post) error
 	FindByID(ctx context.Context, postID string) (*dbmodel.Post, error)
+	UpdateOwnPost(ctx context.Context, postID string, requesterID string, content string, visibility string) (*dbmodel.Post, error)
 	DeleteOwnPost(ctx context.Context, postID string, requesterID string) error
 	FindReplies(ctx context.Context, postID string, limit int) ([]dbmodel.Post, error)
 	IncrementReplyCount(ctx context.Context, postID string) error
 	FindUserTimeline(ctx context.Context, userID uuid.UUID, limit int) ([]UserTimelineItem, error)
+
+	AttachMediaToPost(ctx context.Context, postID uuid.UUID, uploaderID uuid.UUID, mediaIDs []string) error
+	ReplacePostMedia(ctx context.Context, postID uuid.UUID, uploaderID uuid.UUID, mediaIDs []string) error
 }
 
 type postRepository struct {
@@ -49,6 +53,7 @@ func (r *postRepository) FindByID(ctx context.Context, postID string) (*dbmodel.
 
 	err := r.db.WithContext(ctx).
 		Preload("Author").
+		Preload("Media").
 		Where("id = ?", postID).
 		First(&post).Error
 	if err != nil {
@@ -171,6 +176,126 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
 	}
 
 	return items, nil
+}
+
+func (r *postRepository) UpdateOwnPost(
+	ctx context.Context,
+	postID string,
+	requesterID string,
+	content string,
+	visibility string,
+) (*dbmodel.Post, error) {
+	postIDUUID, err := uuid.Parse(postID)
+	if err != nil {
+		return nil, err
+	}
+
+	requesterIDUUID, err := uuid.Parse(requesterID)
+	if err != nil {
+		return nil, err
+	}
+
+	updates := map[string]interface{}{
+		"content":    content,
+		"visibility": visibility,
+		"updated_at": time.Now().UTC(),
+	}
+
+	result := r.db.WithContext(ctx).
+		Model(&dbmodel.Post{}).
+		Where("id = ? AND author_id = ?", postIDUUID, requesterIDUUID).
+		Updates(updates)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, ErrPostNotFound
+	}
+
+	return r.FindByID(ctx, postID)
+}
+
+func (r *postRepository) AttachMediaToPost(
+	ctx context.Context,
+	postID uuid.UUID,
+	uploaderID uuid.UUID,
+	mediaIDs []string,
+) error {
+	if len(mediaIDs) == 0 {
+		return nil
+	}
+
+	ids := make([]uuid.UUID, 0, len(mediaIDs))
+	for _, id := range mediaIDs {
+		parsedID, err := uuid.Parse(id)
+		if err != nil {
+			return err
+		}
+		ids = append(ids, parsedID)
+	}
+
+	result := r.db.WithContext(ctx).
+		Model(&dbmodel.Media{}).
+		Where("id IN ?", ids).
+		Where("uploader_id = ?", uploaderID).
+		Where("post_id IS NULL OR post_id = ?", postID).
+		Update("post_id", postID)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected != int64(len(ids)) {
+		return ErrForbidden
+	}
+
+	return nil
+}
+
+func (r *postRepository) ReplacePostMedia(
+	ctx context.Context,
+	postID uuid.UUID,
+	uploaderID uuid.UUID,
+	mediaIDs []string,
+) error {
+	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Model(&dbmodel.Media{}).
+			Where("post_id = ? AND uploader_id = ?", postID, uploaderID).
+			Update("post_id", nil).Error; err != nil {
+			return err
+		}
+
+		if len(mediaIDs) == 0 {
+			return nil
+		}
+
+		ids := make([]uuid.UUID, 0, len(mediaIDs))
+		for _, id := range mediaIDs {
+			parsedID, err := uuid.Parse(id)
+			if err != nil {
+				return err
+			}
+			ids = append(ids, parsedID)
+		}
+
+		result := tx.Model(&dbmodel.Media{}).
+			Where("id IN ?", ids).
+			Where("uploader_id = ?", uploaderID).
+			Where("post_id IS NULL OR post_id = ?", postID).
+			Update("post_id", postID)
+
+		if result.Error != nil {
+			return result.Error
+		}
+
+		if result.RowsAffected != int64(len(ids)) {
+			return ErrForbidden
+		}
+
+		return nil
+	})
 }
 
 func ParseUUID(value string) (uuid.UUID, error) {

@@ -4,6 +4,7 @@ type CreatePostRequest struct {
 	AuthorID   string
 	Content    string
 	Visibility string
+	MediaIDs   []string
 }
 
 type GetPostRequest struct {
@@ -21,6 +22,7 @@ type CreateReplyRequest struct {
 	ReplyToPostID string
 	Content       string
 	Visibility    string
+	MediaIDs      []string
 }
 
 type GetRepliesRequest struct {
@@ -42,6 +44,7 @@ type PostResponse struct {
 	CreatedAt     string
 	UpdatedAt     string
 	Author        UserSummary
+	Media         []MediaResponse
 }
 
 type UserSummary struct {
@@ -119,4 +122,21 @@ type TimelineItemResponse struct {
 	Type       string
 	Post       PostResponse
 	RepostedAt string
+}
+
+type UpdatePostRequest struct {
+	PostID      string
+	RequesterID string
+	Content     string
+	Visibility  string
+	MediaIDs    []string
+}
+
+type MediaResponse struct {
+	ID        string
+	URL       string
+	MimeType  string
+	SizeBytes int64
+	Width     int
+	Height    int
 }

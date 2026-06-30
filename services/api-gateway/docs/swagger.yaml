@@ -13,6 +13,10 @@ definitions:
     properties:
       content:
         type: string
+      media_ids:
+        items:
+          type: string
+        type: array
       visibility:
         type: string
     required:
@@ -304,6 +308,19 @@ definitions:
       success:
         type: boolean
     type: object
+  dto.UpdatePostRequest:
+    properties:
+      content:
+        type: string
+      media_ids:
+        items:
+          type: string
+        type: array
+      visibility:
+        type: string
+    required:
+    - content
+    type: object
   dto.UpdateProfileRequest:
     properties:
       avatar_url:
@@ -513,6 +530,55 @@ paths:
       security:
       - BearerAuth: []
       summary: Get a post
+      tags:
+      - Contents
+    patch:
+      consumes:
+      - application/json
+      description: Updates the authenticated user's own post. Supports updating content,
+        visibility, and attached media IDs.
+      parameters:
+      - description: Post ID
+        in: path
+        name: postID
+        required: true
+        type: string
+      - description: Update post request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PostResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update a post
       tags:
       - Contents
   /contents/posts/{postID}/bookmarks:

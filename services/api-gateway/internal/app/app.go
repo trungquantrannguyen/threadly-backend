@@ -94,6 +94,7 @@ func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error
 
 					protectedPost.GET("", contentHandler.GetPost)
 					protectedPost.DELETE("", contentHandler.DeletePost)
+					protectedPost.PATCH("", contentHandler.UpdatePost)
 					protectedPostReply := protectedPost.Group("/replies")
 					{
 						protectedPostReply.POST("", contentHandler.CreateReply)

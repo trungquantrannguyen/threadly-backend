@@ -25,6 +25,7 @@ var (
 type ContentService interface {
 	CreatePost(ctx context.Context, req dto.CreatePostRequest) (*dto.PostResponse, error)
 	GetPost(ctx context.Context, req dto.GetPostRequest) (*dto.PostResponse, error)
+	UpdatePost(ctx context.Context, req dto.UpdatePostRequest) (*dto.PostResponse, error)
 	DeletePost(ctx context.Context, req dto.DeletePostRequest) error
 	CreateReply(ctx context.Context, req dto.CreateReplyRequest) (*dto.PostResponse, error)
 	GetReplies(ctx context.Context, req dto.GetRepliesRequest) ([]dto.PostResponse, error)
@@ -86,6 +87,15 @@ func (s *contentService) CreatePost(ctx context.Context, req dto.CreatePostReque
 	if err := s.postRepo.Create(ctx, post); err != nil {
 		return nil, err
 	}
+
+	if err := s.postRepo.AttachMediaToPost(ctx, post.ID, authorID, req.MediaIDs); err != nil {
+		return nil, err
+	}
+
+	postWithMedia, err := s.postRepo.FindByID(ctx, post.ID.String())
+	if err != nil {
+		return nil, err
+	}
 	s.publishEvent(ctx, messaging.EventPostCreated, messaging.Event{
 		EventID:   uuid.NewString(),
 		Type:      messaging.EventPostCreated,
@@ -95,13 +105,50 @@ func (s *contentService) CreatePost(ctx context.Context, req dto.CreatePostReque
 		CreatedAt: time.Now().UTC().Format(time.RFC3339),
 	})
 
-	return toPostResponse(post), nil
+	return toPostResponse(postWithMedia), nil
 }
 
 func (s *contentService) GetPost(ctx context.Context, req dto.GetPostRequest) (*dto.PostResponse, error) {
 	if _, err := uuid.Parse(req.PostID); err != nil {
 		return nil, ErrInvalidPostID
 	}
+	post, err := s.postRepo.FindByID(ctx, req.PostID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toPostResponse(post), nil
+}
+
+func (s *contentService) UpdatePost(ctx context.Context, req dto.UpdatePostRequest) (*dto.PostResponse, error) {
+	content := strings.TrimSpace(req.Content)
+	if content == "" {
+		return nil, ErrInvalidPostContent
+	}
+
+	postID, err := uuid.Parse(req.PostID)
+	if err != nil {
+		return nil, ErrInvalidPostID
+	}
+
+	requesterID, err := uuid.Parse(req.RequesterID)
+	if err != nil {
+		return nil, ErrInvalidAuthorID
+	}
+
+	visibility := req.Visibility
+	if visibility == "" {
+		visibility = "public"
+	}
+
+	if _, err := s.postRepo.UpdateOwnPost(ctx, req.PostID, req.RequesterID, content, visibility); err != nil {
+		return nil, err
+	}
+
+	if err := s.postRepo.ReplacePostMedia(ctx, postID, requesterID, req.MediaIDs); err != nil {
+		return nil, err
+	}
+
 	post, err := s.postRepo.FindByID(ctx, req.PostID)
 	if err != nil {
 		return nil, err
@@ -553,6 +600,11 @@ func toPostResponse(post *dbmodel.Post) *dto.PostResponse {
 		avatarURL = *post.Author.AvatarURL
 	}
 
+	mediaResponses := make([]dto.MediaResponse, 0, len(post.Media))
+	for _, media := range post.Media {
+		mediaResponses = append(mediaResponses, toMediaResponse(media))
+	}
+
 	return &dto.PostResponse{
 		ID:            post.ID.String(),
 		AuthorID:      post.AuthorID.String(),
@@ -572,6 +624,7 @@ func toPostResponse(post *dbmodel.Post) *dto.PostResponse {
 			AvatarURL:   avatarURL,
 			IsVerified:  post.Author.IsVerified,
 		},
+		Media: mediaResponses,
 	}
 }
 
@@ -643,5 +696,26 @@ func (s *contentService) publishEvent(ctx context.Context, routingKey string, ev
 			Err(err).
 			Str("event_type", routingKey).
 			Msg("failed to publish content event")
+	}
+}
+
+func toMediaResponse(media dbmodel.Media) dto.MediaResponse {
+	width := 0
+	if media.Width != nil {
+		width = *media.Width
+	}
+
+	height := 0
+	if media.Height != nil {
+		height = *media.Height
+	}
+
+	return dto.MediaResponse{
+		ID:        media.ID.String(),
+		URL:       media.URL,
+		MimeType:  media.MimeType,
+		SizeBytes: media.SizeBytes,
+		Width:     width,
+		Height:    height,
 	}
 }
