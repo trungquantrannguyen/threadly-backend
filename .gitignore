@@ -1,5 +1,6 @@
-.env
+.env.docker
 .env.local
+.env
 
 bin/
 tmp/
