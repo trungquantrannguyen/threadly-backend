@@ -1,11 +1,11 @@
 
 SERVICE                       TESTS     PASSED     FAILED    SKIPPED     COVERAGE
 ------------------------ ---------- ---------- ---------- ---------- ------------
-api-gateway                       0          0          0          0         0.0%
+api-gateway                     170        170          0          0        91.0%
 user-service                     77         77          0          0        93.3%
 content-service                 173        173          0          0        93.8%
 feed-service                     34         34          0          0        94.4%
 notification-service             66         66          0          0        97.0%
 storage-service                  20         20          0          0       100.0%
 ------------------------ ---------- ---------- ---------- ---------- ------------
-TOTAL                           370        370          0          0        56.5%
+TOTAL                           540        540          0          0        93.1%

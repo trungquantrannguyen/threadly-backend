@@ -192,6 +192,11 @@ func (h *ContentHandler) DeletePost(c *gin.Context) {
 
 	requestID := middleware.GetUserID(c)
 
+	if requestID == "" {
+		response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+		return
+	}
+
 	res, err := h.contentClient.DeletePost(c.Request.Context(), &contentpb.DeletePostRequest{
 		PostId:      postID,
 		RequesterId: requestID,
