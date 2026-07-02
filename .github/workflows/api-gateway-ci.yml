@@ -1,0 +1,96 @@
+name: API Gateway CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "services/api-gateway/**"
+      - "pkg/**"
+      - "proto/**"
+      - "db/**"
+      - "go.mod"
+      - "go.sum"
+      - "docker-compose.yml"
+      - ".github/workflows/**"
+
+  push:
+    branches: [main]
+    paths:
+      - "services/api-gateway/**"
+      - "pkg/**"
+      - "proto/**"
+      - "db/**"
+      - "go.mod"
+      - "go.sum"
+      - "docker-compose.yml"
+      - ".github/workflows/**"
+
+  workflow_dispatch:
+
+jobs:
+  test-api-gateway:
+    name: Test API Gateway
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Check formatting
+        run: |
+          UNFORMATTED=$(gofmt -l services/api-gateway pkg db proto)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "These files are not gofmt formatted:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./services/api-gateway/... ./pkg/... ./db/... ./proto/...
+
+      - name: Run API Gateway tests with coverage
+        run: |
+          mkdir -p test/api-gateway
+          go test ./services/api-gateway/... \
+            -coverprofile=test/api-gateway/coverage.out \
+            -covermode=atomic
+          go tool cover -func=test/api-gateway/coverage.out
+
+      - name: Detect shared changes
+        id: changes
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE_SHA="${{ github.event.before }}"
+          fi
+
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            echo "shared_changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA" "${{ github.sha }}")
+          echo "$CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -Eq '^(pkg/|proto/|db/|go\.mod$|go\.sum$|docker-compose\.yml$|\.github/workflows/)'; then
+            echo "shared_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "shared_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run shared package tests
+        if: steps.changes.outputs.shared_changed == 'true'
+        run: go test ./pkg/... ./db/... ./proto/...
