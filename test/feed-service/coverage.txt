@@ -3,6 +3,10 @@ github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/fee
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/feed_cache.go:47:			SetHomeFeed		80.0%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/feed_cache.go:58:			DeleteHomeFeedByUserID	83.3%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/feed_cache.go:71:			homeFeedKey		100.0%
+github.com/trungquantrannguyen/threadly/services/feed-service/internal/events/feed_event_consumer.go:28:	NewFeedEventConsumer	100.0%
+github.com/trungquantrannguyen/threadly/services/feed-service/internal/events/feed_event_consumer.go:40:	Start			100.0%
+github.com/trungquantrannguyen/threadly/services/feed-service/internal/events/feed_event_consumer.go:54:	handleEvent		100.0%
+github.com/trungquantrannguyen/threadly/services/feed-service/internal/events/feed_event_consumer.go:73:	clearUserHomeFeed	100.0%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc/grpc_server.go:25:			NewFeedServiceServer	100.0%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc/grpc_server.go:34:			GetHealth		100.0%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc/grpc_server.go:44:			GetHomeFeed		100.0%
@@ -12,4 +16,4 @@ github.com/trungquantrannguyen/threadly/services/feed-service/internal/repositor
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository/feed_repository.go:25:	FindHomeFeed		93.8%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/service/feed_service.go:23:		NewFeedService		100.0%
 github.com/trungquantrannguyen/threadly/services/feed-service/internal/service/feed_service.go:30:		GetHomeFeed		100.0%
-total:														(statements)		93.4%
+total:														(statements)		94.4%

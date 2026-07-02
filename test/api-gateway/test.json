@@ -1,12 +1,12 @@
-{"Time":"2026-07-02T19:34:22.854548+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app"}
-{"Time":"2026-07-02T19:34:22.854584+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"}
-{"Time":"2026-07-02T19:34:22.854598+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto"}
-{"Time":"2026-07-02T19:34:22.854611+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers"}
-{"Time":"2026-07-02T19:34:22.854734+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto","Output":"?   \tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto\t[no test files]\n"}
-{"Time":"2026-07-02T19:34:22.85474+10:00","Action":"skip","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto","Elapsed":0}
-{"Time":"2026-07-02T19:34:22.954044+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app","Output":"\tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/app\t\tcoverage: 0.0% of statements\n"}
-{"Time":"2026-07-02T19:34:22.954041+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client","Output":"\tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/client\t\tcoverage: 0.0% of statements\n"}
-{"Time":"2026-07-02T19:34:22.954084+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers","Output":"\tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers\t\tcoverage: 0.0% of statements\n"}
-{"Time":"2026-07-02T19:34:23.034739+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client","Elapsed":0.18}
-{"Time":"2026-07-02T19:34:23.034805+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app","Elapsed":0.18}
-{"Time":"2026-07-02T19:34:23.036039+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers","Elapsed":0.181}
+{"Time":"2026-07-02T20:23:39.412227+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app"}
+{"Time":"2026-07-02T20:23:39.412461+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"}
+{"Time":"2026-07-02T20:23:39.412475+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto"}
+{"Time":"2026-07-02T20:23:39.412547+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers"}
+{"Time":"2026-07-02T20:23:39.412591+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto","Output":"?   \tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto\t[no test files]\n"}
+{"Time":"2026-07-02T20:23:39.412598+10:00","Action":"skip","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto","Elapsed":0}
+{"Time":"2026-07-02T20:23:39.513096+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client","Output":"\tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/client\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T20:23:39.513055+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers","Output":"\tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T20:23:39.513051+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app","Output":"\tgithub.com/trungquantrannguyen/threadly/services/api-gateway/internal/app\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T20:23:39.597446+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers","Elapsed":0.185}
+{"Time":"2026-07-02T20:23:39.598653+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app","Elapsed":0.186}
+{"Time":"2026-07-02T20:23:39.599984+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client","Elapsed":0.188}

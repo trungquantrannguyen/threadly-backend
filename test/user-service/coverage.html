@@ -55,13 +55,13 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/trungquantrannguyen/threadly/services/user-service/internal/grpc/grpc_server.go (0.0%)</option>
+				<option value="file0">github.com/trungquantrannguyen/threadly/services/user-service/internal/grpc/grpc_server.go (100.0%)</option>
 				
-				<option value="file1">github.com/trungquantrannguyen/threadly/services/user-service/internal/repository/session_repository.go (0.0%)</option>
+				<option value="file1">github.com/trungquantrannguyen/threadly/services/user-service/internal/repository/session_repository.go (100.0%)</option>
 				
-				<option value="file2">github.com/trungquantrannguyen/threadly/services/user-service/internal/repository/user_repository.go (0.0%)</option>
+				<option value="file2">github.com/trungquantrannguyen/threadly/services/user-service/internal/repository/user_repository.go (95.7%)</option>
 				
-				<option value="file3">github.com/trungquantrannguyen/threadly/services/user-service/internal/service/user-service.go (0.0%)</option>
+				<option value="file3">github.com/trungquantrannguyen/threadly/services/user-service/internal/service/user_service.go (88.8%)</option>
 				
 				</select>
 			</div>
@@ -108,7 +108,7 @@ type UserServiceServer struct {
         userService service.UserService
 }
 
-func NewUserServiceServer(cfg config.Config, log zerolog.Logger, userService service.UserService) *UserServiceServer <span class="cov0" title="0">{
+func NewUserServiceServer(cfg config.Config, log zerolog.Logger, userService service.UserService) *UserServiceServer <span class="cov10" title="16">{
         return &amp;UserServiceServer{
                 cfg:         cfg,
                 log:         log,
@@ -116,7 +116,7 @@ func NewUserServiceServer(cfg config.Config, log zerolog.Logger, userService ser
         }
 }</span>
 
-func (s *UserServiceServer) GetHealth(ctx context.Context, req *userpb.GetUserServiceHealthRequest) (*userpb.GetUserServiceHealthResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) GetHealth(ctx context.Context, req *userpb.GetUserServiceHealthRequest) (*userpb.GetUserServiceHealthResponse, error) <span class="cov1" title="1">{
         s.log.Info().Msg("User service is healthy")
         return &amp;userpb.GetUserServiceHealthResponse{
                 Status:    "ok",
@@ -126,7 +126,7 @@ func (s *UserServiceServer) GetHealth(ctx context.Context, req *userpb.GetUserSe
         }, nil
 }</span>
 
-func (s *UserServiceServer) Register(ctx context.Context, req *userpb.RegisterRequest) (*userpb.AuthResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) Register(ctx context.Context, req *userpb.RegisterRequest) (*userpb.AuthResponse, error) <span class="cov3" title="2">{
         res, err := s.userService.Register(ctx, dto.RegisterRequest{
                 Email:       req.GetEmail(),
                 Username:    req.GetUsername(),
@@ -135,62 +135,62 @@ func (s *UserServiceServer) Register(ctx context.Context, req *userpb.RegisterRe
                 UserAgent:   req.GetUserAgent(),
                 IPAddress:   req.GetIpAddress(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoAuthResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoAuthResponse(res), nil</span>
 }
 
-func (s *UserServiceServer) Login(ctx context.Context, req *userpb.LoginRequest) (*userpb.AuthResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) Login(ctx context.Context, req *userpb.LoginRequest) (*userpb.AuthResponse, error) <span class="cov3" title="2">{
         res, err := s.userService.Login(ctx, dto.LoginRequest{
                 EmailOrUsername: req.GetEmailOrUsername(),
                 Password:        req.GetPassword(),
                 UserAgent:       req.GetUserAgent(),
                 IPAddress:       req.GetIpAddress(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoAuthResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoAuthResponse(res), nil</span>
 }
 
-func (s *UserServiceServer) RefreshToken(ctx context.Context, req *userpb.RefreshTokenRequest) (*userpb.AuthResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) RefreshToken(ctx context.Context, req *userpb.RefreshTokenRequest) (*userpb.AuthResponse, error) <span class="cov3" title="2">{
         res, err := s.userService.RefreshToken(ctx, dto.RefreshTokenRequest{
                 RefreshToken: req.GetRefreshToken(),
                 UserAgent:    req.GetUserAgent(),
                 IPAddress:    req.GetIpAddress(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoAuthResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoAuthResponse(res), nil</span>
 }
 
-func (s *UserServiceServer) Logout(ctx context.Context, req *userpb.LogoutRequest) (*userpb.LogoutResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) Logout(ctx context.Context, req *userpb.LogoutRequest) (*userpb.LogoutResponse, error) <span class="cov3" title="2">{
         err := s.userService.Logout(ctx, dto.LogoutRequest{
                 RefreshToken: req.GetRefreshToken(),
                 UserID:       req.GetUserID(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return &amp;userpb.LogoutResponse{}, nil</span>
+        <span class="cov1" title="1">return &amp;userpb.LogoutResponse{}, nil</span>
 }
 
-func (s *UserServiceServer) GetMe(ctx context.Context, req *userpb.GetMeRequest) (*userpb.AuthUserResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) GetMe(ctx context.Context, req *userpb.GetMeRequest) (*userpb.AuthUserResponse, error) <span class="cov4" title="3">{
         res, err := s.userService.GetMe(ctx, req.GetUserID())
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov3" title="2">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoUserResponse(*res), nil</span>
+        <span class="cov1" title="1">return toProtoUserResponse(*res), nil</span>
 }
 
-func (s *UserServiceServer) UpdateProfile(ctx context.Context, req *userpb.UpdateProfileRequest) (*userpb.AuthUserResponse, error) <span class="cov0" title="0">{
+func (s *UserServiceServer) UpdateProfile(ctx context.Context, req *userpb.UpdateProfileRequest) (*userpb.AuthUserResponse, error) <span class="cov3" title="2">{
         res, err := s.userService.UpdateProfile(ctx, dto.UpdateProfileRequest{
                 UserID:      req.GetUserID(),
                 DisplayName: req.DisplayName,
@@ -200,22 +200,22 @@ func (s *UserServiceServer) UpdateProfile(ctx context.Context, req *userpb.Updat
                 Location:    req.Location,
                 WebsiteURL:  req.WebsiteURL,
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoUserResponse(*res), nil</span>
+        <span class="cov1" title="1">return toProtoUserResponse(*res), nil</span>
 }
 
-func (s *UserServiceServer) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequest) (*userpb.DeleteUserResponse, error) <span class="cov0" title="0">{
-        if err := s.userService.DeleteUser(ctx, req.GetUserID()); err != nil </span><span class="cov0" title="0">{
+func (s *UserServiceServer) DeleteUser(ctx context.Context, req *userpb.DeleteUserRequest) (*userpb.DeleteUserResponse, error) <span class="cov3" title="2">{
+        if err := s.userService.DeleteUser(ctx, req.GetUserID()); err != nil </span><span class="cov1" title="1">{
                 return nil, mapUserServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return &amp;userpb.DeleteUserResponse{}, nil</span>
+        <span class="cov1" title="1">return &amp;userpb.DeleteUserResponse{}, nil</span>
 }
 
-func toProtoAuthResponse(res *dto.AuthResponse) *userpb.AuthResponse <span class="cov0" title="0">{
+func toProtoAuthResponse(res *dto.AuthResponse) *userpb.AuthResponse <span class="cov4" title="3">{
         return &amp;userpb.AuthResponse{
                 User:         toProtoUserResponse(res.User),
                 AccessToken:  res.AccessToken,
@@ -223,7 +223,7 @@ func toProtoAuthResponse(res *dto.AuthResponse) *userpb.AuthResponse <span class
         }
 }</span>
 
-func toProtoUserResponse(user dto.AuthUserResponse) *userpb.AuthUserResponse <span class="cov0" title="0">{
+func toProtoUserResponse(user dto.AuthUserResponse) *userpb.AuthUserResponse <span class="cov6" title="5">{
         return &amp;userpb.AuthUserResponse{
                 Id:          user.ID,
                 Email:       user.Email,
@@ -238,32 +238,32 @@ func toProtoUserResponse(user dto.AuthUserResponse) *userpb.AuthUserResponse <sp
         }
 }</span>
 
-func mapUserServiceError(err error) error <span class="cov0" title="0">{
-        if err == nil </span><span class="cov0" title="0">{
+func mapUserServiceError(err error) error <span class="cov8" title="9">{
+        if err == nil </span><span class="cov1" title="1">{
                 return nil
         }</span>
 
-        <span class="cov0" title="0">switch </span>{
-        case errors.Is(err, service.ErrInvalidCredential):<span class="cov0" title="0">
+        <span class="cov7" title="8">switch </span>{
+        case errors.Is(err, service.ErrInvalidCredential):<span class="cov1" title="1">
                 return status.Error(codes.Unauthenticated, "Invalid email/username or password")</span>
-        case errors.Is(err, service.ErrInvalidRefreshToken):<span class="cov0" title="0">
+        case errors.Is(err, service.ErrInvalidRefreshToken):<span class="cov1" title="1">
                 return status.Error(codes.Unauthenticated, "invalid or expired refresh token")</span>
 
-        case errors.Is(err, repository.ErrDuplicateUser):<span class="cov0" title="0">
+        case errors.Is(err, repository.ErrDuplicateUser):<span class="cov1" title="1">
                 return status.Error(codes.AlreadyExists, "Email or username already exists")</span>
 
-        case errors.Is(err, repository.ErrUserNotFound):<span class="cov0" title="0">
+        case errors.Is(err, repository.ErrUserNotFound):<span class="cov1" title="1">
                 return status.Error(codes.NotFound, "User not found")</span>
 
-        case errors.Is(err, repository.ErrSessionNotFound):<span class="cov0" title="0">
+        case errors.Is(err, repository.ErrSessionNotFound):<span class="cov1" title="1">
                 return status.Error(codes.NotFound, "Session not found")</span>
 
-        case errors.Is(err, service.ErrUnauthorized):<span class="cov0" title="0">
+        case errors.Is(err, service.ErrUnauthorized):<span class="cov1" title="1">
                 return status.Error(codes.PermissionDenied, "You do not have permission to perform this action")</span>
 
-        case errors.Is(err, service.ErrInvalidProfile):<span class="cov0" title="0">
+        case errors.Is(err, service.ErrInvalidProfile):<span class="cov1" title="1">
                 return status.Error(codes.InvalidArgument, "Invalid profile data")</span>
-        default:<span class="cov0" title="0">
+        default:<span class="cov1" title="1">
                 return status.Error(codes.Internal, "Internal server error")</span>
         }
 }
@@ -294,34 +294,34 @@ type sessionRepository struct {
         db *gorm.DB
 }
 
-func NewSessionRepository(db *gorm.DB) SessionRepository <span class="cov0" title="0">{
+func NewSessionRepository(db *gorm.DB) SessionRepository <span class="cov10" title="15">{
         return &amp;sessionRepository{
                 db: db,
         }
 }</span>
 
-func (r *sessionRepository) Create(ctx context.Context, session *dbmodel.Session) error <span class="cov0" title="0">{
+func (r *sessionRepository) Create(ctx context.Context, session *dbmodel.Session) error <span class="cov3" title="2">{
         return r.db.WithContext(ctx).Create(session).Error
 }</span>
 
-func (r *sessionRepository) FindActiveByRefreshTokenHash(ctx context.Context, refreshTokenHash string) (*dbmodel.Session, error) <span class="cov0" title="0">{
+func (r *sessionRepository) FindActiveByRefreshTokenHash(ctx context.Context, refreshTokenHash string) (*dbmodel.Session, error) <span class="cov6" title="5">{
         var session dbmodel.Session
 
         err := r.db.WithContext(ctx).
                 Where("refresh_token_hash = ?", refreshTokenHash).
                 Where("revoked_at IS NULL").
                 Where("expires_at &gt; ?", time.Now()).First(&amp;session).Error
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov5" title="4">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov4" title="3">{
                         return nil, ErrSessionNotFound
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov1" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">return &amp;session, nil</span>
+        <span class="cov1" title="1">return &amp;session, nil</span>
 }
 
-func (r *sessionRepository) RevokeByID(ctx context.Context, sessionID string) error <span class="cov0" title="0">{
+func (r *sessionRepository) RevokeByID(ctx context.Context, sessionID string) error <span class="cov5" title="4">{
         now := time.Now()
 
         result := r.db.WithContext(ctx).
@@ -330,17 +330,17 @@ func (r *sessionRepository) RevokeByID(ctx context.Context, sessionID string) er
                 Where("revoked_at IS NULL").
                 Update("revoked_at", now)
 
-        if result.Error != nil </span><span class="cov0" title="0">{
+        if result.Error != nil </span><span class="cov1" title="1">{
                 return result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+        <span class="cov4" title="3">if result.RowsAffected == 0 </span><span class="cov3" title="2">{
                 return ErrSessionNotFound
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
-func (r *sessionRepository) RevokeAllByUserID(ctx context.Context, userID string) error <span class="cov0" title="0">{
+func (r *sessionRepository) RevokeAllByUserID(ctx context.Context, userID string) error <span class="cov3" title="2">{
         now := time.Now()
 
         return r.db.WithContext(ctx).
@@ -350,7 +350,7 @@ func (r *sessionRepository) RevokeAllByUserID(ctx context.Context, userID string
                 Update("revoked_at", now).Error
 }</span>
 
-func (r *sessionRepository) DeleteExpired(ctx context.Context) error <span class="cov0" title="0">{
+func (r *sessionRepository) DeleteExpired(ctx context.Context) error <span class="cov3" title="2">{
         return r.db.WithContext(ctx).
                 Where("expires_at &lt; ?", time.Now()).
                 Delete(&amp;dbmodel.Session{}).Error
@@ -386,109 +386,109 @@ type userRepository struct {
         db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository <span class="cov0" title="0">{
+func NewUserRepository(db *gorm.DB) UserRepository <span class="cov10" title="18">{
         return &amp;userRepository{
                 db: db,
         }
 }</span>
 
-func (r *userRepository) Create(ctx context.Context, user *dbmodel.User) error <span class="cov0" title="0">{
+func (r *userRepository) Create(ctx context.Context, user *dbmodel.User) error <span class="cov5" title="4">{
         err := r.db.WithContext(ctx).Create(user).Error
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov3" title="2">{
                 if isDuplicateKeyError(err) </span><span class="cov0" title="0">{
                         return ErrDuplicateUser
                 }</span>
-                <span class="cov0" title="0">return err</span>
+                <span class="cov3" title="2">return err</span>
         }
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov3" title="2">return nil</span>
 }
 
-func (r *userRepository) FindByID(ctx context.Context, id string) (*dbmodel.User, error) <span class="cov0" title="0">{
+func (r *userRepository) FindByID(ctx context.Context, id string) (*dbmodel.User, error) <span class="cov5" title="4">{
         var user dbmodel.User
 
         err := r.db.WithContext(ctx).Where("id = ?", id).First(&amp;user).Error
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov4" title="3">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov3" title="2">{
                         return nil, ErrUserNotFound
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov1" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">return &amp;user, nil</span>
+        <span class="cov1" title="1">return &amp;user, nil</span>
 }
 
-func (r *userRepository) FindByEmail(ctx context.Context, email string) (*dbmodel.User, error) <span class="cov0" title="0">{
+func (r *userRepository) FindByEmail(ctx context.Context, email string) (*dbmodel.User, error) <span class="cov4" title="3">{
         var user dbmodel.User
 
         err := r.db.WithContext(ctx).Where("LOWER(email) = LOWER(?)", email).First(&amp;user).Error
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov3" title="2">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov1" title="1">{
                         return nil, ErrUserNotFound
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov1" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">return &amp;user, nil</span>
+        <span class="cov1" title="1">return &amp;user, nil</span>
 }
 
-func (r *userRepository) FindByUsername(ctx context.Context, username string) (*dbmodel.User, error) <span class="cov0" title="0">{
+func (r *userRepository) FindByUsername(ctx context.Context, username string) (*dbmodel.User, error) <span class="cov4" title="3">{
         var user dbmodel.User
 
         err := r.db.WithContext(ctx).Where("LOWER(username) = LOWER(?)", &amp;username).First(&amp;user).Error
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov3" title="2">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov1" title="1">{
                         return nil, ErrUserNotFound
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov1" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">return &amp;user, nil</span>
+        <span class="cov1" title="1">return &amp;user, nil</span>
 }
 
-func (r *userRepository) UpdateProfile(ctx context.Context, user *dbmodel.User, updates map[string]interface{}) error <span class="cov0" title="0">{
-        if len(updates) == 0 </span><span class="cov0" title="0">{
+func (r *userRepository) UpdateProfile(ctx context.Context, user *dbmodel.User, updates map[string]interface{}) error <span class="cov4" title="3">{
+        if len(updates) == 0 </span><span class="cov1" title="1">{
                 return nil
         }</span>
 
-        <span class="cov0" title="0">err := r.db.WithContext(ctx).
+        <span class="cov3" title="2">err := r.db.WithContext(ctx).
                 Model(user).
                 Updates(updates).
                 Error
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 if isDuplicateKeyError(err) </span><span class="cov0" title="0">{
                         return ErrDuplicateUser
                 }</span>
-                <span class="cov0" title="0">return err</span>
+                <span class="cov1" title="1">return err</span>
         }
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
-func (r *userRepository) DeleteByID(ctx context.Context, id string) error <span class="cov0" title="0">{
+func (r *userRepository) DeleteByID(ctx context.Context, id string) error <span class="cov4" title="3">{
         result := r.db.WithContext(ctx).
                 Where("id = ?", id).
                 Delete(&amp;dbmodel.User{})
 
-        if result.Error != nil </span><span class="cov0" title="0">{
+        if result.Error != nil </span><span class="cov1" title="1">{
                 return result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+        <span class="cov3" title="2">if result.RowsAffected == 0 </span><span class="cov1" title="1">{
                 return ErrUserNotFound
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
-func isDuplicateKeyError(err error) bool <span class="cov0" title="0">{
+func isDuplicateKeyError(err error) bool <span class="cov6" title="5">{
         var pgErr *pgconn.PgError
 
-        if errors.As(err, &amp;pgErr) </span><span class="cov0" title="0">{
+        if errors.As(err, &amp;pgErr) </span><span class="cov1" title="1">{
                 return pgErr.Code == "23505"
         }</span>
 
-        <span class="cov0" title="0">return false</span>
+        <span class="cov5" title="4">return false</span>
 }
 </pre>
 		
@@ -537,7 +537,7 @@ func NewUserService(
         sessionRepo repository.SessionRepository,
         cfg config.Config,
         log zerolog.Logger,
-) UserService <span class="cov0" title="0">{
+) UserService <span class="cov7" title="31">{
         return &amp;userService{
                 userRepo:    userRepo,
                 sessionRepo: sessionRepo,
@@ -545,7 +545,7 @@ func NewUserService(
         }
 }</span>
 
-func (s *userService) Register(ctx context.Context, req dto.RegisterRequest) (*dto.AuthResponse, error) <span class="cov0" title="0">{
+func (s *userService) Register(ctx context.Context, req dto.RegisterRequest) (*dto.AuthResponse, error) <span class="cov6" title="22">{
         email := strings.ToLower(strings.TrimSpace(req.Email))
         username := strings.ToLower(strings.TrimSpace(req.Username))
 
@@ -554,7 +554,7 @@ func (s *userService) Register(ctx context.Context, req dto.RegisterRequest) (*d
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">user := &amp;dbmodel.User{
+        <span class="cov6" title="22">user := &amp;dbmodel.User{
                 Email:        email,
                 Username:     username,
                 PasswordHash: passwordHash,
@@ -562,165 +562,165 @@ func (s *userService) Register(ctx context.Context, req dto.RegisterRequest) (*d
                 Role:         "user",
         }
 
-        if err := s.userRepo.Create(ctx, user); err != nil </span><span class="cov0" title="0">{
+        if err := s.userRepo.Create(ctx, user); err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return s.createAuthResponse(ctx, user, req.UserAgent, req.IPAddress)</span>
+        <span class="cov6" title="20">return s.createAuthResponse(ctx, user, req.UserAgent, req.IPAddress)</span>
 }
 
-func (s *userService) Login(ctx context.Context, req dto.LoginRequest) (*dto.AuthResponse, error) <span class="cov0" title="0">{
+func (s *userService) Login(ctx context.Context, req dto.LoginRequest) (*dto.AuthResponse, error) <span class="cov4" title="7">{
         identifier := strings.ToLower(strings.TrimSpace(req.EmailOrUsername))
 
         var user *dbmodel.User
         var err error
-        if strings.Contains(identifier, "@") </span><span class="cov0" title="0">{
+        if strings.Contains(identifier, "@") </span><span class="cov4" title="5">{
                 user, err = s.userRepo.FindByEmail(ctx, identifier)
-        }</span> else<span class="cov0" title="0"> {
+        }</span> else<span class="cov2" title="2"> {
                 user, err = s.userRepo.FindByUsername(ctx, identifier)
         }</span>
 
-        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, repository.ErrUserNotFound) </span><span class="cov0" title="0">{
+        <span class="cov4" title="7">if err != nil </span><span class="cov3" title="3">{
+                if errors.Is(err, repository.ErrUserNotFound) </span><span class="cov1" title="1">{
                         return nil, ErrInvalidCredential
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov2" title="2">return nil, err</span>
         }
 
-        <span class="cov0" title="0">if err := auth.CheckPassword(req.Password, user.PasswordHash); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := auth.CheckPassword(req.Password, user.PasswordHash); err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidCredential
         }</span>
 
-        <span class="cov0" title="0">return s.createAuthResponse(ctx, user, req.UserAgent, req.IPAddress)</span>
+        <span class="cov3" title="3">return s.createAuthResponse(ctx, user, req.UserAgent, req.IPAddress)</span>
 }
 
-func (s *userService) RefreshToken(ctx context.Context, req dto.RefreshTokenRequest) (*dto.AuthResponse, error) <span class="cov0" title="0">{
+func (s *userService) RefreshToken(ctx context.Context, req dto.RefreshTokenRequest) (*dto.AuthResponse, error) <span class="cov4" title="6">{
         refreshHashToken := auth.HashRefreshToken(req.RefreshToken)
 
         session, err := s.sessionRepo.FindActiveByRefreshTokenHash(ctx, refreshHashToken)
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, repository.ErrSessionNotFound) </span><span class="cov0" title="0">{
-                        return nil, ErrInvalidCredential
+        if err != nil </span><span class="cov2" title="2">{
+                if errors.Is(err, repository.ErrSessionNotFound) </span><span class="cov1" title="1">{
+                        return nil, ErrInvalidRefreshToken
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov1" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">user, err := s.userRepo.FindByID(ctx, session.UserID.String())
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">user, err := s.userRepo.FindByID(ctx, session.UserID.String())
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.sessionRepo.RevokeByID(ctx, session.ID.String()); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.sessionRepo.RevokeByID(ctx, session.ID.String()); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return s.createAuthResponse(ctx, user, req.UserAgent, req.IPAddress)</span>
+        <span class="cov2" title="2">return s.createAuthResponse(ctx, user, req.UserAgent, req.IPAddress)</span>
 }
 
-func (s *userService) Logout(ctx context.Context, req dto.LogoutRequest) error <span class="cov0" title="0">{
-        if req.RefreshToken == "" </span><span class="cov0" title="0">{
+func (s *userService) Logout(ctx context.Context, req dto.LogoutRequest) error <span class="cov4" title="5">{
+        if req.RefreshToken == "" </span><span class="cov1" title="1">{
                 return ErrInvalidRefreshToken
         }</span>
 
-        <span class="cov0" title="0">refreshTokenHash := auth.HashRefreshToken(req.RefreshToken)
+        <span class="cov3" title="4">refreshTokenHash := auth.HashRefreshToken(req.RefreshToken)
 
         session, err := s.sessionRepo.FindActiveByRefreshTokenHash(ctx, refreshTokenHash)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 if errors.Is(err, ErrInvalidRefreshToken) </span><span class="cov0" title="0">{
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">return err</span>
+                <span class="cov1" title="1">return err</span>
         }
 
-        <span class="cov0" title="0">if session.UserID.String() != req.UserID </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if session.UserID.String() != req.UserID </span><span class="cov1" title="1">{
                 return ErrUnauthorized
         }</span>
 
-        <span class="cov0" title="0">if err := s.sessionRepo.RevokeByID(ctx, session.ID.String()); err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if err := s.sessionRepo.RevokeByID(ctx, session.ID.String()); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
-func (s *userService) GetMe(ctx context.Context, userID string) (*dto.AuthUserResponse, error) <span class="cov0" title="0">{
+func (s *userService) GetMe(ctx context.Context, userID string) (*dto.AuthUserResponse, error) <span class="cov2" title="2">{
         user, err := s.userRepo.FindByID(ctx, userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toAuthUserResponse(user), nil</span>
+        <span class="cov1" title="1">return toAuthUserResponse(user), nil</span>
 }
 
-func (s *userService) UpdateProfile(ctx context.Context, req dto.UpdateProfileRequest) (*dto.AuthUserResponse, error) <span class="cov0" title="0">{
+func (s *userService) UpdateProfile(ctx context.Context, req dto.UpdateProfileRequest) (*dto.AuthUserResponse, error) <span class="cov3" title="4">{
         user, err := s.userRepo.FindByID(ctx, req.UserID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">updates := map[string]interface{}{}
+        <span class="cov3" title="3">updates := map[string]interface{}{}
 
-        if req.DisplayName != nil </span><span class="cov0" title="0">{
+        if req.DisplayName != nil </span><span class="cov3" title="3">{
                 displayName := strings.TrimSpace(*req.DisplayName)
                 if displayName == "" || len(displayName) &gt; 80 </span><span class="cov0" title="0">{
                         return nil, ErrInvalidProfile
                 }</span>
-                <span class="cov0" title="0">updates["display_name"] = displayName</span>
+                <span class="cov3" title="3">updates["display_name"] = displayName</span>
         }
 
-        <span class="cov0" title="0">if value, ok, err := nullableProfileField(req.Bio, 280); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if value, ok, err := nullableProfileField(req.Bio, 280); err != nil </span><span class="cov0" title="0">{
                 return nil, err
-        }</span> else<span class="cov0" title="0"> if ok </span><span class="cov0" title="0">{
+        }</span> else<span class="cov3" title="3"> if ok </span><span class="cov2" title="2">{
                 updates["bio"] = value
         }</span>
 
-        <span class="cov0" title="0">if value, ok, err := nullableProfileField(req.AvatarURL, 2048); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if value, ok, err := nullableProfileField(req.AvatarURL, 2048); err != nil </span><span class="cov0" title="0">{
                 return nil, err
-        }</span> else<span class="cov0" title="0"> if ok </span><span class="cov0" title="0">{
+        }</span> else<span class="cov3" title="3"> if ok </span><span class="cov1" title="1">{
                 updates["avatar_url"] = value
         }</span>
 
-        <span class="cov0" title="0">if value, ok, err := nullableProfileField(req.BannerURL, 2048); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if value, ok, err := nullableProfileField(req.BannerURL, 2048); err != nil </span><span class="cov0" title="0">{
                 return nil, err
-        }</span> else<span class="cov0" title="0"> if ok </span><span class="cov0" title="0">{
+        }</span> else<span class="cov3" title="3"> if ok </span><span class="cov1" title="1">{
                 updates["banner_url"] = value
         }</span>
 
-        <span class="cov0" title="0">if value, ok, err := nullableProfileField(req.Location, 100); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if value, ok, err := nullableProfileField(req.Location, 100); err != nil </span><span class="cov0" title="0">{
                 return nil, err
-        }</span> else<span class="cov0" title="0"> if ok </span><span class="cov0" title="0">{
+        }</span> else<span class="cov3" title="3"> if ok </span><span class="cov2" title="2">{
                 updates["location"] = value
         }</span>
 
-        <span class="cov0" title="0">if value, ok, err := nullableProfileField(req.WebsiteURL, 2048); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if value, ok, err := nullableProfileField(req.WebsiteURL, 2048); err != nil </span><span class="cov0" title="0">{
                 return nil, err
-        }</span> else<span class="cov0" title="0"> if ok </span><span class="cov0" title="0">{
+        }</span> else<span class="cov3" title="3"> if ok </span><span class="cov1" title="1">{
                 updates["website_url"] = value
         }</span>
 
-        <span class="cov0" title="0">if err := s.userRepo.UpdateProfile(ctx, user, updates); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.userRepo.UpdateProfile(ctx, user, updates); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">updatedUser, err := s.userRepo.FindByID(ctx, req.UserID)
+        <span class="cov2" title="2">updatedUser, err := s.userRepo.FindByID(ctx, req.UserID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toAuthUserResponse(updatedUser), nil</span>
+        <span class="cov2" title="2">return toAuthUserResponse(updatedUser), nil</span>
 }
 
-func (s *userService) DeleteUser(ctx context.Context, userID string) error <span class="cov0" title="0">{
-        if _, err := s.userRepo.FindByID(ctx, userID); err != nil </span><span class="cov0" title="0">{
+func (s *userService) DeleteUser(ctx context.Context, userID string) error <span class="cov3" title="3">{
+        if _, err := s.userRepo.FindByID(ctx, userID); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if err := s.userRepo.DeleteByID(ctx, userID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if err := s.userRepo.DeleteByID(ctx, userID); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">return s.sessionRepo.RevokeAllByUserID(ctx, userID)</span>
+        <span class="cov1" title="1">return s.sessionRepo.RevokeAllByUserID(ctx, userID)</span>
 }
 
 func (s *userService) createAuthResponse(
@@ -728,7 +728,7 @@ func (s *userService) createAuthResponse(
         user *dbmodel.User,
         userAgent string,
         ipAddress string,
-) (*dto.AuthResponse, error) <span class="cov0" title="0">{
+) (*dto.AuthResponse, error) <span class="cov7" title="25">{
         accessToken, err := auth.GenerateAccessToken(
                 user.ID.String(),
                 user.Email,
@@ -741,12 +741,12 @@ func (s *userService) createAuthResponse(
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">refreshToken, err := auth.GenerateRefreshToken()
+        <span class="cov7" title="25">refreshToken, err := auth.GenerateRefreshToken()
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">refreshTokenHash := auth.HashRefreshToken(refreshToken)
+        <span class="cov7" title="25">refreshTokenHash := auth.HashRefreshToken(refreshToken)
 
         session := &amp;dbmodel.Session{
                 UserID:           user.ID,
@@ -756,10 +756,10 @@ func (s *userService) createAuthResponse(
                 ExpiresAt:        time.Now().Add(s.cfg.RefreshTokenTTL),
         }
 
-        if err := s.sessionRepo.Create(ctx, session); err != nil </span><span class="cov0" title="0">{
+        if err := s.sessionRepo.Create(ctx, session); err != nil </span><span class="cov3" title="3">{
                 return nil, err
         }</span>
-        <span class="cov0" title="0">returnUser := toAuthUserResponse(user)
+        <span class="cov6" title="22">returnUser := toAuthUserResponse(user)
 
         return &amp;dto.AuthResponse{
                 User:         *returnUser,
@@ -768,24 +768,24 @@ func (s *userService) createAuthResponse(
         }, nil</span>
 }
 
-func nullableProfileField(value *string, max int) (interface{}, bool, error) <span class="cov0" title="0">{
-        if value == nil </span><span class="cov0" title="0">{
+func nullableProfileField(value *string, max int) (interface{}, bool, error) <span class="cov6" title="15">{
+        if value == nil </span><span class="cov4" title="8">{
                 return nil, false, nil
         }</span>
 
-        <span class="cov0" title="0">trimmed := strings.TrimSpace(*value)
+        <span class="cov4" title="7">trimmed := strings.TrimSpace(*value)
         if len(trimmed) &gt; max </span><span class="cov0" title="0">{
                 return nil, false, ErrInvalidProfile
         }</span>
 
-        <span class="cov0" title="0">if trimmed == "" </span><span class="cov0" title="0">{
+        <span class="cov4" title="7">if trimmed == "" </span><span class="cov0" title="0">{
                 return nil, true, nil
         }</span>
 
-        <span class="cov0" title="0">return trimmed, true, nil</span>
+        <span class="cov4" title="7">return trimmed, true, nil</span>
 }
 
-func toAuthUserResponse(user *dbmodel.User) *dto.AuthUserResponse <span class="cov0" title="0">{
+func toAuthUserResponse(user *dbmodel.User) *dto.AuthUserResponse <span class="cov7" title="25">{
         return &amp;dto.AuthUserResponse{
                 ID:          user.ID.String(),
                 Email:       user.Email,
@@ -800,12 +800,12 @@ func toAuthUserResponse(user *dbmodel.User) *dto.AuthUserResponse <span class="c
         }
 }</span>
 
-func stringValue(value *string) string <span class="cov0" title="0">{
-        if value == nil </span><span class="cov0" title="0">{
+func stringValue(value *string) string <span class="cov10" title="125">{
+        if value == nil </span><span class="cov9" title="118">{
                 return ""
         }</span>
 
-        <span class="cov0" title="0">return *value</span>
+        <span class="cov4" title="7">return *value</span>
 }
 </pre>
 		

@@ -57,11 +57,13 @@
 				
 				<option value="file0">github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/feed_cache.go (91.3%)</option>
 				
-				<option value="file1">github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc/grpc_server.go (93.8%)</option>
+				<option value="file1">github.com/trungquantrannguyen/threadly/services/feed-service/internal/events/feed_event_consumer.go (100.0%)</option>
 				
-				<option value="file2">github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository/feed_repository.go (94.1%)</option>
+				<option value="file2">github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc/grpc_server.go (93.8%)</option>
 				
-				<option value="file3">github.com/trungquantrannguyen/threadly/services/feed-service/internal/service/feed_service.go (100.0%)</option>
+				<option value="file3">github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository/feed_repository.go (94.1%)</option>
+				
+				<option value="file4">github.com/trungquantrannguyen/threadly/services/feed-service/internal/service/feed_service.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -163,7 +165,97 @@ func homeFeedKey(userID string, limit int32, cursor string) string <span class="
 }
 </pre>
 		
-		<pre class="file" id="file1" style="display: none">package grpc
+		<pre class="file" id="file1" style="display: none">package events
+
+import (
+        "context"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/messaging"
+        "github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache"
+)
+
+const feedCacheInvalidationQueue = "feed-service.cache-invalidation"
+
+type FeedEventConsumer struct {
+        eventBus  EventConsumer
+        feedCache cache.FeedCache
+        log       zerolog.Logger
+}
+
+type EventConsumer interface {
+        Consume(
+                ctx context.Context,
+                queueName string,
+                routingKeys []string,
+                handler messaging.EventHandler,
+        ) error
+}
+
+func NewFeedEventConsumer(
+        eventBus EventConsumer,
+        feedCache cache.FeedCache,
+        log zerolog.Logger,
+) *FeedEventConsumer <span class="cov10" title="9">{
+        return &amp;FeedEventConsumer{
+                eventBus:  eventBus,
+                feedCache: feedCache,
+                log:       log,
+        }
+}</span>
+
+func (c *FeedEventConsumer) Start(ctx context.Context) error <span class="cov3" title="2">{
+        return c.eventBus.Consume(
+                ctx,
+                feedCacheInvalidationQueue,
+                []string{
+                        messaging.EventPostCreated,
+                        messaging.EventPostDeleted,
+                        messaging.EventUserFollowed,
+                        messaging.EventUserUnfollowed,
+                },
+                c.handleEvent,
+        )
+}</span>
+
+func (c *FeedEventConsumer) handleEvent(ctx context.Context, event messaging.Event) error <span class="cov7" title="5">{
+        switch event.Type </span>{
+        case messaging.EventPostCreated:<span class="cov1" title="1">
+                return c.clearUserHomeFeed(ctx, event.AuthorID, event.Type)</span>
+
+        case messaging.EventPostDeleted:<span class="cov1" title="1">
+                return c.clearUserHomeFeed(ctx, event.AuthorID, event.Type)</span>
+
+        case messaging.EventUserFollowed:<span class="cov1" title="1">
+                return c.clearUserHomeFeed(ctx, event.ActorID, event.Type)</span>
+
+        case messaging.EventUserUnfollowed:<span class="cov1" title="1">
+                return c.clearUserHomeFeed(ctx, event.ActorID, event.Type)</span>
+
+        default:<span class="cov1" title="1">
+                return nil</span>
+        }
+}
+
+func (c *FeedEventConsumer) clearUserHomeFeed(ctx context.Context, userID string, eventType string) error <span class="cov8" title="6">{
+        if userID == "" </span><span class="cov1" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov7" title="5">if err := c.feedCache.DeleteHomeFeedByUserID(ctx, userID); err != nil </span><span class="cov1" title="1">{
+                return err
+        }</span>
+
+        <span class="cov6" title="4">c.log.Info().
+                Str("user_id", userID).
+                Str("event_type", eventType).
+                Msg("cleared home feed cache")
+
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package grpc
 
 import (
         "context"
@@ -308,7 +400,7 @@ func stringValue(value *string) string <span class="cov8" title="4">{
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package repository
+		<pre class="file" id="file3" style="display: none">package repository
 
 import (
         "context"
@@ -376,7 +468,7 @@ func (r *feedRepository) FindHomeFeed(ctx context.Context, userID string, limit 
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package service
+		<pre class="file" id="file4" style="display: none">package service
 
 import (
         "context"

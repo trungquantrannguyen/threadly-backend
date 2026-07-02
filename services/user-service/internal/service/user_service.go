@@ -106,7 +106,7 @@ func (s *userService) RefreshToken(ctx context.Context, req dto.RefreshTokenRequ
 	session, err := s.sessionRepo.FindActiveByRefreshTokenHash(ctx, refreshHashToken)
 	if err != nil {
 		if errors.Is(err, repository.ErrSessionNotFound) {
-			return nil, ErrInvalidCredential
+			return nil, ErrInvalidRefreshToken
 		}
 		return nil, err
 	}

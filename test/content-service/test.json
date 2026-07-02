@@ -1,12 +1,12 @@
-{"Time":"2026-07-02T19:34:24.20956+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto"}
-{"Time":"2026-07-02T19:34:24.209685+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto","Output":"?   \tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/dto\t[no test files]\n"}
-{"Time":"2026-07-02T19:34:24.20969+10:00","Action":"skip","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto","Elapsed":0}
-{"Time":"2026-07-02T19:34:24.319444+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc"}
-{"Time":"2026-07-02T19:34:24.319464+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository"}
-{"Time":"2026-07-02T19:34:24.319474+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/service"}
-{"Time":"2026-07-02T19:34:24.394423+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository","Output":"\tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/repository\t\tcoverage: 0.0% of statements\n"}
-{"Time":"2026-07-02T19:34:24.394451+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc","Output":"\tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/grpc\t\tcoverage: 0.0% of statements\n"}
-{"Time":"2026-07-02T19:34:24.39466+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/service","Output":"\tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/service\t\tcoverage: 0.0% of statements\n"}
-{"Time":"2026-07-02T19:34:24.469694+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository","Elapsed":0.15}
-{"Time":"2026-07-02T19:34:24.470071+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/service","Elapsed":0.151}
-{"Time":"2026-07-02T19:34:24.470339+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc","Elapsed":0.151}
+{"Time":"2026-07-02T20:23:42.410343+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto"}
+{"Time":"2026-07-02T20:23:42.410446+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto","Output":"?   \tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/dto\t[no test files]\n"}
+{"Time":"2026-07-02T20:23:42.410451+10:00","Action":"skip","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/dto","Elapsed":0}
+{"Time":"2026-07-02T20:23:42.52799+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc"}
+{"Time":"2026-07-02T20:23:42.528017+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository"}
+{"Time":"2026-07-02T20:23:42.528031+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/service"}
+{"Time":"2026-07-02T20:23:42.618829+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc","Output":"\tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/grpc\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T20:23:42.618889+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/service","Output":"\tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/service\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T20:23:42.619027+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository","Output":"\tgithub.com/trungquantrannguyen/threadly/services/content-service/internal/repository\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T20:23:42.733919+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc","Elapsed":0.206}
+{"Time":"2026-07-02T20:23:42.734574+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/service","Elapsed":0.207}
+{"Time":"2026-07-02T20:23:42.735809+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/content-service/internal/repository","Elapsed":0.208}

@@ -173,24 +173,6 @@ echo "TEST SUMMARY"
 echo "============================================================"
 cat "$SUMMARY_FILE"
 
-echo ""
-echo "Reports generated:"
-echo "  Total summary:        $SUMMARY_FILE"
-echo "  Total coverage text:  $COMBINED_COVERAGE_TXT"
-echo "  Total coverage HTML:  $COMBINED_COVERAGE_HTML"
-echo ""
-
-for entry in "${SERVICES[@]}"; do
-  SERVICE_NAME="${entry%%:*}"
-  SERVICE_DIR="$TEST_REPORT_DIR/$SERVICE_NAME"
-
-  if [[ -d "$SERVICE_DIR" ]]; then
-    echo "  $SERVICE_NAME:"
-    echo "    Test JSON:      $SERVICE_DIR/test.json"
-    echo "    Coverage text: $SERVICE_DIR/coverage.txt"
-    echo "    Coverage HTML: $SERVICE_DIR/coverage.html"
-  fi
-done
 
 COVERAGE_NUMBER="${TOTAL_COVERAGE%\%}"
 
