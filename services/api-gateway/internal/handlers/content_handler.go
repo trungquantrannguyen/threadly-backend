@@ -202,7 +202,7 @@ func (h *ContentHandler) DeletePost(c *gin.Context) {
 		RequesterId: requestID,
 	})
 	if err != nil {
-		h.log.Error().Err(err).Msg("Failed to delete post")
+		h.log.Error().Err(err).Msg("Failed to delete posts")
 		HandleGRPCError(c, err)
 		return
 	}
