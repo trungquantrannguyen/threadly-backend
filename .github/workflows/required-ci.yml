@@ -1,0 +1,51 @@
+name: Backend Required CI
+
+on:
+  pull_request:
+    branches: [main]
+
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend-required-ci:
+    name: Backend Required CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Check formatting
+        run: |
+          UNFORMATTED=$(gofmt -l $(git ls-files '*.go'))
+          if [ -n "$UNFORMATTED" ]; then
+            echo "These files are not gofmt formatted:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run all backend tests
+        run: |
+          mkdir -p test/backend
+          go test ./... \
+            -coverprofile=test/backend/coverage.out \
+            -covermode=atomic
+          go tool cover -func=test/backend/coverage.out
