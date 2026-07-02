@@ -21,6 +21,10 @@ func NewStorageClient(cfg config.Config, log zerolog.Logger) (*StorageClient, er
 	conn, err := grpc.NewClient(
 		cfg.StorageServiceGRPCAddr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallSendMsgSize(10<<20),
+			grpc.MaxCallRecvMsgSize(10<<20),
+		),
 	)
 	if err != nil {
 		return nil, err

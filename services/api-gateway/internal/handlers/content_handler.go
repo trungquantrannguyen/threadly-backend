@@ -243,6 +243,7 @@ func (h *ContentHandler) CreateReply(c *gin.Context) {
 		AuthorId:      authorID,
 		Content:       req.Content,
 		ReplyToPostId: postID,
+		MediaIds:      req.MediaIDs,
 	})
 	if err != nil {
 		h.log.Error().Err(err).Msg("Failed to create reply")

@@ -102,7 +102,7 @@ func (h *StorageHandler) UploadMedia(c *gin.Context) {
 	)
 	if err != nil {
 		h.log.Error().Err(err).Msg("failed to upload media")
-		response.Error(c, http.StatusServiceUnavailable, "Storage service unavailable", err)
+		HandleGRPCError(c, err)
 		return
 	}
 

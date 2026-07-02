@@ -154,6 +154,15 @@ func (s *contentService) UpdatePost(ctx context.Context, req dto.UpdatePostReque
 		return nil, err
 	}
 
+	s.publishEvent(ctx, messaging.EventPostUpdated, messaging.Event{
+		EventID:   uuid.NewString(),
+		Type:      messaging.EventPostUpdated,
+		ActorID:   req.RequesterID,
+		PostID:    req.PostID,
+		AuthorID:  req.RequesterID,
+		CreatedAt: time.Now().UTC().Format(time.RFC3339),
+	})
+
 	return toPostResponse(post), nil
 }
 
@@ -240,7 +249,16 @@ func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyReq
 		})
 	}
 
-	return toPostResponse(post), nil
+	if err := s.postRepo.AttachMediaToPost(ctx, post.ID, authorID, req.MediaIDs); err != nil {
+		return nil, err
+	}
+
+	postWithMedia, err := s.postRepo.FindByID(ctx, post.ID.String())
+	if err != nil {
+		return nil, err
+	}
+
+	return toPostResponse(postWithMedia), nil
 }
 
 func (s *contentService) GetReplies(ctx context.Context, req dto.GetRepliesRequest) ([]dto.PostResponse, error) {

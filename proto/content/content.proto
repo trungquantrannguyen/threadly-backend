@@ -122,6 +122,7 @@ message CreateReplyRequest {
     string reply_to_post_id = 2;
     string content = 3;
     string visibility = 4;
+    repeated string media_ids = 5;
 }
 
 message GetRepliesRequest {

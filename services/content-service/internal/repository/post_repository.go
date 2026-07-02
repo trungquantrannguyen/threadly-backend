@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+	"github.com/trungquantrannguyen/threadly/pkg/messaging"
 	"gorm.io/gorm"
 )
 
@@ -85,6 +86,12 @@ func (r *postRepository) DeleteOwnPost(ctx context.Context, postID string, reque
 
 	if result.RowsAffected == 0 {
 		return ErrPostNotFound
+	}
+
+	if err := r.db.WithContext(ctx).Model(&dbmodel.Media{}).
+		Where("post_id = ?", postIDUUID).
+		Update("status", "deleted").Error; err != nil {
+		return err
 	}
 	return nil
 }
@@ -217,6 +224,15 @@ func (r *postRepository) UpdateOwnPost(
 		return nil, ErrPostNotFound
 	}
 
+	s.publishEvent(ctx, messaging.EventPostUpdated, messaging.Event{
+		EventID:   uuid.NewString(),
+		Type:      messaging.EventPostUpdated,
+		ActorID:   req.RequesterID,
+		PostID:    req.PostID,
+		AuthorID:  req.RequesterID,
+		CreatedAt: time.Now().UTC().Format(time.RFC3339),
+	})
+
 	return r.FindByID(ctx, postID)
 }
 
@@ -244,7 +260,10 @@ func (r *postRepository) AttachMediaToPost(
 		Where("id IN ?", ids).
 		Where("uploader_id = ?", uploaderID).
 		Where("post_id IS NULL OR post_id = ?", postID).
-		Update("post_id", postID)
+		UpdateColumns(map[string]interface{}{
+			"post_id": postID,
+			"status":  "attached",
+		})
 
 	if result.Error != nil {
 		return result.Error
@@ -266,7 +285,10 @@ func (r *postRepository) ReplacePostMedia(
 	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Model(&dbmodel.Media{}).
 			Where("post_id = ? AND uploader_id = ?", postID, uploaderID).
-			Update("post_id", nil).Error; err != nil {
+			UpdateColumns(map[string]interface{}{
+				"post_id": nil,
+				"status":  "uploaded",
+			}).Error; err != nil {
 			return err
 		}
 
@@ -287,7 +309,10 @@ func (r *postRepository) ReplacePostMedia(
 			Where("id IN ?", ids).
 			Where("uploader_id = ?", uploaderID).
 			Where("post_id IS NULL OR post_id = ?", postID).
-			Update("post_id", postID)
+			UpdateColumns(map[string]interface{}{
+				"post_id": postID,
+				"status":  "attached",
+			})
 
 		if result.Error != nil {
 			return result.Error

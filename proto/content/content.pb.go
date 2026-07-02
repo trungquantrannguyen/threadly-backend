@@ -7,12 +7,11 @@
 package contentv1
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -728,6 +727,7 @@ type CreateReplyRequest struct {
 	ReplyToPostId string                 `protobuf:"bytes,2,opt,name=reply_to_post_id,json=replyToPostId,proto3" json:"reply_to_post_id,omitempty"`
 	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	Visibility    string                 `protobuf:"bytes,4,opt,name=visibility,proto3" json:"visibility,omitempty"`
+	MediaIds      []string               `protobuf:"bytes,5,rep,name=media_ids,json=mediaIds,proto3" json:"media_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -788,6 +788,13 @@ func (x *CreateReplyRequest) GetVisibility() string {
 		return x.Visibility
 	}
 	return ""
+}
+
+func (x *CreateReplyRequest) GetMediaIds() []string {
+	if x != nil {
+		return x.MediaIds
+	}
+	return nil
 }
 
 type GetRepliesRequest struct {
@@ -1785,14 +1792,15 @@ const file_proto_content_content_proto_rawDesc = "" +
 	"\tviewer_id\x18\x02 \x01(\tR\bviewerId\"O\n" +
 	"\x11DeletePostRequest\x12\x17\n" +
 	"\apost_id\x18\x01 \x01(\tR\x06postId\x12!\n" +
-	"\frequester_id\x18\x02 \x01(\tR\vrequesterId\"\x94\x01\n" +
+	"\frequester_id\x18\x02 \x01(\tR\vrequesterId\"\xb1\x01\n" +
 	"\x12CreateReplyRequest\x12\x1b\n" +
 	"\tauthor_id\x18\x01 \x01(\tR\bauthorId\x12'\n" +
 	"\x10reply_to_post_id\x18\x02 \x01(\tR\rreplyToPostId\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x1e\n" +
 	"\n" +
 	"visibility\x18\x04 \x01(\tR\n" +
-	"visibility\"Z\n" +
+	"visibility\x12\x1b\n" +
+	"\tmedia_ids\x18\x05 \x03(\tR\bmediaIds\"Z\n" +
 	"\x11GetRepliesRequest\x12\x17\n" +
 	"\apost_id\x18\x01 \x01(\tR\x06postId\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\x12\x16\n" +
@@ -1901,39 +1909,37 @@ func file_proto_content_content_proto_rawDescGZIP() []byte {
 	return file_proto_content_content_proto_rawDescData
 }
 
-var (
-	file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
-	file_proto_content_content_proto_goTypes  = []any{
-		(*GetContentServiceHealthRequest)(nil),  // 0: content.GetContentServiceHealthRequest
-		(*GetContentServiceHealthResponse)(nil), // 1: content.GetContentServiceHealthResponse
-		(*PostResponse)(nil),                    // 2: content.PostResponse
-		(*PostListResponse)(nil),                // 3: content.PostListResponse
-		(*UserSummary)(nil),                     // 4: content.UserSummary
-		(*UserListResponse)(nil),                // 5: content.UserListResponse
-		(*ActionResponse)(nil),                  // 6: content.ActionResponse
-		(*DeletePostResponse)(nil),              // 7: content.DeletePostResponse
-		(*CreatePostRequest)(nil),               // 8: content.CreatePostRequest
-		(*GetPostRequest)(nil),                  // 9: content.GetPostRequest
-		(*DeletePostRequest)(nil),               // 10: content.DeletePostRequest
-		(*CreateReplyRequest)(nil),              // 11: content.CreateReplyRequest
-		(*GetRepliesRequest)(nil),               // 12: content.GetRepliesRequest
-		(*LikePostRequest)(nil),                 // 13: content.LikePostRequest
-		(*UnlikePostRequest)(nil),               // 14: content.UnlikePostRequest
-		(*BookmarkPostRequest)(nil),             // 15: content.BookmarkPostRequest
-		(*UnbookmarkPostRequest)(nil),           // 16: content.UnbookmarkPostRequest
-		(*RepostPostRequest)(nil),               // 17: content.RepostPostRequest
-		(*UndoRepostRequest)(nil),               // 18: content.UndoRepostRequest
-		(*FollowUserRequest)(nil),               // 19: content.FollowUserRequest
-		(*UnfollowUserRequest)(nil),             // 20: content.UnfollowUserRequest
-		(*GetFollowersRequest)(nil),             // 21: content.GetFollowersRequest
-		(*GetFollowingRequest)(nil),             // 22: content.GetFollowingRequest
-		(*GetUserTimelineRequest)(nil),          // 23: content.GetUserTimelineRequest
-		(*TimelineItemResponse)(nil),            // 24: content.TimelineItemResponse
-		(*TimelineResponse)(nil),                // 25: content.TimelineResponse
-		(*MediaResponse)(nil),                   // 26: content.MediaResponse
-		(*UpdatePostRequest)(nil),               // 27: content.UpdatePostRequest
-	}
-)
+var file_proto_content_content_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
+var file_proto_content_content_proto_goTypes = []any{
+	(*GetContentServiceHealthRequest)(nil),  // 0: content.GetContentServiceHealthRequest
+	(*GetContentServiceHealthResponse)(nil), // 1: content.GetContentServiceHealthResponse
+	(*PostResponse)(nil),                    // 2: content.PostResponse
+	(*PostListResponse)(nil),                // 3: content.PostListResponse
+	(*UserSummary)(nil),                     // 4: content.UserSummary
+	(*UserListResponse)(nil),                // 5: content.UserListResponse
+	(*ActionResponse)(nil),                  // 6: content.ActionResponse
+	(*DeletePostResponse)(nil),              // 7: content.DeletePostResponse
+	(*CreatePostRequest)(nil),               // 8: content.CreatePostRequest
+	(*GetPostRequest)(nil),                  // 9: content.GetPostRequest
+	(*DeletePostRequest)(nil),               // 10: content.DeletePostRequest
+	(*CreateReplyRequest)(nil),              // 11: content.CreateReplyRequest
+	(*GetRepliesRequest)(nil),               // 12: content.GetRepliesRequest
+	(*LikePostRequest)(nil),                 // 13: content.LikePostRequest
+	(*UnlikePostRequest)(nil),               // 14: content.UnlikePostRequest
+	(*BookmarkPostRequest)(nil),             // 15: content.BookmarkPostRequest
+	(*UnbookmarkPostRequest)(nil),           // 16: content.UnbookmarkPostRequest
+	(*RepostPostRequest)(nil),               // 17: content.RepostPostRequest
+	(*UndoRepostRequest)(nil),               // 18: content.UndoRepostRequest
+	(*FollowUserRequest)(nil),               // 19: content.FollowUserRequest
+	(*UnfollowUserRequest)(nil),             // 20: content.UnfollowUserRequest
+	(*GetFollowersRequest)(nil),             // 21: content.GetFollowersRequest
+	(*GetFollowingRequest)(nil),             // 22: content.GetFollowingRequest
+	(*GetUserTimelineRequest)(nil),          // 23: content.GetUserTimelineRequest
+	(*TimelineItemResponse)(nil),            // 24: content.TimelineItemResponse
+	(*TimelineResponse)(nil),                // 25: content.TimelineResponse
+	(*MediaResponse)(nil),                   // 26: content.MediaResponse
+	(*UpdatePostRequest)(nil),               // 27: content.UpdatePostRequest
+}
 var file_proto_content_content_proto_depIdxs = []int32{
 	4,  // 0: content.PostResponse.author:type_name -> content.UserSummary
 	26, // 1: content.PostResponse.media:type_name -> content.MediaResponse

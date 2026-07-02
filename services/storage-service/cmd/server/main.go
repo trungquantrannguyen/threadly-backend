@@ -49,7 +49,10 @@ func main() {
 	mediaRepo := repository.NewMediaRepository(dtb)
 	storageService := service.NewStorageService(mediaRepo, storageProvider)
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.MaxRecvMsgSize(10<<20),
+		grpc.MaxSendMsgSize(10<<20),
+	)
 	storageGrpcServer := storagegrpc.NewStorageServiceServer(cfg, log, storageService)
 	storagepb.RegisterStorageServiceServer(grpcServer, storageGrpcServer)
 

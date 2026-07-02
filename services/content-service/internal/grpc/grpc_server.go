@@ -87,6 +87,7 @@ func (s *ContentServiceServer) CreateReply(ctx context.Context, req *contentpb.C
 		ReplyToPostID: req.GetReplyToPostId(),
 		Content:       req.GetContent(),
 		Visibility:    req.GetVisibility(),
+		MediaIDs:      req.GetMediaIds(),
 	})
 	if err != nil {
 		return nil, mapContentServiceError(err)

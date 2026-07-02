@@ -2,12 +2,15 @@ package grpc
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/trungquantrannguyen/threadly/pkg/config"
 	storagepb "github.com/trungquantrannguyen/threadly/proto/storage"
 	"github.com/trungquantrannguyen/threadly/services/storage-service/internal/service"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type StorageServiceServer struct {
@@ -43,7 +46,7 @@ func (s *StorageServiceServer) UploadMedia(ctx context.Context, req *storagepb.U
 		Content:     req.GetContent(),
 	})
 	if err != nil {
-		return nil, err
+		return nil, mapStorageServiceError(err)
 	}
 
 	return &storagepb.UploadMediaResponse{
@@ -54,4 +57,16 @@ func (s *StorageServiceServer) UploadMedia(ctx context.Context, req *storagepb.U
 		SizeBytes:  media.SizeBytes,
 		CreatedAt:  media.CreatedAt,
 	}, nil
+}
+
+func mapStorageServiceError(err error) error {
+	switch {
+	case errors.Is(err, service.ErrInvalidUploaderID),
+		errors.Is(err, service.ErrEmptyFile),
+		errors.Is(err, service.ErrInvalidMimeType):
+		return status.Error(codes.InvalidArgument, err.Error())
+
+	default:
+		return status.Error(codes.Internal, "failed to upload media")
+	}
 }

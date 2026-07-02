@@ -21,6 +21,7 @@ const (
 	EventPostLiked    = "post.liked"
 	EventReplyCreated = "reply.created"
 	EventPostReposted = "post.reposted"
+	EventPostUpdated  = "post.updated"
 
 	MaxRetries  = int32(3)
 	RetryHeader = "x-retry-count"
