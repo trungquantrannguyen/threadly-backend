@@ -55,13 +55,13 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/trungquantrannguyen/threadly/services/notification-service/internal/events/notification_event_consumer.go (0.0%)</option>
+				<option value="file0">github.com/trungquantrannguyen/threadly/services/notification-service/internal/events/notification_event_consumer.go (100.0%)</option>
 				
-				<option value="file1">github.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc/grpc_server.go (0.0%)</option>
+				<option value="file1">github.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc/grpc_server.go (100.0%)</option>
 				
-				<option value="file2">github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository/notification_repository.go (0.0%)</option>
+				<option value="file2">github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository/notification_repository.go (100.0%)</option>
 				
-				<option value="file3">github.com/trungquantrannguyen/threadly/services/notification-service/internal/service/notification_service.go (0.0%)</option>
+				<option value="file3">github.com/trungquantrannguyen/threadly/services/notification-service/internal/service/notification_service.go (95.7%)</option>
 				
 				</select>
 			</div>
@@ -96,17 +96,21 @@ import (
 
 const notificationQueue = "notification-service.events"
 
+type EventConsumer interface {
+        Consume(ctx context.Context, queueName string, routingKeys []string, handler messaging.EventHandler) error
+}
+
 type NotificationEventConsumer struct {
-        eventBus            *messaging.RabbitMQ
+        eventBus            EventConsumer
         notificationService service.NotificationService
         log                 zerolog.Logger
 }
 
 func NewNotificationEventConsumer(
-        eventBus *messaging.RabbitMQ,
+        eventBus EventConsumer,
         notificationService service.NotificationService,
         log zerolog.Logger,
-) *NotificationEventConsumer <span class="cov0" title="0">{
+) *NotificationEventConsumer <span class="cov10" title="5">{
         return &amp;NotificationEventConsumer{
                 eventBus:            eventBus,
                 notificationService: notificationService,
@@ -114,7 +118,7 @@ func NewNotificationEventConsumer(
         }
 }</span>
 
-func (c *NotificationEventConsumer) Start(ctx context.Context) error <span class="cov0" title="0">{
+func (c *NotificationEventConsumer) Start(ctx context.Context) error <span class="cov7" title="3">{
         return c.eventBus.Consume(
                 ctx,
                 notificationQueue,
@@ -128,12 +132,12 @@ func (c *NotificationEventConsumer) Start(ctx context.Context) error <span class
         )
 }</span>
 
-func (c *NotificationEventConsumer) handleEvent(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
-        if err := c.notificationService.CreateFromEvent(ctx, event); err != nil </span><span class="cov0" title="0">{
+func (c *NotificationEventConsumer) handleEvent(ctx context.Context, event messaging.Event) error <span class="cov7" title="3">{
+        if err := c.notificationService.CreateFromEvent(ctx, event); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">c.log.Info().
+        <span class="cov4" title="2">c.log.Info().
                 Str("event_type", event.Type).
                 Str("actor_id", event.ActorID).
                 Str("target_user_id", event.TargetUserID).
@@ -162,7 +166,7 @@ type NotificationServiceServer struct {
         notificationService service.NotificationService
 }
 
-func NewNotificationServiceServer(cfg config.Config, log zerolog.Logger, notificationService service.NotificationService) *NotificationServiceServer <span class="cov0" title="0">{
+func NewNotificationServiceServer(cfg config.Config, log zerolog.Logger, notificationService service.NotificationService) *NotificationServiceServer <span class="cov10" title="11">{
         return &amp;NotificationServiceServer{
                 cfg:                 cfg,
                 log:                 log,
@@ -170,7 +174,7 @@ func NewNotificationServiceServer(cfg config.Config, log zerolog.Logger, notific
         }
 }</span>
 
-func (s *NotificationServiceServer) GetHealth(ctx context.Context, req *notificationpb.GetNotificationServiceHealthRequest) (*notificationpb.GetNotificationServiceHealthResponse, error) <span class="cov0" title="0">{
+func (s *NotificationServiceServer) GetHealth(ctx context.Context, req *notificationpb.GetNotificationServiceHealthRequest) (*notificationpb.GetNotificationServiceHealthResponse, error) <span class="cov1" title="1">{
         s.log.Info().Msg("Notification service is healthy")
         return &amp;notificationpb.GetNotificationServiceHealthResponse{
                 Status:    "ok",
@@ -180,16 +184,16 @@ func (s *NotificationServiceServer) GetHealth(ctx context.Context, req *notifica
         }, nil
 }</span>
 
-func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *notificationpb.GetNotificationsRequest) (*notificationpb.GetNotificationsResponse, error) <span class="cov0" title="0">{
+func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *notificationpb.GetNotificationsRequest) (*notificationpb.GetNotificationsResponse, error) <span class="cov5" title="3">{
         notifications, err := s.notificationService.GetNotifications(ctx, req.GetUserId(), int(req.GetLimit()))
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">res := make([]*notificationpb.NotificationResponse, 0, len(notifications))
-        for _, n := range notifications </span><span class="cov0" title="0">{
+        <span class="cov3" title="2">res := make([]*notificationpb.NotificationResponse, 0, len(notifications))
+        for _, n := range notifications </span><span class="cov3" title="2">{
                 var actor *notificationpb.NotificationActor
-                if n.Actor != nil </span><span class="cov0" title="0">{
+                if n.Actor != nil </span><span class="cov1" title="1">{
                         actor = &amp;notificationpb.NotificationActor{
                                 Id:          n.Actor.ID,
                                 Username:    n.Actor.Username,
@@ -199,7 +203,7 @@ func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *n
                         }
                 }</span>
 
-                <span class="cov0" title="0">res = append(res, &amp;notificationpb.NotificationResponse{
+                <span class="cov3" title="2">res = append(res, &amp;notificationpb.NotificationResponse{
                         Id:          n.ID,
                         RecipientId: n.RecipientID,
                         ActorId:     n.ActorID,
@@ -213,48 +217,48 @@ func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *n
                 })</span>
         }
 
-        <span class="cov0" title="0">return &amp;notificationpb.GetNotificationsResponse{
+        <span class="cov3" title="2">return &amp;notificationpb.GetNotificationsResponse{
                 Notifications: res,
         }, nil</span>
 }
 
-func (s *NotificationServiceServer) MarkNotificationRead(ctx context.Context, req *notificationpb.MarkNotificationReadRequest) (*notificationpb.MarkNotificationReadResponse, error) <span class="cov0" title="0">{
+func (s *NotificationServiceServer) MarkNotificationRead(ctx context.Context, req *notificationpb.MarkNotificationReadRequest) (*notificationpb.MarkNotificationReadResponse, error) <span class="cov5" title="3">{
         updated, err := s.notificationService.MarkNotificationRead(ctx, req.GetUserId(), req.GetNotificationId())
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">message := "notification marked as read"
-        if !updated </span><span class="cov0" title="0">{
+        <span class="cov3" title="2">message := "notification marked as read"
+        if !updated </span><span class="cov1" title="1">{
                 message = "notification not found or already read"
         }</span>
 
-        <span class="cov0" title="0">return &amp;notificationpb.MarkNotificationReadResponse{
+        <span class="cov3" title="2">return &amp;notificationpb.MarkNotificationReadResponse{
                 Success: updated,
                 Message: message,
         }, nil</span>
 }
 
-func (s *NotificationServiceServer) MarkAllNotificationsRead(ctx context.Context, req *notificationpb.MarkAllNotificationsReadRequest) (*notificationpb.MarkAllNotificationsReadResponse, error) <span class="cov0" title="0">{
+func (s *NotificationServiceServer) MarkAllNotificationsRead(ctx context.Context, req *notificationpb.MarkAllNotificationsReadRequest) (*notificationpb.MarkAllNotificationsReadResponse, error) <span class="cov3" title="2">{
         count, err := s.notificationService.MarkAllNotificationsRead(ctx, req.GetUserId())
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return &amp;notificationpb.MarkAllNotificationsReadResponse{
+        <span class="cov1" title="1">return &amp;notificationpb.MarkAllNotificationsReadResponse{
                 Success:      true,
                 Message:      "notifications marked as read",
                 UpdatedCount: int32(count),
         }, nil</span>
 }
 
-func (s *NotificationServiceServer) GetUnreadNotificationCount(ctx context.Context, req *notificationpb.GetUnreadNotificationCountRequest) (*notificationpb.GetUnreadNotificationCountResponse, error) <span class="cov0" title="0">{
+func (s *NotificationServiceServer) GetUnreadNotificationCount(ctx context.Context, req *notificationpb.GetUnreadNotificationCountRequest) (*notificationpb.GetUnreadNotificationCountResponse, error) <span class="cov3" title="2">{
         count, err := s.notificationService.GetUnreadNotificationCount(ctx, req.GetUserId())
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return &amp;notificationpb.GetUnreadNotificationCountResponse{
+        <span class="cov1" title="1">return &amp;notificationpb.GetUnreadNotificationCountResponse{
                 Count: count,
         }, nil</span>
 }
@@ -284,13 +288,13 @@ type notificationRepository struct {
         db *gorm.DB
 }
 
-func NewNotificationRepository(db *gorm.DB) NotificationRepository <span class="cov0" title="0">{
+func NewNotificationRepository(db *gorm.DB) NotificationRepository <span class="cov10" title="15">{
         return &amp;notificationRepository{
                 db: db,
         }
 }</span>
 
-func (r *notificationRepository) Create(ctx context.Context, notification *dbmodel.Notification) error <span class="cov0" title="0">{
+func (r *notificationRepository) Create(ctx context.Context, notification *dbmodel.Notification) error <span class="cov5" title="4">{
         return r.db.WithContext(ctx).
                 Clauses(clause.OnConflict{
                         Columns:   []clause.Column{{Name: "event_id"}},
@@ -299,7 +303,7 @@ func (r *notificationRepository) Create(ctx context.Context, notification *dbmod
                 Create(notification).Error
 }</span>
 
-func (r *notificationRepository) FindByRecipientID(ctx context.Context, recipientID uuid.UUID, limit int) ([]dbmodel.Notification, error) <span class="cov0" title="0">{
+func (r *notificationRepository) FindByRecipientID(ctx context.Context, recipientID uuid.UUID, limit int) ([]dbmodel.Notification, error) <span class="cov4" title="3">{
         var notifications []dbmodel.Notification
 
         err := r.db.WithContext(ctx).
@@ -312,7 +316,7 @@ func (r *notificationRepository) FindByRecipientID(ctx context.Context, recipien
         return notifications, err
 }</span>
 
-func (r *notificationRepository) CountUnreadByRecipientID(ctx context.Context, recipientID uuid.UUID) (int64, error) <span class="cov0" title="0">{
+func (r *notificationRepository) CountUnreadByRecipientID(ctx context.Context, recipientID uuid.UUID) (int64, error) <span class="cov4" title="3">{
         var count int64
 
         err := r.db.WithContext(ctx).
@@ -323,7 +327,7 @@ func (r *notificationRepository) CountUnreadByRecipientID(ctx context.Context, r
         return count, err
 }</span>
 
-func (r *notificationRepository) MarkAsRead(ctx context.Context, notificationID uuid.UUID, recipientID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *notificationRepository) MarkAsRead(ctx context.Context, notificationID uuid.UUID, recipientID uuid.UUID) (bool, error) <span class="cov5" title="4">{
         now := time.Now().UTC()
 
         result := r.db.WithContext(ctx).
@@ -331,14 +335,14 @@ func (r *notificationRepository) MarkAsRead(ctx context.Context, notificationID 
                 Where("id = ? AND recipient_id = ? AND read_at IS NULL", notificationID, recipientID).
                 Update("read_at", now)
 
-        if result.Error != nil </span><span class="cov0" title="0">{
+        if result.Error != nil </span><span class="cov1" title="1">{
                 return false, result.Error
         }</span>
 
-        <span class="cov0" title="0">return result.RowsAffected &gt; 0, nil</span>
+        <span class="cov4" title="3">return result.RowsAffected &gt; 0, nil</span>
 }
 
-func (r *notificationRepository) MarkAllAsRead(ctx context.Context, recipientID uuid.UUID) (int64, error) <span class="cov0" title="0">{
+func (r *notificationRepository) MarkAllAsRead(ctx context.Context, recipientID uuid.UUID) (int64, error) <span class="cov3" title="2">{
         now := time.Now().UTC()
 
         result := r.db.WithContext(ctx).
@@ -346,11 +350,11 @@ func (r *notificationRepository) MarkAllAsRead(ctx context.Context, recipientID 
                 Where("recipient_id = ? AND read_at IS NULL", recipientID).
                 Update("read_at", now)
 
-        if result.Error != nil </span><span class="cov0" title="0">{
+        if result.Error != nil </span><span class="cov1" title="1">{
                 return 0, result.Error
         }</span>
 
-        <span class="cov0" title="0">return result.RowsAffected, nil</span>
+        <span class="cov1" title="1">return result.RowsAffected, nil</span>
 }
 </pre>
 		
@@ -394,63 +398,63 @@ type notificationService struct {
         notificationRepo repository.NotificationRepository
 }
 
-func NewNotificationService(notificationRepo repository.NotificationRepository) NotificationService <span class="cov0" title="0">{
+func NewNotificationService(notificationRepo repository.NotificationRepository) NotificationService <span class="cov10" title="37">{
         return &amp;notificationService{
                 notificationRepo: notificationRepo,
         }
 }</span>
 
-func (s *notificationService) CreateFromEvent(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+func (s *notificationService) CreateFromEvent(ctx context.Context, event messaging.Event) error <span class="cov8" title="22">{
         switch event.Type </span>{
-        case messaging.EventUserFollowed:<span class="cov0" title="0">
+        case messaging.EventUserFollowed:<span class="cov6" title="8">
                 return s.createFollowNotification(ctx, event)</span>
 
-        case messaging.EventPostLiked:<span class="cov0" title="0">
+        case messaging.EventPostLiked:<span class="cov5" title="6">
                 return s.createPostNotification(ctx, event, NotificationTypePostLiked, "liked your post")</span>
 
-        case messaging.EventReplyCreated:<span class="cov0" title="0">
+        case messaging.EventReplyCreated:<span class="cov5" title="6">
                 return s.createReplyNotification(ctx, event)</span>
 
-        case messaging.EventPostReposted:<span class="cov0" title="0">
+        case messaging.EventPostReposted:<span class="cov1" title="1">
                 return s.createPostNotification(ctx, event, NotificationTypePostReposted, "reposted your post")</span>
 
-        default:<span class="cov0" title="0">
+        default:<span class="cov1" title="1">
                 return nil</span>
         }
 }
 
-func (s *notificationService) createFollowNotification(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+func (s *notificationService) createFollowNotification(ctx context.Context, event messaging.Event) error <span class="cov6" title="8">{
         eventID, err := parseEventID(event)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov2" title="2">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if event.ActorID == "" || event.TargetUserID == "" </span><span class="cov0" title="0">{
+        <span class="cov5" title="6">if event.ActorID == "" || event.TargetUserID == "" </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">if event.ActorID == event.TargetUserID </span><span class="cov0" title="0">{
+        <span class="cov5" title="5">if event.ActorID == event.TargetUserID </span><span class="cov1" title="1">{
                 return nil
         }</span>
 
-        <span class="cov0" title="0">actorID, err := uuid.Parse(event.ActorID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="4">actorID, err := uuid.Parse(event.ActorID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">recipientID, err := uuid.Parse(event.TargetUserID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">recipientID, err := uuid.Parse(event.TargetUserID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">payload, err := json.Marshal(map[string]string{
+        <span class="cov2" title="2">payload, err := json.Marshal(map[string]string{
                 "message": "started following you",
         })
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">notification := &amp;dbmodel.Notification{
+        <span class="cov2" title="2">notification := &amp;dbmodel.Notification{
                 EventID:     eventID,
                 RecipientID: recipientID,
                 ActorID:     &amp;actorID,
@@ -469,43 +473,43 @@ func (s *notificationService) createPostNotification(
         event messaging.Event,
         notificationType string,
         message string,
-) error <span class="cov0" title="0">{
+) error <span class="cov5" title="7">{
         eventID, err := parseEventID(event)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if event.ActorID == "" || event.AuthorID == "" || event.PostID == "" </span><span class="cov0" title="0">{
+        <span class="cov5" title="7">if event.ActorID == "" || event.AuthorID == "" || event.PostID == "" </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">if event.ActorID == event.AuthorID </span><span class="cov0" title="0">{
+        <span class="cov5" title="6">if event.ActorID == event.AuthorID </span><span class="cov1" title="1">{
                 return nil
         }</span>
 
-        <span class="cov0" title="0">actorID, err := uuid.Parse(event.ActorID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov5" title="5">actorID, err := uuid.Parse(event.ActorID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">recipientID, err := uuid.Parse(event.AuthorID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="4">recipientID, err := uuid.Parse(event.AuthorID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">postID, err := uuid.Parse(event.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">postID, err := uuid.Parse(event.PostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">payload, err := json.Marshal(map[string]string{
+        <span class="cov2" title="2">payload, err := json.Marshal(map[string]string{
                 "message": message,
         })
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">notification := &amp;dbmodel.Notification{
+        <span class="cov2" title="2">notification := &amp;dbmodel.Notification{
                 EventID:     eventID,
                 RecipientID: recipientID,
                 ActorID:     &amp;actorID,
@@ -519,43 +523,43 @@ func (s *notificationService) createPostNotification(
         return s.notificationRepo.Create(ctx, notification)</span>
 }
 
-func (s *notificationService) createReplyNotification(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+func (s *notificationService) createReplyNotification(ctx context.Context, event messaging.Event) error <span class="cov5" title="6">{
         eventID, err := parseEventID(event)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if event.ActorID == "" || event.TargetUserID == "" || event.PostID == "" </span><span class="cov0" title="0">{
+        <span class="cov5" title="6">if event.ActorID == "" || event.TargetUserID == "" || event.PostID == "" </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">if event.ActorID == event.TargetUserID </span><span class="cov0" title="0">{
+        <span class="cov5" title="5">if event.ActorID == event.TargetUserID </span><span class="cov1" title="1">{
                 return nil
         }</span>
 
-        <span class="cov0" title="0">actorID, err := uuid.Parse(event.ActorID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="4">actorID, err := uuid.Parse(event.ActorID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">recipientID, err := uuid.Parse(event.TargetUserID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">recipientID, err := uuid.Parse(event.TargetUserID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">replyID, err := uuid.Parse(event.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">replyID, err := uuid.Parse(event.PostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">payload, err := json.Marshal(map[string]string{
+        <span class="cov1" title="1">payload, err := json.Marshal(map[string]string{
                 "message": "replied to your post",
         })
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">notification := &amp;dbmodel.Notification{
+        <span class="cov1" title="1">notification := &amp;dbmodel.Notification{
                 EventID:     eventID,
                 RecipientID: recipientID,
                 ActorID:     &amp;actorID,
@@ -569,85 +573,85 @@ func (s *notificationService) createReplyNotification(ctx context.Context, event
         return s.notificationRepo.Create(ctx, notification)</span>
 }
 
-func (s *notificationService) GetUnreadNotificationCount(ctx context.Context, userID string) (int64, error) <span class="cov0" title="0">{
+func (s *notificationService) GetUnreadNotificationCount(ctx context.Context, userID string) (int64, error) <span class="cov3" title="3">{
         recipientID, err := uuid.Parse(userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return 0, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">return s.notificationRepo.CountUnreadByRecipientID(ctx, recipientID)</span>
+        <span class="cov2" title="2">return s.notificationRepo.CountUnreadByRecipientID(ctx, recipientID)</span>
 }
 
-func (s *notificationService) GetNotifications(ctx context.Context, userID string, limit int) ([]dto.NotificationResponse, error) <span class="cov0" title="0">{
+func (s *notificationService) GetNotifications(ctx context.Context, userID string, limit int) ([]dto.NotificationResponse, error) <span class="cov5" title="5">{
         recipientID, err := uuid.Parse(userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">if limit &lt;= 0 || limit &gt; 50 </span><span class="cov0" title="0">{
+        <span class="cov4" title="4">if limit &lt;= 0 || limit &gt; 50 </span><span class="cov2" title="2">{
                 limit = 20
         }</span>
 
-        <span class="cov0" title="0">notifications, err := s.notificationRepo.FindByRecipientID(ctx, recipientID, limit)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="4">notifications, err := s.notificationRepo.FindByRecipientID(ctx, recipientID, limit)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">responses := make([]dto.NotificationResponse, 0, len(notifications))
-        for _, notification := range notifications </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">responses := make([]dto.NotificationResponse, 0, len(notifications))
+        for _, notification := range notifications </span><span class="cov1" title="1">{
                 responses = append(responses, toNotificationResponse(notification))
         }</span>
 
-        <span class="cov0" title="0">return responses, nil</span>
+        <span class="cov3" title="3">return responses, nil</span>
 }
 
-func (s *notificationService) MarkNotificationRead(ctx context.Context, userID string, notificationID string) (bool, error) <span class="cov0" title="0">{
+func (s *notificationService) MarkNotificationRead(ctx context.Context, userID string, notificationID string) (bool, error) <span class="cov4" title="4">{
         recipientID, err := uuid.Parse(userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return false, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">id, err := uuid.Parse(notificationID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">id, err := uuid.Parse(notificationID)
+        if err != nil </span><span class="cov1" title="1">{
                 return false, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">return s.notificationRepo.MarkAsRead(ctx, id, recipientID)</span>
+        <span class="cov2" title="2">return s.notificationRepo.MarkAsRead(ctx, id, recipientID)</span>
 }
 
-func (s *notificationService) MarkAllNotificationsRead(ctx context.Context, userID string) (int64, error) <span class="cov0" title="0">{
+func (s *notificationService) MarkAllNotificationsRead(ctx context.Context, userID string) (int64, error) <span class="cov3" title="3">{
         recipientID, err := uuid.Parse(userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return 0, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">return s.notificationRepo.MarkAllAsRead(ctx, recipientID)</span>
+        <span class="cov2" title="2">return s.notificationRepo.MarkAllAsRead(ctx, recipientID)</span>
 }
 
-func toNotificationResponse(notification dbmodel.Notification) dto.NotificationResponse <span class="cov0" title="0">{
+func toNotificationResponse(notification dbmodel.Notification) dto.NotificationResponse <span class="cov3" title="3">{
         actorID := ""
-        if notification.ActorID != nil </span><span class="cov0" title="0">{
+        if notification.ActorID != nil </span><span class="cov2" title="2">{
                 actorID = notification.ActorID.String()
         }</span>
 
-        <span class="cov0" title="0">entityID := ""
-        if notification.EntityID != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">entityID := ""
+        if notification.EntityID != nil </span><span class="cov1" title="1">{
                 entityID = notification.EntityID.String()
         }</span>
 
-        <span class="cov0" title="0">readAt := ""
-        if notification.ReadAt != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">readAt := ""
+        if notification.ReadAt != nil </span><span class="cov1" title="1">{
                 readAt = notification.ReadAt.Format(time.RFC3339)
         }</span>
 
-        <span class="cov0" title="0">var actor *dto.NotificationActorResponse
-        if notification.Actor != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">var actor *dto.NotificationActorResponse
+        if notification.Actor != nil </span><span class="cov2" title="2">{
                 avatarURL := ""
-                if notification.Actor.AvatarURL != nil </span><span class="cov0" title="0">{
+                if notification.Actor.AvatarURL != nil </span><span class="cov1" title="1">{
                         avatarURL = *notification.Actor.AvatarURL
                 }</span>
 
-                <span class="cov0" title="0">actor = &amp;dto.NotificationActorResponse{
+                <span class="cov2" title="2">actor = &amp;dto.NotificationActorResponse{
                         ID:          notification.Actor.ID.String(),
                         Username:    notification.Actor.Username,
                         DisplayName: notification.Actor.DisplayName,
@@ -656,7 +660,7 @@ func toNotificationResponse(notification dbmodel.Notification) dto.NotificationR
                 }</span>
         }
 
-        <span class="cov0" title="0">return dto.NotificationResponse{
+        <span class="cov3" title="3">return dto.NotificationResponse{
                 ID:          notification.ID.String(),
                 RecipientID: notification.RecipientID.String(),
                 ActorID:     actorID,
@@ -670,17 +674,17 @@ func toNotificationResponse(notification dbmodel.Notification) dto.NotificationR
         }</span>
 }
 
-func parseEventID(event messaging.Event) (uuid.UUID, error) <span class="cov0" title="0">{
-        if event.EventID == "" </span><span class="cov0" title="0">{
+func parseEventID(event messaging.Event) (uuid.UUID, error) <span class="cov8" title="21">{
+        if event.EventID == "" </span><span class="cov1" title="1">{
                 return uuid.Nil, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">eventID, err := uuid.Parse(event.EventID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="20">eventID, err := uuid.Parse(event.EventID)
+        if err != nil </span><span class="cov1" title="1">{
                 return uuid.Nil, ErrInvalidNotificationEvent
         }</span>
 
-        <span class="cov0" title="0">return eventID, nil</span>
+        <span class="cov8" title="19">return eventID, nil</span>
 }
 </pre>
 		

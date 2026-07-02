@@ -5,7 +5,7 @@ api-gateway                       0          0          0          0         0.0
 user-service                     77         77          0          0        93.3%
 content-service                   0          0          0          0         0.0%
 feed-service                     34         34          0          0        94.4%
-notification-service              0          0          0          0         0.0%
+notification-service             66         66          0          0        97.0%
 storage-service                  20         20          0          0       100.0%
 ------------------------ ---------- ---------- ---------- ---------- ------------
-TOTAL                           131        131          0          0        18.6%
+TOTAL                           197        197          0          0        27.7%

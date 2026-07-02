@@ -10,14 +10,18 @@ import (
 
 const notificationQueue = "notification-service.events"
 
+type EventConsumer interface {
+	Consume(ctx context.Context, queueName string, routingKeys []string, handler messaging.EventHandler) error
+}
+
 type NotificationEventConsumer struct {
-	eventBus            *messaging.RabbitMQ
+	eventBus            EventConsumer
 	notificationService service.NotificationService
 	log                 zerolog.Logger
 }
 
 func NewNotificationEventConsumer(
-	eventBus *messaging.RabbitMQ,
+	eventBus EventConsumer,
 	notificationService service.NotificationService,
 	log zerolog.Logger,
 ) *NotificationEventConsumer {
