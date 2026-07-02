@@ -81,13 +81,13 @@
 				
 				<option value="file12">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/user_handler.go (0.0%)</option>
 				
-				<option value="file13">github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc/grpc_server.go (0.0%)</option>
+				<option value="file13">github.com/trungquantrannguyen/threadly/services/content-service/internal/grpc/grpc_server.go (100.0%)</option>
 				
-				<option value="file14">github.com/trungquantrannguyen/threadly/services/content-service/internal/repository/interaction_repository.go (0.0%)</option>
+				<option value="file14">github.com/trungquantrannguyen/threadly/services/content-service/internal/repository/interaction_repository.go (89.0%)</option>
 				
-				<option value="file15">github.com/trungquantrannguyen/threadly/services/content-service/internal/repository/post_repository.go (0.0%)</option>
+				<option value="file15">github.com/trungquantrannguyen/threadly/services/content-service/internal/repository/post_repository.go (84.2%)</option>
 				
-				<option value="file16">github.com/trungquantrannguyen/threadly/services/content-service/internal/service/content_service.go (0.0%)</option>
+				<option value="file16">github.com/trungquantrannguyen/threadly/services/content-service/internal/service/content_service.go (96.2%)</option>
 				
 				<option value="file17">github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/feed_cache.go (91.3%)</option>
 				
@@ -2452,7 +2452,7 @@ type ContentServiceServer struct {
         contentService service.ContentService
 }
 
-func NewContentServiceServer(cfg config.Config, log zerolog.Logger, contentService service.ContentService) *ContentServiceServer <span class="cov0" title="0">{
+func NewContentServiceServer(cfg config.Config, log zerolog.Logger, contentService service.ContentService) *ContentServiceServer <span class="cov10" title="35">{
         return &amp;ContentServiceServer{
                 cfg:            cfg,
                 log:            log,
@@ -2460,7 +2460,7 @@ func NewContentServiceServer(cfg config.Config, log zerolog.Logger, contentServi
         }
 }</span>
 
-func (s *ContentServiceServer) GetHealth(ctx context.Context, req *contentpb.GetContentServiceHealthRequest) (*contentpb.GetContentServiceHealthResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) GetHealth(ctx context.Context, req *contentpb.GetContentServiceHealthRequest) (*contentpb.GetContentServiceHealthResponse, error) <span class="cov1" title="1">{
         s.log.Info().Msg("Content service is healthy")
         return &amp;contentpb.GetContentServiceHealthResponse{
                 Status:    "ok",
@@ -2470,48 +2470,48 @@ func (s *ContentServiceServer) GetHealth(ctx context.Context, req *contentpb.Get
         }, nil
 }</span>
 
-func (s *ContentServiceServer) CreatePost(ctx context.Context, req *contentpb.CreatePostRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) CreatePost(ctx context.Context, req *contentpb.CreatePostRequest) (*contentpb.PostResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.CreatePost(ctx, dto.CreatePostRequest{
                 AuthorID:   req.GetAuthorId(),
                 Content:    req.GetContent(),
                 Visibility: req.GetVisibility(),
                 MediaIDs:   req.GetMediaIds(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoPostResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoPostResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) GetPost(ctx context.Context, req *contentpb.GetPostRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) GetPost(ctx context.Context, req *contentpb.GetPostRequest) (*contentpb.PostResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.GetPost(ctx, dto.GetPostRequest{
                 PostID:   req.GetPostId(),
                 ViewerID: req.GetViewerId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoPostResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoPostResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) DeletePost(ctx context.Context, req *contentpb.DeletePostRequest) (*contentpb.DeletePostResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) DeletePost(ctx context.Context, req *contentpb.DeletePostRequest) (*contentpb.DeletePostResponse, error) <span class="cov2" title="2">{
         err := s.contentService.DeletePost(ctx, dto.DeletePostRequest{
                 PostID:      req.GetPostId(),
                 RequesterID: req.GetRequesterId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return &amp;contentpb.DeletePostResponse{
+        <span class="cov1" title="1">return &amp;contentpb.DeletePostResponse{
                 Success: true,
                 Message: "post deleted successfully",
         }, nil</span>
 }
 
-func (s *ContentServiceServer) CreateReply(ctx context.Context, req *contentpb.CreateReplyRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) CreateReply(ctx context.Context, req *contentpb.CreateReplyRequest) (*contentpb.PostResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.CreateReply(ctx, dto.CreateReplyRequest{
                 AuthorID:      req.GetAuthorId(),
                 ReplyToPostID: req.GetReplyToPostId(),
@@ -2519,175 +2519,175 @@ func (s *ContentServiceServer) CreateReply(ctx context.Context, req *contentpb.C
                 Visibility:    req.GetVisibility(),
                 MediaIDs:      req.GetMediaIds(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoPostResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoPostResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) GetReplies(ctx context.Context, req *contentpb.GetRepliesRequest) (*contentpb.PostListResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) GetReplies(ctx context.Context, req *contentpb.GetRepliesRequest) (*contentpb.PostListResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.GetReplies(ctx, dto.GetRepliesRequest{
                 PostID: req.GetPostId(),
                 Limit:  int(req.GetLimit()),
                 Cursor: req.GetCursor(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">posts := make([]*contentpb.PostResponse, 0, len(res))
+        <span class="cov1" title="1">posts := make([]*contentpb.PostResponse, 0, len(res))
 
-        for _, post := range res </span><span class="cov0" title="0">{
+        for _, post := range res </span><span class="cov1" title="1">{
                 posts = append(posts, toProtoPostResponse(&amp;post))
         }</span>
 
-        <span class="cov0" title="0">return &amp;contentpb.PostListResponse{
+        <span class="cov1" title="1">return &amp;contentpb.PostListResponse{
                 Posts: posts,
         }, nil</span>
 }
 
-func (s *ContentServiceServer) LikePost(ctx context.Context, req *contentpb.LikePostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) LikePost(ctx context.Context, req *contentpb.LikePostRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.LikePost(ctx, dto.LikePostRequest{
                 UserID: req.GetUserId(),
                 PostID: req.GetPostId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return &amp;contentpb.ActionResponse{
+        <span class="cov1" title="1">return &amp;contentpb.ActionResponse{
                 Success: res.Success,
                 Message: res.Message,
         }, nil</span>
 }
 
-func (s *ContentServiceServer) UnlikePost(ctx context.Context, req *contentpb.UnlikePostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) UnlikePost(ctx context.Context, req *contentpb.UnlikePostRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.UnlikePost(ctx, dto.UnlikePostRequest{
                 UserID: req.GetUserId(),
                 PostID: req.GetPostId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return &amp;contentpb.ActionResponse{
+        <span class="cov1" title="1">return &amp;contentpb.ActionResponse{
                 Success: res.Success,
                 Message: res.Message,
         }, nil</span>
 }
 
-func (s *ContentServiceServer) BookmarkPost(ctx context.Context, req *contentpb.BookmarkPostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) BookmarkPost(ctx context.Context, req *contentpb.BookmarkPostRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.BookmarkPost(ctx, dto.BookmarkPostRequest{
                 UserID: req.GetUserId(),
                 PostID: req.GetPostId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoActionResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoActionResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) UnbookmarkPost(ctx context.Context, req *contentpb.UnbookmarkPostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) UnbookmarkPost(ctx context.Context, req *contentpb.UnbookmarkPostRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.UnbookmarkPost(ctx, dto.UnbookmarkPostRequest{
                 UserID: req.GetUserId(),
                 PostID: req.GetPostId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoActionResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoActionResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) RepostPost(ctx context.Context, req *contentpb.RepostPostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) RepostPost(ctx context.Context, req *contentpb.RepostPostRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.RepostPost(ctx, dto.RepostPostRequest{
                 UserID: req.GetUserId(),
                 PostID: req.GetPostId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoActionResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoActionResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) UndoRepost(ctx context.Context, req *contentpb.UndoRepostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) UndoRepost(ctx context.Context, req *contentpb.UndoRepostRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.UndoRepost(ctx, dto.UndoRepostRequest{
                 UserID: req.GetUserId(),
                 PostID: req.GetPostId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoActionResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoActionResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) FollowUser(ctx context.Context, req *contentpb.FollowUserRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) FollowUser(ctx context.Context, req *contentpb.FollowUserRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.FollowUser(ctx, dto.FollowUserRequest{
                 FollowerID:  req.GetFollowerId(),
                 FollowingID: req.GetFollowingId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoActionResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoActionResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) UnfollowUser(ctx context.Context, req *contentpb.UnfollowUserRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) UnfollowUser(ctx context.Context, req *contentpb.UnfollowUserRequest) (*contentpb.ActionResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.UnfollowUser(ctx, dto.UnfollowUserRequest{
                 FollowerID:  req.GetFollowerId(),
                 FollowingID: req.GetFollowingId(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoActionResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoActionResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) GetFollowers(ctx context.Context, req *contentpb.GetFollowersRequest) (*contentpb.UserListResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) GetFollowers(ctx context.Context, req *contentpb.GetFollowersRequest) (*contentpb.UserListResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.GetFollowers(ctx, dto.GetFollowersRequest{
                 UserID: req.GetUserId(),
                 Limit:  int(req.GetLimit()),
                 Cursor: req.GetCursor(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoUserListResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoUserListResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) GetFollowing(ctx context.Context, req *contentpb.GetFollowingRequest) (*contentpb.UserListResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) GetFollowing(ctx context.Context, req *contentpb.GetFollowingRequest) (*contentpb.UserListResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.GetFollowing(ctx, dto.GetFollowingRequest{
                 UserID: req.GetUserId(),
                 Limit:  int(req.GetLimit()),
                 Cursor: req.GetCursor(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">return toProtoUserListResponse(res), nil</span>
+        <span class="cov1" title="1">return toProtoUserListResponse(res), nil</span>
 }
 
-func (s *ContentServiceServer) GetUserTimeline(ctx context.Context, req *contentpb.GetUserTimelineRequest) (*contentpb.TimelineResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) GetUserTimeline(ctx context.Context, req *contentpb.GetUserTimelineRequest) (*contentpb.TimelineResponse, error) <span class="cov2" title="2">{
         res, err := s.contentService.GetUserTimeline(ctx, dto.GetUserTimelineRequest{
                 UserID: req.GetUserId(),
                 Limit:  int(req.GetLimit()),
                 Cursor: req.GetCursor(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, mapContentServiceError(err)
         }</span>
 
-        <span class="cov0" title="0">items := make([]*contentpb.TimelineItemResponse, 0, len(res))
+        <span class="cov1" title="1">items := make([]*contentpb.TimelineItemResponse, 0, len(res))
 
-        for _, item := range res </span><span class="cov0" title="0">{
+        for _, item := range res </span><span class="cov2" title="2">{
                 post := item.Post
 
                 items = append(items, &amp;contentpb.TimelineItemResponse{
@@ -2697,12 +2697,12 @@ func (s *ContentServiceServer) GetUserTimeline(ctx context.Context, req *content
                 })
         }</span>
 
-        <span class="cov0" title="0">return &amp;contentpb.TimelineResponse{
+        <span class="cov1" title="1">return &amp;contentpb.TimelineResponse{
                 Items: items,
         }, nil</span>
 }
 
-func (s *ContentServiceServer) UpdatePost(ctx context.Context, req *contentpb.UpdatePostRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+func (s *ContentServiceServer) UpdatePost(ctx context.Context, req *contentpb.UpdatePostRequest) (*contentpb.PostResponse, error) <span class="cov2" title="2">{
         post, err := s.contentService.UpdatePost(ctx, dto.UpdatePostRequest{
                 PostID:      req.GetPostId(),
                 RequesterID: req.GetRequesterId(),
@@ -2710,14 +2710,14 @@ func (s *ContentServiceServer) UpdatePost(ctx context.Context, req *contentpb.Up
                 Visibility:  req.GetVisibility(),
                 MediaIDs:    req.GetMediaIds(),
         })
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toProtoPostResponse(post), nil</span>
+        <span class="cov1" title="1">return toProtoPostResponse(post), nil</span>
 }
 
-func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse <span class="cov0" title="0">{
+func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse <span class="cov5" title="7">{
         return &amp;contentpb.PostResponse{
                 Id:            post.ID,
                 AuthorId:      post.AuthorID,
@@ -2741,26 +2741,26 @@ func toProtoPostResponse(post *dto.PostResponse) *contentpb.PostResponse <span c
         }
 }</span>
 
-func toProtoActionResponse(res *dto.ActionResponse) *contentpb.ActionResponse <span class="cov0" title="0">{
+func toProtoActionResponse(res *dto.ActionResponse) *contentpb.ActionResponse <span class="cov5" title="6">{
         return &amp;contentpb.ActionResponse{
                 Success: res.Success,
                 Message: res.Message,
         }
 }</span>
 
-func toProtoUserListResponse(users []dto.UserSummary) *contentpb.UserListResponse <span class="cov0" title="0">{
+func toProtoUserListResponse(users []dto.UserSummary) *contentpb.UserListResponse <span class="cov2" title="2">{
         protoUsers := make([]*contentpb.UserSummary, 0, len(users))
 
-        for _, user := range users </span><span class="cov0" title="0">{
+        for _, user := range users </span><span class="cov2" title="2">{
                 protoUsers = append(protoUsers, toProtoUserSummary(user))
         }</span>
 
-        <span class="cov0" title="0">return &amp;contentpb.UserListResponse{
+        <span class="cov2" title="2">return &amp;contentpb.UserListResponse{
                 Users: protoUsers,
         }</span>
 }
 
-func toProtoUserSummary(user dto.UserSummary) *contentpb.UserSummary <span class="cov0" title="0">{
+func toProtoUserSummary(user dto.UserSummary) *contentpb.UserSummary <span class="cov2" title="2">{
         return &amp;contentpb.UserSummary{
                 Id:          user.ID,
                 Username:    user.Username,
@@ -2770,33 +2770,33 @@ func toProtoUserSummary(user dto.UserSummary) *contentpb.UserSummary <span class
         }
 }</span>
 
-func mapContentServiceError(err error) error <span class="cov0" title="0">{
+func mapContentServiceError(err error) error <span class="cov9" title="25">{
         switch </span>{
         case errors.Is(err, service.ErrInvalidPostContent),
                 errors.Is(err, service.ErrInvalidPostID),
                 errors.Is(err, service.ErrInvalidAuthorID),
                 errors.Is(err, service.ErrInvalidUserID),
-                errors.Is(err, service.ErrCannotFollowSelf):<span class="cov0" title="0">
+                errors.Is(err, service.ErrCannotFollowSelf):<span class="cov7" title="11">
                 return status.Error(codes.InvalidArgument, err.Error())</span>
 
-        case errors.Is(err, repository.ErrPostNotFound):<span class="cov0" title="0">
+        case errors.Is(err, repository.ErrPostNotFound):<span class="cov5" title="5">
                 return status.Error(codes.NotFound, "post not found")</span>
 
-        case errors.Is(err, repository.ErrUserNotFound):<span class="cov0" title="0">
+        case errors.Is(err, repository.ErrUserNotFound):<span class="cov5" title="5">
                 return status.Error(codes.NotFound, "user not found")</span>
 
-        case errors.Is(err, repository.ErrForbidden):<span class="cov0" title="0">
+        case errors.Is(err, repository.ErrForbidden):<span class="cov3" title="3">
                 return status.Error(codes.PermissionDenied, "you do not have permission to perform this action")</span>
 
-        default:<span class="cov0" title="0">
+        default:<span class="cov1" title="1">
                 return status.Error(codes.Internal, "internal server error")</span>
         }
 }
 
-func toProtoMediaResponses(media []dto.MediaResponse) []*contentpb.MediaResponse <span class="cov0" title="0">{
+func toProtoMediaResponses(media []dto.MediaResponse) []*contentpb.MediaResponse <span class="cov5" title="7">{
         res := make([]*contentpb.MediaResponse, 0, len(media))
 
-        for _, item := range media </span><span class="cov0" title="0">{
+        for _, item := range media </span><span class="cov5" title="7">{
                 res = append(res, &amp;contentpb.MediaResponse{
                         Id:        item.ID,
                         Url:       item.URL,
@@ -2807,7 +2807,7 @@ func toProtoMediaResponses(media []dto.MediaResponse) []*contentpb.MediaResponse
                 })
         }</span>
 
-        <span class="cov0" title="0">return res</span>
+        <span class="cov5" title="7">return res</span>
 }
 </pre>
 		
@@ -2847,11 +2847,11 @@ type interactionRepository struct {
         db *gorm.DB
 }
 
-func NewInteractionRepository(db *gorm.DB) InteractionRepository <span class="cov0" title="0">{
+func NewInteractionRepository(db *gorm.DB) InteractionRepository <span class="cov10" title="26">{
         return &amp;interactionRepository{db: db}
 }</span>
 
-func (r *interactionRepository) UserExists(ctx context.Context, userID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) UserExists(ctx context.Context, userID uuid.UUID) (bool, error) <span class="cov4" title="3">{
         var count int64
 
         err := r.db.WithContext(ctx).
@@ -2862,43 +2862,43 @@ func (r *interactionRepository) UserExists(ctx context.Context, userID uuid.UUID
         return count &gt; 0, err
 }</span>
 
-func (r *interactionRepository) LikePost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) LikePost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov4" title="4">{
         return r.createPostInteraction(ctx, &amp;dbmodel.Like{
                 UserID: userID,
                 PostID: postID,
         }, "like_count")
 }</span>
 
-func (r *interactionRepository) UnlikePost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) UnlikePost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov4" title="3">{
         return r.deletePostInteraction(ctx, &amp;dbmodel.Like{}, userID, postID, "like_count")
 }</span>
 
-func (r *interactionRepository) BookmarkPost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) BookmarkPost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov4" title="3">{
         return r.createPostInteraction(ctx, &amp;dbmodel.Bookmark{
                 UserID: userID,
                 PostID: postID,
         }, "bookmark_count")
 }</span>
 
-func (r *interactionRepository) UnbookmarkPost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) UnbookmarkPost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov1" title="1">{
         return r.deletePostInteraction(ctx, &amp;dbmodel.Bookmark{}, userID, postID, "bookmark_count")
 }</span>
 
-func (r *interactionRepository) RepostPost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) RepostPost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov4" title="3">{
         return r.createPostInteraction(ctx, &amp;dbmodel.Repost{
                 UserID: userID,
                 PostID: postID,
         }, "repost_count")
 }</span>
 
-func (r *interactionRepository) UndoRepost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) UndoRepost(ctx context.Context, userID uuid.UUID, postID uuid.UUID) (bool, error) <span class="cov1" title="1">{
         return r.deletePostInteraction(ctx, &amp;dbmodel.Repost{}, userID, postID, "repost_count")
 }</span>
 
-func (r *interactionRepository) createPostInteraction(ctx context.Context, model interface{}, counterColumn string) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) createPostInteraction(ctx context.Context, model interface{}, counterColumn string) (bool, error) <span class="cov7" title="10">{
         var inserted bool
 
-        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov0" title="0">{
+        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov7" title="9">{
                 result := tx.Clauses(clause.OnConflict{
                         Columns: []clause.Column{
                                 {Name: "user_id"},
@@ -2911,31 +2911,31 @@ func (r *interactionRepository) createPostInteraction(ctx context.Context, model
                         return result.Error
                 }</span>
 
-                <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+                <span class="cov7" title="9">if result.RowsAffected == 0 </span><span class="cov4" title="3">{
                         inserted = false
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">inserted = true
+                <span class="cov5" title="6">inserted = true
 
                 postID, ok := getPostIDFromInteraction(model)
                 if !ok </span><span class="cov0" title="0">{
                         return errors.New("failed to extract post id from interaction")
                 }</span>
 
-                <span class="cov0" title="0">return tx.Model(&amp;dbmodel.Post{}).
+                <span class="cov5" title="6">return tx.Model(&amp;dbmodel.Post{}).
                         Where("id = ?", postID).
                         UpdateColumn(counterColumn, gorm.Expr(counterColumn+" + 1")).
                         Error</span>
         })
 
-        <span class="cov0" title="0">return inserted, err</span>
+        <span class="cov7" title="10">return inserted, err</span>
 }
 
-func (r *interactionRepository) deletePostInteraction(ctx context.Context, model interface{}, userID uuid.UUID, postID uuid.UUID, counterColumn string) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) deletePostInteraction(ctx context.Context, model interface{}, userID uuid.UUID, postID uuid.UUID, counterColumn string) (bool, error) <span class="cov5" title="5">{
         var deleted bool
 
-        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov0" title="0">{
+        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov4" title="4">{
                 result := tx.
                         Where("user_id = ? AND post_id = ?", userID, postID).
                         Delete(model)
@@ -2944,12 +2944,12 @@ func (r *interactionRepository) deletePostInteraction(ctx context.Context, model
                         return result.Error
                 }</span>
 
-                <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+                <span class="cov4" title="4">if result.RowsAffected == 0 </span><span class="cov1" title="1">{
                         deleted = false
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">deleted = true
+                <span class="cov4" title="3">deleted = true
 
                 return tx.Model(&amp;dbmodel.Post{}).
                         Where("id = ? AND "+counterColumn+" &gt; 0", postID).
@@ -2957,26 +2957,26 @@ func (r *interactionRepository) deletePostInteraction(ctx context.Context, model
                         Error</span>
         })
 
-        <span class="cov0" title="0">return deleted, err</span>
+        <span class="cov5" title="5">return deleted, err</span>
 }
 
-func getPostIDFromInteraction(model interface{}) (uuid.UUID, bool) <span class="cov0" title="0">{
+func getPostIDFromInteraction(model interface{}) (uuid.UUID, bool) <span class="cov5" title="6">{
         switch value := model.(type) </span>{
-        case *dbmodel.Like:<span class="cov0" title="0">
+        case *dbmodel.Like:<span class="cov2" title="2">
                 return value.PostID, true</span>
-        case *dbmodel.Bookmark:<span class="cov0" title="0">
+        case *dbmodel.Bookmark:<span class="cov2" title="2">
                 return value.PostID, true</span>
-        case *dbmodel.Repost:<span class="cov0" title="0">
+        case *dbmodel.Repost:<span class="cov2" title="2">
                 return value.PostID, true</span>
         default:<span class="cov0" title="0">
                 return uuid.Nil, false</span>
         }
 }
 
-func (r *interactionRepository) FollowUser(ctx context.Context, followerID uuid.UUID, followingID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) FollowUser(ctx context.Context, followerID uuid.UUID, followingID uuid.UUID) (bool, error) <span class="cov4" title="4">{
         var inserted bool
 
-        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov0" title="0">{
+        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov4" title="3">{
                 follow := dbmodel.Follow{
                         FollowerID:  followerID,
                         FollowingID: followingID,
@@ -2994,12 +2994,12 @@ func (r *interactionRepository) FollowUser(ctx context.Context, followerID uuid.
                         return result.Error
                 }</span>
 
-                <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+                <span class="cov4" title="3">if result.RowsAffected == 0 </span><span class="cov1" title="1">{
                         inserted = false
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">inserted = true
+                <span class="cov2" title="2">inserted = true
 
                 if err := tx.Model(&amp;dbmodel.User{}).
                         Where("id = ?", followerID).
@@ -3008,19 +3008,19 @@ func (r *interactionRepository) FollowUser(ctx context.Context, followerID uuid.
                         return err
                 }</span>
 
-                <span class="cov0" title="0">return tx.Model(&amp;dbmodel.User{}).
+                <span class="cov2" title="2">return tx.Model(&amp;dbmodel.User{}).
                         Where("id = ?", followingID).
                         UpdateColumn("follower_count", gorm.Expr("follower_count + 1")).
                         Error</span>
         })
 
-        <span class="cov0" title="0">return inserted, err</span>
+        <span class="cov4" title="4">return inserted, err</span>
 }
 
-func (r *interactionRepository) UnfollowUser(ctx context.Context, followerID uuid.UUID, followingID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+func (r *interactionRepository) UnfollowUser(ctx context.Context, followerID uuid.UUID, followingID uuid.UUID) (bool, error) <span class="cov2" title="2">{
         var deleted bool
 
-        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov0" title="0">{
+        err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov2" title="2">{
                 result := tx.
                         Where("follower_id = ? AND following_id = ?", followerID, followingID).
                         Delete(&amp;dbmodel.Follow{})
@@ -3029,12 +3029,12 @@ func (r *interactionRepository) UnfollowUser(ctx context.Context, followerID uui
                         return result.Error
                 }</span>
 
-                <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+                <span class="cov2" title="2">if result.RowsAffected == 0 </span><span class="cov1" title="1">{
                         deleted = false
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">deleted = true
+                <span class="cov1" title="1">deleted = true
 
                 if err := tx.Model(&amp;dbmodel.User{}).
                         Where("id = ? AND following_count &gt; 0", followerID).
@@ -3043,16 +3043,16 @@ func (r *interactionRepository) UnfollowUser(ctx context.Context, followerID uui
                         return err
                 }</span>
 
-                <span class="cov0" title="0">return tx.Model(&amp;dbmodel.User{}).
+                <span class="cov1" title="1">return tx.Model(&amp;dbmodel.User{}).
                         Where("id = ? AND follower_count &gt; 0", followingID).
                         UpdateColumn("follower_count", gorm.Expr("follower_count - 1")).
                         Error</span>
         })
 
-        <span class="cov0" title="0">return deleted, err</span>
+        <span class="cov2" title="2">return deleted, err</span>
 }
 
-func (r *interactionRepository) GetFollowers(ctx context.Context, userID uuid.UUID, limit int) ([]dbmodel.User, error) <span class="cov0" title="0">{
+func (r *interactionRepository) GetFollowers(ctx context.Context, userID uuid.UUID, limit int) ([]dbmodel.User, error) <span class="cov4" title="3">{
         var users []dbmodel.User
 
         err := r.db.WithContext(ctx).
@@ -3067,7 +3067,7 @@ func (r *interactionRepository) GetFollowers(ctx context.Context, userID uuid.UU
         return users, err
 }</span>
 
-func (r *interactionRepository) GetFollowing(ctx context.Context, userID uuid.UUID, limit int) ([]dbmodel.User, error) <span class="cov0" title="0">{
+func (r *interactionRepository) GetFollowing(ctx context.Context, userID uuid.UUID, limit int) ([]dbmodel.User, error) <span class="cov4" title="3">{
         var users []dbmodel.User
 
         err := r.db.WithContext(ctx).
@@ -3125,15 +3125,15 @@ type postRepository struct {
         db *gorm.DB
 }
 
-func NewPostRepository(db *gorm.DB) PostRepository <span class="cov0" title="0">{
+func NewPostRepository(db *gorm.DB) PostRepository <span class="cov9" title="21">{
         return &amp;postRepository{db: db}
 }</span>
 
-func (r *postRepository) Create(ctx context.Context, post *dbmodel.Post) error <span class="cov0" title="0">{
+func (r *postRepository) Create(ctx context.Context, post *dbmodel.Post) error <span class="cov2" title="2">{
         return r.db.WithContext(ctx).Create(post).Error
 }</span>
 
-func (r *postRepository) FindByID(ctx context.Context, postID string) (*dbmodel.Post, error) <span class="cov0" title="0">{
+func (r *postRepository) FindByID(ctx context.Context, postID string) (*dbmodel.Post, error) <span class="cov6" title="6">{
         var post dbmodel.Post
 
         err := r.db.WithContext(ctx).
@@ -3141,53 +3141,53 @@ func (r *postRepository) FindByID(ctx context.Context, postID string) (*dbmodel.
                 Preload("Media").
                 Where("id = ?", postID).
                 First(&amp;post).Error
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov4" title="3">{
+                if errors.Is(err, gorm.ErrRecordNotFound) </span><span class="cov2" title="2">{
                         return nil, ErrPostNotFound
                 }</span>
-                <span class="cov0" title="0">return nil, err</span>
+                <span class="cov1" title="1">return nil, err</span>
         }
 
-        <span class="cov0" title="0">return &amp;post, nil</span>
+        <span class="cov4" title="3">return &amp;post, nil</span>
 }
 
-func (r *postRepository) DeleteOwnPost(ctx context.Context, postID string, requesterID string) error <span class="cov0" title="0">{
+func (r *postRepository) DeleteOwnPost(ctx context.Context, postID string, requesterID string) error <span class="cov2" title="2">{
         postIDUUID, err := ParseUUID(postID)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">requesterIDUUID, err := ParseUUID(requesterID)
+        <span class="cov2" title="2">requesterIDUUID, err := ParseUUID(requesterID)
         if err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">result := r.db.WithContext(ctx).Where(&amp;dbmodel.Post{ID: postIDUUID, AuthorID: requesterIDUUID}).Delete(&amp;dbmodel.Post{})
+        <span class="cov2" title="2">result := r.db.WithContext(ctx).Where(&amp;dbmodel.Post{ID: postIDUUID, AuthorID: requesterIDUUID}).Delete(&amp;dbmodel.Post{})
 
         if result.Error != nil </span><span class="cov0" title="0">{
                 return result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if result.RowsAffected == 0 </span><span class="cov1" title="1">{
                 return ErrPostNotFound
         }</span>
 
-        <span class="cov0" title="0">if err := r.db.WithContext(ctx).Model(&amp;dbmodel.Media{}).
+        <span class="cov1" title="1">if err := r.db.WithContext(ctx).Model(&amp;dbmodel.Media{}).
                 Where("post_id = ?", postIDUUID).
                 Update("status", "deleted").Error; err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
-func (r *postRepository) FindReplies(ctx context.Context, postID string, limit int) ([]dbmodel.Post, error) <span class="cov0" title="0">{
+func (r *postRepository) FindReplies(ctx context.Context, postID string, limit int) ([]dbmodel.Post, error) <span class="cov2" title="2">{
         var replies []dbmodel.Post
 
-        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov0" title="0">{
+        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov1" title="1">{
                 limit = 20
         }</span>
 
-        <span class="cov0" title="0">err := r.db.WithContext(ctx).
+        <span class="cov2" title="2">err := r.db.WithContext(ctx).
                 Preload("Author").
                 Preload("Media").
                 Where("reply_to_post_id = ?", postID).
@@ -3198,10 +3198,10 @@ func (r *postRepository) FindReplies(ctx context.Context, postID string, limit i
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return replies, nil</span>
+        <span class="cov2" title="2">return replies, nil</span>
 }
 
-func (r *postRepository) IncrementReplyCount(ctx context.Context, postID string) error <span class="cov0" title="0">{
+func (r *postRepository) IncrementReplyCount(ctx context.Context, postID string) error <span class="cov1" title="1">{
         return r.db.WithContext(ctx).
                 Model(&amp;dbmodel.Post{}).
                 Where("id = ?", postID).
@@ -3209,12 +3209,12 @@ func (r *postRepository) IncrementReplyCount(ctx context.Context, postID string)
                 Error
 }</span>
 
-func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID, limit int) ([]UserTimelineItem, error) <span class="cov0" title="0">{
-        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov0" title="0">{
+func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID, limit int) ([]UserTimelineItem, error) <span class="cov2" title="2">{
+        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov1" title="1">{
                 limit = 20
         }</span>
 
-        <span class="cov0" title="0">var ownPosts []dbmodel.Post
+        <span class="cov2" title="2">var ownPosts []dbmodel.Post
 
         if err := r.db.WithContext(ctx).
                 Preload("Author").
@@ -3226,7 +3226,7 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">var reposts []dbmodel.Repost
+        <span class="cov2" title="2">var reposts []dbmodel.Repost
 
         if err := r.db.WithContext(ctx).
                 Preload("Post.Author").
@@ -3240,9 +3240,9 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">items := make([]UserTimelineItem, 0, len(ownPosts)+len(reposts))
+        <span class="cov2" title="2">items := make([]UserTimelineItem, 0, len(ownPosts)+len(reposts))
 
-        for _, post := range ownPosts </span><span class="cov0" title="0">{
+        for _, post := range ownPosts </span><span class="cov9" title="21">{
                 items = append(items, UserTimelineItem{
                         Type:   "post",
                         Post:   post,
@@ -3250,7 +3250,7 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
                 })
         }</span>
 
-        <span class="cov0" title="0">for _, repost := range reposts </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">for _, repost := range reposts </span><span class="cov1" title="1">{
                 repostedAt := repost.CreatedAt
 
                 items = append(items, UserTimelineItem{
@@ -3261,15 +3261,15 @@ func (r *postRepository) FindUserTimeline(ctx context.Context, userID uuid.UUID,
                 })
         }</span>
 
-        <span class="cov0" title="0">sort.Slice(items, func(i, j int) bool </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">sort.Slice(items, func(i, j int) bool </span><span class="cov10" title="23">{
                 return items[i].SortAt.After(items[j].SortAt)
         }</span>)
 
-        <span class="cov0" title="0">if len(items) &gt; limit </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if len(items) &gt; limit </span><span class="cov0" title="0">{
                 items = items[:limit]
         }</span>
 
-        <span class="cov0" title="0">return items, nil</span>
+        <span class="cov2" title="2">return items, nil</span>
 }
 
 func (r *postRepository) UpdateOwnPost(
@@ -3278,18 +3278,18 @@ func (r *postRepository) UpdateOwnPost(
         requesterID string,
         content string,
         visibility string,
-) (*dbmodel.Post, error) <span class="cov0" title="0">{
+) (*dbmodel.Post, error) <span class="cov2" title="2">{
         postIDUUID, err := uuid.Parse(postID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">requesterIDUUID, err := uuid.Parse(requesterID)
+        <span class="cov2" title="2">requesterIDUUID, err := uuid.Parse(requesterID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">updates := map[string]interface{}{
+        <span class="cov2" title="2">updates := map[string]interface{}{
                 "content":    content,
                 "visibility": visibility,
                 "updated_at": time.Now().UTC(),
@@ -3304,11 +3304,11 @@ func (r *postRepository) UpdateOwnPost(
                 return nil, result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected == 0 </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if result.RowsAffected == 0 </span><span class="cov1" title="1">{
                 return nil, ErrPostNotFound
         }</span>
 
-        <span class="cov0" title="0">return r.FindByID(ctx, postID)</span>
+        <span class="cov1" title="1">return r.FindByID(ctx, postID)</span>
 }
 
 func (r *postRepository) AttachMediaToPost(
@@ -3316,21 +3316,21 @@ func (r *postRepository) AttachMediaToPost(
         postID uuid.UUID,
         uploaderID uuid.UUID,
         mediaIDs []string,
-) error <span class="cov0" title="0">{
-        if len(mediaIDs) == 0 </span><span class="cov0" title="0">{
+) error <span class="cov4" title="4">{
+        if len(mediaIDs) == 0 </span><span class="cov1" title="1">{
                 return nil
         }</span>
 
-        <span class="cov0" title="0">ids := make([]uuid.UUID, 0, len(mediaIDs))
-        for _, id := range mediaIDs </span><span class="cov0" title="0">{
+        <span class="cov4" title="3">ids := make([]uuid.UUID, 0, len(mediaIDs))
+        for _, id := range mediaIDs </span><span class="cov4" title="4">{
                 parsedID, err := uuid.Parse(id)
-                if err != nil </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov1" title="1">{
                         return err
                 }</span>
-                <span class="cov0" title="0">ids = append(ids, parsedID)</span>
+                <span class="cov4" title="3">ids = append(ids, parsedID)</span>
         }
 
-        <span class="cov0" title="0">result := r.db.WithContext(ctx).
+        <span class="cov2" title="2">result := r.db.WithContext(ctx).
                 Model(&amp;dbmodel.Media{}).
                 Where("id IN ?", ids).
                 Where("uploader_id = ?", uploaderID).
@@ -3344,11 +3344,11 @@ func (r *postRepository) AttachMediaToPost(
                 return result.Error
         }</span>
 
-        <span class="cov0" title="0">if result.RowsAffected != int64(len(ids)) </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if result.RowsAffected != int64(len(ids)) </span><span class="cov1" title="1">{
                 return ErrForbidden
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov1" title="1">return nil</span>
 }
 
 func (r *postRepository) ReplacePostMedia(
@@ -3356,8 +3356,8 @@ func (r *postRepository) ReplacePostMedia(
         postID uuid.UUID,
         uploaderID uuid.UUID,
         mediaIDs []string,
-) error <span class="cov0" title="0">{
-        return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov0" title="0">{
+) error <span class="cov4" title="3">{
+        return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error </span><span class="cov4" title="3">{
                 if err := tx.Model(&amp;dbmodel.Media{}).
                         Where("post_id = ? AND uploader_id = ?", postID, uploaderID).
                         UpdateColumns(map[string]interface{}{
@@ -3367,20 +3367,20 @@ func (r *postRepository) ReplacePostMedia(
                         return err
                 }</span>
 
-                <span class="cov0" title="0">if len(mediaIDs) == 0 </span><span class="cov0" title="0">{
+                <span class="cov4" title="3">if len(mediaIDs) == 0 </span><span class="cov1" title="1">{
                         return nil
                 }</span>
 
-                <span class="cov0" title="0">ids := make([]uuid.UUID, 0, len(mediaIDs))
-                for _, id := range mediaIDs </span><span class="cov0" title="0">{
+                <span class="cov2" title="2">ids := make([]uuid.UUID, 0, len(mediaIDs))
+                for _, id := range mediaIDs </span><span class="cov2" title="2">{
                         parsedID, err := uuid.Parse(id)
                         if err != nil </span><span class="cov0" title="0">{
                                 return err
                         }</span>
-                        <span class="cov0" title="0">ids = append(ids, parsedID)</span>
+                        <span class="cov2" title="2">ids = append(ids, parsedID)</span>
                 }
 
-                <span class="cov0" title="0">result := tx.Model(&amp;dbmodel.Media{}).
+                <span class="cov2" title="2">result := tx.Model(&amp;dbmodel.Media{}).
                         Where("id IN ?", ids).
                         Where("uploader_id = ?", uploaderID).
                         Where("post_id IS NULL OR post_id = ?", postID).
@@ -3393,15 +3393,15 @@ func (r *postRepository) ReplacePostMedia(
                         return result.Error
                 }</span>
 
-                <span class="cov0" title="0">if result.RowsAffected != int64(len(ids)) </span><span class="cov0" title="0">{
+                <span class="cov2" title="2">if result.RowsAffected != int64(len(ids)) </span><span class="cov1" title="1">{
                         return ErrForbidden
                 }</span>
 
-                <span class="cov0" title="0">return nil</span>
+                <span class="cov1" title="1">return nil</span>
         })
 }
 
-func ParseUUID(value string) (uuid.UUID, error) <span class="cov0" title="0">{
+func ParseUUID(value string) (uuid.UUID, error) <span class="cov4" title="4">{
         return uuid.Parse(value)
 }</span>
 </pre>
@@ -3462,7 +3462,7 @@ type contentService struct {
         log             zerolog.Logger
 }
 
-func NewContentService(postRepo repository.PostRepository, interactionRepo repository.InteractionRepository, eventPublisher messaging.Publisher, log zerolog.Logger) ContentService <span class="cov0" title="0">{
+func NewContentService(postRepo repository.PostRepository, interactionRepo repository.InteractionRepository, eventPublisher messaging.Publisher, log zerolog.Logger) ContentService <span class="cov10" title="88">{
         return &amp;contentService{
                 postRepo:        postRepo,
                 interactionRepo: interactionRepo,
@@ -3470,41 +3470,41 @@ func NewContentService(postRepo repository.PostRepository, interactionRepo repos
         }
 }</span>
 
-func (s *contentService) CreatePost(ctx context.Context, req dto.CreatePostRequest) (*dto.PostResponse, error) <span class="cov0" title="0">{
+func (s *contentService) CreatePost(ctx context.Context, req dto.CreatePostRequest) (*dto.PostResponse, error) <span class="cov4" title="6">{
         content := strings.TrimSpace(req.Content)
-        if content == "" </span><span class="cov0" title="0">{
+        if content == "" </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostContent
         }</span>
 
-        <span class="cov0" title="0">authorID, err := uuid.Parse(req.AuthorID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="5">authorID, err := uuid.Parse(req.AuthorID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidAuthorID
         }</span>
 
-        <span class="cov0" title="0">visibility := req.Visibility
-        if visibility == "" </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">visibility := req.Visibility
+        if visibility == "" </span><span class="cov3" title="4">{
                 visibility = "public"
         }</span>
 
-        <span class="cov0" title="0">post := &amp;dbmodel.Post{
+        <span class="cov3" title="4">post := &amp;dbmodel.Post{
                 AuthorID:   authorID,
                 Content:    content,
                 Visibility: visibility,
         }
 
-        if err := s.postRepo.Create(ctx, post); err != nil </span><span class="cov0" title="0">{
+        if err := s.postRepo.Create(ctx, post); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.postRepo.AttachMediaToPost(ctx, post.ID, authorID, req.MediaIDs); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.postRepo.AttachMediaToPost(ctx, post.ID, authorID, req.MediaIDs); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">postWithMedia, err := s.postRepo.FindByID(ctx, post.ID.String())
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">postWithMedia, err := s.postRepo.FindByID(ctx, post.ID.String())
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
-        <span class="cov0" title="0">s.publishEvent(ctx, messaging.EventPostCreated, messaging.Event{
+        <span class="cov1" title="1">s.publishEvent(ctx, messaging.EventPostCreated, messaging.Event{
                 EventID:   uuid.NewString(),
                 Type:      messaging.EventPostCreated,
                 ActorID:   req.AuthorID,
@@ -3516,53 +3516,53 @@ func (s *contentService) CreatePost(ctx context.Context, req dto.CreatePostReque
         return toPostResponse(postWithMedia), nil</span>
 }
 
-func (s *contentService) GetPost(ctx context.Context, req dto.GetPostRequest) (*dto.PostResponse, error) <span class="cov0" title="0">{
-        if _, err := uuid.Parse(req.PostID); err != nil </span><span class="cov0" title="0">{
+func (s *contentService) GetPost(ctx context.Context, req dto.GetPostRequest) (*dto.PostResponse, error) <span class="cov3" title="3">{
+        if _, err := uuid.Parse(req.PostID); err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostID
         }</span>
-        <span class="cov0" title="0">post, err := s.postRepo.FindByID(ctx, req.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">post, err := s.postRepo.FindByID(ctx, req.PostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toPostResponse(post), nil</span>
+        <span class="cov1" title="1">return toPostResponse(post), nil</span>
 }
 
-func (s *contentService) UpdatePost(ctx context.Context, req dto.UpdatePostRequest) (*dto.PostResponse, error) <span class="cov0" title="0">{
+func (s *contentService) UpdatePost(ctx context.Context, req dto.UpdatePostRequest) (*dto.PostResponse, error) <span class="cov4" title="6">{
         content := strings.TrimSpace(req.Content)
-        if content == "" </span><span class="cov0" title="0">{
+        if content == "" </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostContent
         }</span>
 
-        <span class="cov0" title="0">postID, err := uuid.Parse(req.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="5">postID, err := uuid.Parse(req.PostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostID
         }</span>
 
-        <span class="cov0" title="0">requesterID, err := uuid.Parse(req.RequesterID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">requesterID, err := uuid.Parse(req.RequesterID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidAuthorID
         }</span>
 
-        <span class="cov0" title="0">visibility := req.Visibility
-        if visibility == "" </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">visibility := req.Visibility
+        if visibility == "" </span><span class="cov3" title="3">{
                 visibility = "public"
         }</span>
 
-        <span class="cov0" title="0">if _, err := s.postRepo.UpdateOwnPost(ctx, req.PostID, req.RequesterID, content, visibility); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if _, err := s.postRepo.UpdateOwnPost(ctx, req.PostID, req.RequesterID, content, visibility); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.postRepo.ReplacePostMedia(ctx, postID, requesterID, req.MediaIDs); err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if err := s.postRepo.ReplacePostMedia(ctx, postID, requesterID, req.MediaIDs); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">post, err := s.postRepo.FindByID(ctx, req.PostID)
+        <span class="cov1" title="1">post, err := s.postRepo.FindByID(ctx, req.PostID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">s.publishEvent(ctx, messaging.EventPostUpdated, messaging.Event{
+        <span class="cov1" title="1">s.publishEvent(ctx, messaging.EventPostUpdated, messaging.Event{
                 EventID:   uuid.NewString(),
                 Type:      messaging.EventPostUpdated,
                 ActorID:   req.RequesterID,
@@ -3574,25 +3574,25 @@ func (s *contentService) UpdatePost(ctx context.Context, req dto.UpdatePostReque
         return toPostResponse(post), nil</span>
 }
 
-func (s *contentService) DeletePost(ctx context.Context, req dto.DeletePostRequest) error <span class="cov0" title="0">{
-        if _, err := uuid.Parse(req.PostID); err != nil </span><span class="cov0" title="0">{
+func (s *contentService) DeletePost(ctx context.Context, req dto.DeletePostRequest) error <span class="cov4" title="5">{
+        if _, err := uuid.Parse(req.PostID); err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidPostID
         }</span>
 
-        <span class="cov0" title="0">if _, err := uuid.Parse(req.RequesterID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if _, err := uuid.Parse(req.RequesterID); err != nil </span><span class="cov1" title="1">{
                 return ErrInvalidAuthorID
         }</span>
 
-        <span class="cov0" title="0">post, err := s.postRepo.FindByID(ctx, req.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">post, err := s.postRepo.FindByID(ctx, req.PostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if err := s.postRepo.DeleteOwnPost(ctx, req.PostID, req.RequesterID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if err := s.postRepo.DeleteOwnPost(ctx, req.PostID, req.RequesterID); err != nil </span><span class="cov1" title="1">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">s.publishEvent(ctx, messaging.EventPostDeleted, messaging.Event{
+        <span class="cov1" title="1">s.publishEvent(ctx, messaging.EventPostDeleted, messaging.Event{
                 EventID:   uuid.NewString(),
                 Type:      messaging.EventPostDeleted,
                 ActorID:   req.RequesterID,
@@ -3604,48 +3604,48 @@ func (s *contentService) DeletePost(ctx context.Context, req dto.DeletePostReque
         return nil</span>
 }
 
-func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyRequest) (*dto.PostResponse, error) <span class="cov0" title="0">{
+func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyRequest) (*dto.PostResponse, error) <span class="cov5" title="9">{
         content := strings.TrimSpace(req.Content)
-        if content == "" </span><span class="cov0" title="0">{
+        if content == "" </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostContent
         }</span>
 
-        <span class="cov0" title="0">authorID, err := uuid.Parse(req.AuthorID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov5" title="8">authorID, err := uuid.Parse(req.AuthorID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidAuthorID
         }</span>
 
-        <span class="cov0" title="0">replyToPostID, err := uuid.Parse(req.ReplyToPostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="7">replyToPostID, err := uuid.Parse(req.ReplyToPostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostID
         }</span>
 
-        <span class="cov0" title="0">parentPost, err := s.postRepo.FindByID(ctx, req.ReplyToPostID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="6">parentPost, err := s.postRepo.FindByID(ctx, req.ReplyToPostID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">visibility := req.Visibility
-        if visibility == "" </span><span class="cov0" title="0">{
+        <span class="cov4" title="5">visibility := req.Visibility
+        if visibility == "" </span><span class="cov4" title="5">{
                 visibility = "public"
         }</span>
 
-        <span class="cov0" title="0">post := &amp;dbmodel.Post{
+        <span class="cov4" title="5">post := &amp;dbmodel.Post{
                 AuthorID:      authorID,
                 ReplyToPostID: &amp;replyToPostID,
                 Content:       content,
                 Visibility:    visibility,
         }
 
-        if err := s.postRepo.Create(ctx, post); err != nil </span><span class="cov0" title="0">{
+        if err := s.postRepo.Create(ctx, post); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.postRepo.IncrementReplyCount(ctx, req.ReplyToPostID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := s.postRepo.IncrementReplyCount(ctx, req.ReplyToPostID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if parentPost.AuthorID.String() != req.AuthorID </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if parentPost.AuthorID.String() != req.AuthorID </span><span class="cov2" title="2">{
                 s.publishEvent(ctx, messaging.EventReplyCreated, messaging.Event{
                         EventID:      uuid.NewString(),
                         Type:         messaging.EventReplyCreated,
@@ -3657,61 +3657,61 @@ func (s *contentService) CreateReply(ctx context.Context, req dto.CreateReplyReq
                 })
         }</span>
 
-        <span class="cov0" title="0">if err := s.postRepo.AttachMediaToPost(ctx, post.ID, authorID, req.MediaIDs); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.postRepo.AttachMediaToPost(ctx, post.ID, authorID, req.MediaIDs); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">postWithMedia, err := s.postRepo.FindByID(ctx, post.ID.String())
+        <span class="cov2" title="2">postWithMedia, err := s.postRepo.FindByID(ctx, post.ID.String())
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toPostResponse(postWithMedia), nil</span>
+        <span class="cov2" title="2">return toPostResponse(postWithMedia), nil</span>
 }
 
-func (s *contentService) GetReplies(ctx context.Context, req dto.GetRepliesRequest) ([]dto.PostResponse, error) <span class="cov0" title="0">{
-        if _, err := uuid.Parse(req.PostID); err != nil </span><span class="cov0" title="0">{
+func (s *contentService) GetReplies(ctx context.Context, req dto.GetRepliesRequest) ([]dto.PostResponse, error) <span class="cov3" title="3">{
+        if _, err := uuid.Parse(req.PostID); err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidPostID
         }</span>
 
-        <span class="cov0" title="0">replies, err := s.postRepo.FindReplies(ctx, req.PostID, req.Limit)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">replies, err := s.postRepo.FindReplies(ctx, req.PostID, req.Limit)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">responses := make([]dto.PostResponse, 0, len(replies))
-        for _, reply := range replies </span><span class="cov0" title="0">{
+        <span class="cov1" title="1">responses := make([]dto.PostResponse, 0, len(replies))
+        for _, reply := range replies </span><span class="cov1" title="1">{
                 responses = append(responses, *toPostResponse(&amp;reply))
         }</span>
 
-        <span class="cov0" title="0">return responses, nil</span>
+        <span class="cov1" title="1">return responses, nil</span>
 }
 
-func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) (*dto.ActionResponse, error) <span class="cov4" title="7">{
         userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
+        if err != nil </span><span class="cov2" title="2">{
+                return nil, err
+        }</span>
+
+        <span class="cov4" title="5">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov1" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov3" title="4">post, err := s.postRepo.FindByID(ctx, req.PostID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">created, err := s.interactionRepo.LikePost(ctx, userID, postID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">post, err := s.postRepo.FindByID(ctx, req.PostID)
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, err
-        }</span>
-
-        <span class="cov0" title="0">created, err := s.interactionRepo.LikePost(ctx, userID, postID)
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, err
-        }</span>
-
-        <span class="cov0" title="0">if !created </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if !created </span><span class="cov1" title="1">{
                 return actionResponse("post already liked"), nil
         }</span>
 
-        <span class="cov0" title="0">if post.AuthorID.String() != req.UserID </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if post.AuthorID.String() != req.UserID </span><span class="cov1" title="1">{
                 s.publishEvent(ctx, messaging.EventPostLiked, messaging.Event{
                         EventID:   uuid.NewString(),
                         Type:      messaging.EventPostLiked,
@@ -3722,96 +3722,96 @@ func (s *contentService) LikePost(ctx context.Context, req dto.LikePostRequest) 
                 })
         }</span>
 
-        <span class="cov0" title="0">return actionResponse("post liked successfully"), nil</span>
+        <span class="cov2" title="2">return actionResponse("post liked successfully"), nil</span>
 }
 
-func (s *contentService) UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) UnlikePost(ctx context.Context, req dto.UnlikePostRequest) (*dto.ActionResponse, error) <span class="cov3" title="3">{
         userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">deleted, err := s.interactionRepo.UnlikePost(ctx, userID, postID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">deleted, err := s.interactionRepo.UnlikePost(ctx, userID, postID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !deleted </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if !deleted </span><span class="cov1" title="1">{
                 return actionResponse("post was not liked"), nil
         }</span>
 
-        <span class="cov0" title="0">return actionResponse("post unliked successfully"), nil</span>
+        <span class="cov1" title="1">return actionResponse("post unliked successfully"), nil</span>
 }
 
-func (s *contentService) BookmarkPost(ctx context.Context, req dto.BookmarkPostRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) BookmarkPost(ctx context.Context, req dto.BookmarkPostRequest) (*dto.ActionResponse, error) <span class="cov3" title="3">{
         userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">created, err := s.interactionRepo.BookmarkPost(ctx, userID, postID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">created, err := s.interactionRepo.BookmarkPost(ctx, userID, postID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !created </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if !created </span><span class="cov1" title="1">{
                 return actionResponse("post already bookmarked"), nil
         }</span>
 
-        <span class="cov0" title="0">return actionResponse("post bookmarked successfully"), nil</span>
+        <span class="cov1" title="1">return actionResponse("post bookmarked successfully"), nil</span>
 }
 
-func (s *contentService) UnbookmarkPost(ctx context.Context, req dto.UnbookmarkPostRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) UnbookmarkPost(ctx context.Context, req dto.UnbookmarkPostRequest) (*dto.ActionResponse, error) <span class="cov4" title="6">{
         userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">deleted, err := s.interactionRepo.UnbookmarkPost(ctx, userID, postID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">deleted, err := s.interactionRepo.UnbookmarkPost(ctx, userID, postID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !deleted </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if !deleted </span><span class="cov1" title="1">{
                 return actionResponse("post was not bookmarked"), nil
         }</span>
 
-        <span class="cov0" title="0">return actionResponse("post unbookmarked successfully"), nil</span>
+        <span class="cov1" title="1">return actionResponse("post unbookmarked successfully"), nil</span>
 }
 
-func (s *contentService) RepostPost(ctx context.Context, req dto.RepostPostRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) RepostPost(ctx context.Context, req dto.RepostPostRequest) (*dto.ActionResponse, error) <span class="cov3" title="4">{
         userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">post, err := s.postRepo.FindByID(ctx, req.PostID)
+        <span class="cov3" title="4">post, err := s.postRepo.FindByID(ctx, req.PostID)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">created, err := s.interactionRepo.RepostPost(ctx, userID, postID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">created, err := s.interactionRepo.RepostPost(ctx, userID, postID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !created </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if !created </span><span class="cov1" title="1">{
                 return actionResponse("post already reposted"), nil
         }</span>
 
-        <span class="cov0" title="0">if post.AuthorID.String() != req.UserID </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if post.AuthorID.String() != req.UserID </span><span class="cov1" title="1">{
                 s.publishEvent(ctx, messaging.EventPostReposted, messaging.Event{
                         EventID:   uuid.NewString(),
                         Type:      messaging.EventPostReposted,
@@ -3822,64 +3822,64 @@ func (s *contentService) RepostPost(ctx context.Context, req dto.RepostPostReque
                 })
         }</span>
 
-        <span class="cov0" title="0">return actionResponse("post reposted successfully"), nil</span>
+        <span class="cov2" title="2">return actionResponse("post reposted successfully"), nil</span>
 }
 
-func (s *contentService) UndoRepost(ctx context.Context, req dto.UndoRepostRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) UndoRepost(ctx context.Context, req dto.UndoRepostRequest) (*dto.ActionResponse, error) <span class="cov4" title="6">{
         userID, postID, err := parseUserAndPostID(req.UserID, req.PostID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov2" title="2">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := s.ensurePostExists(ctx, req.PostID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">deleted, err := s.interactionRepo.UndoRepost(ctx, userID, postID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">deleted, err := s.interactionRepo.UndoRepost(ctx, userID, postID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !deleted </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if !deleted </span><span class="cov1" title="1">{
                 return actionResponse("post was not reposted"), nil
         }</span>
 
-        <span class="cov0" title="0">return actionResponse("repost removed successfully"), nil</span>
+        <span class="cov1" title="1">return actionResponse("repost removed successfully"), nil</span>
 }
 
-func (s *contentService) FollowUser(ctx context.Context, req dto.FollowUserRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) FollowUser(ctx context.Context, req dto.FollowUserRequest) (*dto.ActionResponse, error) <span class="cov4" title="7">{
         followerID, err := uuid.Parse(req.FollowerID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">followingID, err := uuid.Parse(req.FollowingID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="6">followingID, err := uuid.Parse(req.FollowingID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">if followerID == followingID </span><span class="cov0" title="0">{
+        <span class="cov4" title="5">if followerID == followingID </span><span class="cov1" title="1">{
                 return nil, ErrCannotFollowSelf
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, followerID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := s.ensureUserExists(ctx, followerID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, followingID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.ensureUserExists(ctx, followingID); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">created, err := s.interactionRepo.FollowUser(ctx, followerID, followingID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">created, err := s.interactionRepo.FollowUser(ctx, followerID, followingID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !created </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if !created </span><span class="cov1" title="1">{
                 return actionResponse("user already followed"), nil
         }</span>
 
-        <span class="cov0" title="0">s.publishEvent(ctx, messaging.EventUserFollowed, messaging.Event{
+        <span class="cov1" title="1">s.publishEvent(ctx, messaging.EventUserFollowed, messaging.Event{
                 EventID:      uuid.NewString(),
                 Type:         messaging.EventUserFollowed,
                 ActorID:      followerID.String(),
@@ -3890,38 +3890,38 @@ func (s *contentService) FollowUser(ctx context.Context, req dto.FollowUserReque
         return actionResponse("user followed successfully"), nil</span>
 }
 
-func (s *contentService) UnfollowUser(ctx context.Context, req dto.UnfollowUserRequest) (*dto.ActionResponse, error) <span class="cov0" title="0">{
+func (s *contentService) UnfollowUser(ctx context.Context, req dto.UnfollowUserRequest) (*dto.ActionResponse, error) <span class="cov4" title="7">{
         followerID, err := uuid.Parse(req.FollowerID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">followingID, err := uuid.Parse(req.FollowingID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov4" title="6">followingID, err := uuid.Parse(req.FollowingID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">if followerID == followingID </span><span class="cov0" title="0">{
+        <span class="cov4" title="5">if followerID == followingID </span><span class="cov1" title="1">{
                 return nil, ErrCannotFollowSelf
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, followerID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := s.ensureUserExists(ctx, followerID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, followingID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.ensureUserExists(ctx, followingID); err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">deleted, err := s.interactionRepo.UnfollowUser(ctx, followerID, followingID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">deleted, err := s.interactionRepo.UnfollowUser(ctx, followerID, followingID)
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">if !deleted </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">if !deleted </span><span class="cov1" title="1">{
                 return actionResponse("user was not followed"), nil
         }</span>
-        <span class="cov0" title="0">s.publishEvent(ctx, messaging.EventUserUnfollowed, messaging.Event{
+        <span class="cov1" title="1">s.publishEvent(ctx, messaging.EventUserUnfollowed, messaging.Event{
                 EventID:      uuid.NewString(),
                 Type:         messaging.EventUserUnfollowed,
                 ActorID:      followerID.String(),
@@ -3932,106 +3932,106 @@ func (s *contentService) UnfollowUser(ctx context.Context, req dto.UnfollowUserR
         return actionResponse("user unfollowed successfully"), nil</span>
 }
 
-func (s *contentService) GetFollowers(ctx context.Context, req dto.GetFollowersRequest) ([]dto.UserSummary, error) <span class="cov0" title="0">{
+func (s *contentService) GetFollowers(ctx context.Context, req dto.GetFollowersRequest) ([]dto.UserSummary, error) <span class="cov4" title="5">{
         userID, err := uuid.Parse(req.UserID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, userID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="4">if err := s.ensureUserExists(ctx, userID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">users, err := s.interactionRepo.GetFollowers(ctx, userID, normalizeLimit(req.Limit))
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">users, err := s.interactionRepo.GetFollowers(ctx, userID, normalizeLimit(req.Limit))
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toUserSummaryResponses(users), nil</span>
+        <span class="cov2" title="2">return toUserSummaryResponses(users), nil</span>
 }
 
-func (s *contentService) GetFollowing(ctx context.Context, req dto.GetFollowingRequest) ([]dto.UserSummary, error) <span class="cov0" title="0">{
+func (s *contentService) GetFollowing(ctx context.Context, req dto.GetFollowingRequest) ([]dto.UserSummary, error) <span class="cov3" title="4">{
         userID, err := uuid.Parse(req.UserID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, userID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.ensureUserExists(ctx, userID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">users, err := s.interactionRepo.GetFollowing(ctx, userID, normalizeLimit(req.Limit))
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">users, err := s.interactionRepo.GetFollowing(ctx, userID, normalizeLimit(req.Limit))
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">return toUserSummaryResponses(users), nil</span>
+        <span class="cov1" title="1">return toUserSummaryResponses(users), nil</span>
 }
 
-func parseUserAndPostID(userIDValue string, postIDValue string) (uuid.UUID, uuid.UUID, error) <span class="cov0" title="0">{
+func parseUserAndPostID(userIDValue string, postIDValue string) (uuid.UUID, uuid.UUID, error) <span class="cov7" title="29">{
         userID, err := uuid.Parse(userIDValue)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov3" title="3">{
                 return uuid.Nil, uuid.Nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">postID, err := uuid.Parse(postIDValue)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov7" title="26">postID, err := uuid.Parse(postIDValue)
+        if err != nil </span><span class="cov3" title="3">{
                 return uuid.Nil, uuid.Nil, ErrInvalidPostID
         }</span>
 
-        <span class="cov0" title="0">return userID, postID, nil</span>
+        <span class="cov7" title="23">return userID, postID, nil</span>
 }
 
-func (s *contentService) ensurePostExists(ctx context.Context, postID string) error <span class="cov0" title="0">{
+func (s *contentService) ensurePostExists(ctx context.Context, postID string) error <span class="cov6" title="19">{
         _, err := s.postRepo.FindByID(ctx, postID)
         return err
 }</span>
 
-func (s *contentService) ensureUserExists(ctx context.Context, userID uuid.UUID) error <span class="cov0" title="0">{
+func (s *contentService) ensureUserExists(ctx context.Context, userID uuid.UUID) error <span class="cov7" title="24">{
         exists, err := s.interactionRepo.UserExists(ctx, userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov2" title="2">{
                 return err
         }</span>
 
-        <span class="cov0" title="0">if !exists </span><span class="cov0" title="0">{
+        <span class="cov7" title="22">if !exists </span><span class="cov3" title="3">{
                 return repository.ErrUserNotFound
         }</span>
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov6" title="19">return nil</span>
 }
 
-func normalizeLimit(limit int) int <span class="cov0" title="0">{
-        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov0" title="0">{
+func normalizeLimit(limit int) int <span class="cov4" title="7">{
+        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov1" title="1">{
                 return 20
         }</span>
 
-        <span class="cov0" title="0">return limit</span>
+        <span class="cov4" title="6">return limit</span>
 }
 
-func actionResponse(message string) *dto.ActionResponse <span class="cov0" title="0">{
+func actionResponse(message string) *dto.ActionResponse <span class="cov6" title="18">{
         return &amp;dto.ActionResponse{
                 Success: true,
                 Message: message,
         }
 }</span>
 
-func toPostResponse(post *dbmodel.Post) *dto.PostResponse <span class="cov0" title="0">{
+func toPostResponse(post *dbmodel.Post) *dto.PostResponse <span class="cov5" title="9">{
         replyToPostID := ""
-        if post.ReplyToPostID != nil </span><span class="cov0" title="0">{
+        if post.ReplyToPostID != nil </span><span class="cov3" title="4">{
                 replyToPostID = post.ReplyToPostID.String()
         }</span>
 
-        <span class="cov0" title="0">avatarURL := ""
-        if post.Author.AvatarURL != nil </span><span class="cov0" title="0">{
+        <span class="cov5" title="9">avatarURL := ""
+        if post.Author.AvatarURL != nil </span><span class="cov1" title="1">{
                 avatarURL = *post.Author.AvatarURL
         }</span>
 
-        <span class="cov0" title="0">mediaResponses := make([]dto.MediaResponse, 0, len(post.Media))
-        for _, media := range post.Media </span><span class="cov0" title="0">{
+        <span class="cov5" title="9">mediaResponses := make([]dto.MediaResponse, 0, len(post.Media))
+        for _, media := range post.Media </span><span class="cov1" title="1">{
                 mediaResponses = append(mediaResponses, toMediaResponse(media))
         }</span>
 
-        <span class="cov0" title="0">return &amp;dto.PostResponse{
+        <span class="cov5" title="9">return &amp;dto.PostResponse{
                 ID:            post.ID.String(),
                 AuthorID:      post.AuthorID.String(),
                 ReplyToPostID: replyToPostID,
@@ -4054,23 +4054,23 @@ func toPostResponse(post *dbmodel.Post) *dto.PostResponse <span class="cov0" tit
         }</span>
 }
 
-func toUserSummaryResponses(users []dbmodel.User) []dto.UserSummary <span class="cov0" title="0">{
+func toUserSummaryResponses(users []dbmodel.User) []dto.UserSummary <span class="cov3" title="3">{
         responses := make([]dto.UserSummary, 0, len(users))
 
-        for _, user := range users </span><span class="cov0" title="0">{
+        for _, user := range users </span><span class="cov2" title="2">{
                 responses = append(responses, toUserSummaryResponse(&amp;user))
         }</span>
 
-        <span class="cov0" title="0">return responses</span>
+        <span class="cov3" title="3">return responses</span>
 }
 
-func toUserSummaryResponse(user *dbmodel.User) dto.UserSummary <span class="cov0" title="0">{
+func toUserSummaryResponse(user *dbmodel.User) dto.UserSummary <span class="cov2" title="2">{
         avatarURL := ""
-        if user.AvatarURL != nil </span><span class="cov0" title="0">{
+        if user.AvatarURL != nil </span><span class="cov1" title="1">{
                 avatarURL = *user.AvatarURL
         }</span>
 
-        <span class="cov0" title="0">return dto.UserSummary{
+        <span class="cov2" title="2">return dto.UserSummary{
                 ID:          user.ID.String(),
                 Username:    user.Username,
                 DisplayName: user.DisplayName,
@@ -4079,45 +4079,45 @@ func toUserSummaryResponse(user *dbmodel.User) dto.UserSummary <span class="cov0
         }</span>
 }
 
-func (s *contentService) GetUserTimeline(ctx context.Context, req dto.GetUserTimelineRequest) ([]dto.TimelineItemResponse, error) <span class="cov0" title="0">{
+func (s *contentService) GetUserTimeline(ctx context.Context, req dto.GetUserTimelineRequest) ([]dto.TimelineItemResponse, error) <span class="cov3" title="4">{
         userID, err := uuid.Parse(req.UserID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, ErrInvalidUserID
         }</span>
 
-        <span class="cov0" title="0">if err := s.ensureUserExists(ctx, userID); err != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">if err := s.ensureUserExists(ctx, userID); err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">items, err := s.postRepo.FindUserTimeline(ctx, userID, normalizeLimit(req.Limit))
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov2" title="2">items, err := s.postRepo.FindUserTimeline(ctx, userID, normalizeLimit(req.Limit))
+        if err != nil </span><span class="cov1" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">responses := make([]dto.TimelineItemResponse, 0, len(items))
+        <span class="cov1" title="1">responses := make([]dto.TimelineItemResponse, 0, len(items))
 
-        for _, item := range items </span><span class="cov0" title="0">{
+        for _, item := range items </span><span class="cov2" title="2">{
                 repostedAt := ""
-                if item.RepostedAt != nil </span><span class="cov0" title="0">{
+                if item.RepostedAt != nil </span><span class="cov1" title="1">{
                         repostedAt = item.RepostedAt.Format(time.RFC3339)
                 }</span>
 
-                <span class="cov0" title="0">responses = append(responses, dto.TimelineItemResponse{
+                <span class="cov2" title="2">responses = append(responses, dto.TimelineItemResponse{
                         Type:       item.Type,
                         Post:       *toPostResponse(&amp;item.Post),
                         RepostedAt: repostedAt,
                 })</span>
         }
 
-        <span class="cov0" title="0">return responses, nil</span>
+        <span class="cov1" title="1">return responses, nil</span>
 }
 
-func (s *contentService) publishEvent(ctx context.Context, routingKey string, event messaging.Event) <span class="cov0" title="0">{
-        if s.eventPublisher == nil </span><span class="cov0" title="0">{
+func (s *contentService) publishEvent(ctx context.Context, routingKey string, event messaging.Event) <span class="cov5" title="11">{
+        if s.eventPublisher == nil </span><span class="cov1" title="1">{
                 return
         }</span>
 
-        <span class="cov0" title="0">if err := s.eventPublisher.Publish(ctx, routingKey, event); err != nil </span><span class="cov0" title="0">{
+        <span class="cov5" title="10">if err := s.eventPublisher.Publish(ctx, routingKey, event); err != nil </span><span class="cov1" title="1">{
                 s.log.Warn().
                         Err(err).
                         Str("event_type", routingKey).
@@ -4125,18 +4125,18 @@ func (s *contentService) publishEvent(ctx context.Context, routingKey string, ev
         }</span>
 }
 
-func toMediaResponse(media dbmodel.Media) dto.MediaResponse <span class="cov0" title="0">{
+func toMediaResponse(media dbmodel.Media) dto.MediaResponse <span class="cov3" title="3">{
         width := 0
-        if media.Width != nil </span><span class="cov0" title="0">{
+        if media.Width != nil </span><span class="cov2" title="2">{
                 width = *media.Width
         }</span>
 
-        <span class="cov0" title="0">height := 0
-        if media.Height != nil </span><span class="cov0" title="0">{
+        <span class="cov3" title="3">height := 0
+        if media.Height != nil </span><span class="cov2" title="2">{
                 height = *media.Height
         }</span>
 
-        <span class="cov0" title="0">return dto.MediaResponse{
+        <span class="cov3" title="3">return dto.MediaResponse{
                 ID:        media.ID.String(),
                 URL:       media.URL,
                 MimeType:  media.MimeType,
