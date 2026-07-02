@@ -1,0 +1,132 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: threadly-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - threadly-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: threadly-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - threadly-rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile
+    container_name: threadly-user-service
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "50051:50051"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  content-service:
+    build:
+      context: .
+      dockerfile: services/content-service/Dockerfile
+    container_name: threadly-content-service
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "50052:50052"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  feed-service:
+    build:
+      context: .
+      dockerfile: services/feed-service/Dockerfile
+    container_name: threadly-feed-service
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "50053:50053"
+    depends_on:
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: services/notification-service/Dockerfile
+    container_name: threadly-notification-service
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "50054:50054"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  storage-service:
+    build:
+      context: .
+      dockerfile: services/storage-service/Dockerfile
+    container_name: threadly-storage-service
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "50055:50055"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api-gateway/Dockerfile
+    container_name: threadly-api-gateway
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+      - content-service
+      - feed-service
+      - notification-service
+      - storage-service
+      - redis
+      - rabbitmq
+
+volumes:
+  threadly-redis-data:
+  threadly-rabbitmq-data:
