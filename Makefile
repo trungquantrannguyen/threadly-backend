@@ -4,6 +4,24 @@ MIGRATIONS_PATH=./db/migrations
 DB_URL=$(DATABASE_URL)
 GOCACHE ?= $(CURDIR)/tmp/go-build
 
+SHELL := /bin/bash
+.SHELLFLAGS := -o pipefail -c
+
+COVERAGE_DIR ?= coverage
+COVERAGE_PROFILE ?= $(COVERAGE_DIR)/coverage.out
+COVERAGE_THRESHOLD ?= 80
+
+TEST_PACKAGES := $(shell go list ./... \
+	| grep -v '/proto/' \
+	| grep -v '/docs' \
+	| grep -v '/cmd/' \
+	| grep -v '/provider')
+
+FEED_PACKAGES := $(shell go list ./services/feed-service/internal/...)
+
+STORAGE_PACKAGES := $(shell go list ./services/storage-service/internal/... \
+	| grep -v '/provider')
+
 .PHONY: help
 help:
 	@echo "Available commands:"
@@ -129,10 +147,6 @@ migrate-force:
 	fi
 	migrate -path $(MIGRATIONS_PATH) -database "$(DB_URL)" force $(version)
 
-.PHONY: test
-test:
-	GOCACHE="$(GOCACHE)" go test ./...
-
 .PHONY: tidy
 tidy:
 	go mod tidy
@@ -197,3 +211,59 @@ swagger-gen:
 		-o services/api-gateway/docs \
 		--parseInternal \
 		--parseDependency
+
+COVERAGE_DIR ?= coverage
+COVERAGE_PROFILE ?= $(COVERAGE_DIR)/coverage.out
+COVERAGE_THRESHOLD ?= 80
+
+TEST_PACKAGES := $(shell go list ./... | grep -v '/proto/' | grep -v '/docs' | grep -v '/cmd/')
+
+.PHONY: test
+test:
+	GOCACHE="$(GOCACHE)" go test $(TEST_PACKAGES)
+
+.PHONY: test-coverage
+test-coverage:
+	@mkdir -p $(COVERAGE_DIR)
+	GOCACHE="$(GOCACHE)" go test $(TEST_PACKAGES) -covermode=atomic -coverprofile=$(COVERAGE_PROFILE)
+	go tool cover -func=$(COVERAGE_PROFILE) | tee $(COVERAGE_DIR)/coverage.txt
+
+.PHONY: coverage-html
+coverage-html: test-coverage
+	go tool cover -html=$(COVERAGE_PROFILE) -o $(COVERAGE_DIR)/coverage.html
+
+.PHONY: coverage-check
+coverage-check: test-coverage
+	@coverage=$$(go tool cover -func=$(COVERAGE_PROFILE) | awk '/total:/ { gsub("%","",$$3); print $$3 }'); \
+	echo "Total coverage: $$coverage%"; \
+	awk -v coverage=$$coverage -v threshold=$(COVERAGE_THRESHOLD) 'BEGIN { if (coverage < threshold) exit 1 }'
+	.PHONY: test-feed
+test-feed:
+	GOCACHE="$(GOCACHE)" go test ./services/feed-service/internal/... -v
+
+.PHONY: test-storage
+test-storage:
+	GOCACHE="$(GOCACHE)" go test $$(go list ./services/storage-service/internal/... | grep -v '/provider') -v
+
+.PHONY: coverage-feed
+coverage-feed:
+	@mkdir -p coverage
+	GOCACHE="$(GOCACHE)" go test ./services/feed-service/internal/... -covermode=atomic -coverprofile=coverage/feed.out
+	go tool cover -func=coverage/feed.out | tee coverage/feed.txt
+
+.PHONY: coverage-storage
+coverage-storage:
+	@mkdir -p coverage
+	GOCACHE="$(GOCACHE)" go test $$(go list ./services/storage-service/internal/... | grep -v '/provider') -covermode=atomic -coverprofile=coverage/storage.out
+	go tool cover -func=coverage/storage.out | tee coverage/storage.txt
+
+.PHONY: coverage-feed-html
+coverage-feed-html: coverage-feed
+	go tool cover -html=coverage/feed.out -o coverage/feed.html
+
+.PHONY: coverage-storage-html
+coverage-storage-html: coverage-storage
+	go tool cover -html=coverage/storage.out -o coverage/storage.html
+.PHONY: test-report
+test-report:
+	./scripts/test-report.sh

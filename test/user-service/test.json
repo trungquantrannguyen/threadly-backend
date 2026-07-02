@@ -1,0 +1,12 @@
+{"Time":"2026-07-02T19:34:23.544818+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/dto"}
+{"Time":"2026-07-02T19:34:23.544916+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/dto","Output":"?   \tgithub.com/trungquantrannguyen/threadly/services/user-service/internal/dto\t[no test files]\n"}
+{"Time":"2026-07-02T19:34:23.544921+10:00","Action":"skip","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/dto","Elapsed":0}
+{"Time":"2026-07-02T19:34:23.674639+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/grpc"}
+{"Time":"2026-07-02T19:34:23.674656+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/repository"}
+{"Time":"2026-07-02T19:34:23.674669+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/service"}
+{"Time":"2026-07-02T19:34:23.755028+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/service","Output":"\tgithub.com/trungquantrannguyen/threadly/services/user-service/internal/service\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:23.755228+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/grpc","Output":"\tgithub.com/trungquantrannguyen/threadly/services/user-service/internal/grpc\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:23.755456+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/repository","Output":"\tgithub.com/trungquantrannguyen/threadly/services/user-service/internal/repository\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:23.836551+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/grpc","Elapsed":0.162}
+{"Time":"2026-07-02T19:34:23.83671+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/service","Elapsed":0.162}
+{"Time":"2026-07-02T19:34:23.83697+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/user-service/internal/repository","Elapsed":0.162}

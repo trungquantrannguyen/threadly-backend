@@ -8,7 +8,6 @@ import (
 
 	"github.com/google/uuid"
 	dbmodel "github.com/trungquantrannguyen/threadly/db/models"
-	"github.com/trungquantrannguyen/threadly/pkg/messaging"
 	"gorm.io/gorm"
 )
 
@@ -223,15 +222,6 @@ func (r *postRepository) UpdateOwnPost(
 	if result.RowsAffected == 0 {
 		return nil, ErrPostNotFound
 	}
-
-	s.publishEvent(ctx, messaging.EventPostUpdated, messaging.Event{
-		EventID:   uuid.NewString(),
-		Type:      messaging.EventPostUpdated,
-		ActorID:   req.RequesterID,
-		PostID:    req.PostID,
-		AuthorID:  req.RequesterID,
-		CreatedAt: time.Now().UTC().Format(time.RFC3339),
-	})
 
 	return r.FindByID(ctx, postID)
 }

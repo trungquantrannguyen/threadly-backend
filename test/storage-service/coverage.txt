@@ -1,0 +1,11 @@
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/grpc/grpc_server.go:23:		NewStorageServiceServer	100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/grpc/grpc_server.go:31:		GetHealth		100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/grpc/grpc_server.go:41:		UploadMedia		100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/grpc/grpc_server.go:62:		mapStorageServiceError	100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/repository/media_repository.go:18:	NewMediaRepository	100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/repository/media_repository.go:22:	Create			100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/service/storage_service.go:48:	NewStorageService	100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/service/storage_service.go:58:	UploadMedia		100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/service/storage_service.go:108:	isAllowedImageType	100.0%
+github.com/trungquantrannguyen/threadly/services/storage-service/internal/service/storage_service.go:117:	extensionFromMime	100.0%
+total:														(statements)		100.0%

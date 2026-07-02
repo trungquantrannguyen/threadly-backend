@@ -11,13 +11,22 @@ import (
 const feedCacheInvalidationQueue = "feed-service.cache-invalidation"
 
 type FeedEventConsumer struct {
-	eventBus  *messaging.RabbitMQ
+	eventBus  EventConsumer
 	feedCache cache.FeedCache
 	log       zerolog.Logger
 }
 
+type EventConsumer interface {
+	Consume(
+		ctx context.Context,
+		queueName string,
+		routingKeys []string,
+		handler messaging.EventHandler,
+	) error
+}
+
 func NewFeedEventConsumer(
-	eventBus *messaging.RabbitMQ,
+	eventBus EventConsumer,
 	feedCache cache.FeedCache,
 	log zerolog.Logger,
 ) *FeedEventConsumer {

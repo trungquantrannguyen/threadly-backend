@@ -1,0 +1,15 @@
+{"Time":"2026-07-02T19:34:25.399677+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/dto"}
+{"Time":"2026-07-02T19:34:25.399781+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/dto","Output":"?   \tgithub.com/trungquantrannguyen/threadly/services/notification-service/internal/dto\t[no test files]\n"}
+{"Time":"2026-07-02T19:34:25.399786+10:00","Action":"skip","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/dto","Elapsed":0}
+{"Time":"2026-07-02T19:34:25.493992+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/events"}
+{"Time":"2026-07-02T19:34:25.495703+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc"}
+{"Time":"2026-07-02T19:34:25.495737+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository"}
+{"Time":"2026-07-02T19:34:25.495769+10:00","Action":"start","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/service"}
+{"Time":"2026-07-02T19:34:25.585977+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/events","Output":"\tgithub.com/trungquantrannguyen/threadly/services/notification-service/internal/events\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:25.586213+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc","Output":"\tgithub.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:25.586236+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/service","Output":"\tgithub.com/trungquantrannguyen/threadly/services/notification-service/internal/service\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:25.586515+10:00","Action":"output","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository","Output":"\tgithub.com/trungquantrannguyen/threadly/services/notification-service/internal/repository\t\tcoverage: 0.0% of statements\n"}
+{"Time":"2026-07-02T19:34:25.692853+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/events","Elapsed":0.199}
+{"Time":"2026-07-02T19:34:25.693105+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository","Elapsed":0.197}
+{"Time":"2026-07-02T19:34:25.693545+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/service","Elapsed":0.198}
+{"Time":"2026-07-02T19:34:25.69369+10:00","Action":"pass","Package":"github.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc","Elapsed":0.198}

@@ -1,0 +1,2420 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>app: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/app/app.go (0.0%)</option>
+				
+				<option value="file1">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client/content_client.go (0.0%)</option>
+				
+				<option value="file2">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client/feed_client.go (0.0%)</option>
+				
+				<option value="file3">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client/notification_client.go (0.0%)</option>
+				
+				<option value="file4">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client/storage_client.go (0.0%)</option>
+				
+				<option value="file5">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client/user_client.go (0.0%)</option>
+				
+				<option value="file6">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/content_handler.go (0.0%)</option>
+				
+				<option value="file7">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/feed_handler.go (0.0%)</option>
+				
+				<option value="file8">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/grpc_error.go (0.0%)</option>
+				
+				<option value="file9">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/health_handler.go (0.0%)</option>
+				
+				<option value="file10">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/notification_handler.go (0.0%)</option>
+				
+				<option value="file11">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/storage_handler.go (0.0%)</option>
+				
+				<option value="file12">github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers/user_handler.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package app
+
+import (
+        "time"
+
+        "github.com/gin-gonic/gin"
+        "github.com/rs/zerolog"
+        swaggerFiles "github.com/swaggo/files"
+        ginSwagger "github.com/swaggo/gin-swagger"
+        "github.com/trungquantrannguyen/threadly/pkg/cache"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        "github.com/trungquantrannguyen/threadly/pkg/middleware"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/handlers"
+)
+
+func NewRouter(cfg config.Config, log zerolog.Logger) (*gin.Engine, func() error) <span class="cov0" title="0">{
+        if cfg.AppEnv == "production" </span><span class="cov0" title="0">{
+                gin.SetMode(gin.ReleaseMode)
+        }</span>
+
+        <span class="cov0" title="0">redisClient := cache.NewRedisClient(cfg)
+
+        router := gin.New()
+
+        router.Use(gin.Recovery())
+        router.Use(middleware.RequestID())
+        router.Use(middleware.Logging(log))
+        router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+        healthHandler := handlers.NewHealthHandler(cfg)
+
+        userClient, err := client.NewUserClient(cfg, log)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal().Err(err).Msg("Failed to create user service grpc client")
+        }</span>
+
+        <span class="cov0" title="0">contentClient, err := client.NewContentClient(cfg, log)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal().Err(err).Msg("Failed to create content service grpc client")
+        }</span>
+
+        <span class="cov0" title="0">feedClient, err := client.NewFeedClient(cfg, log)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal().Err(err).Msg("Failed to create feed service grpc client")
+        }</span>
+
+        <span class="cov0" title="0">notificationClient, err := client.NewNotificationClient(cfg, log)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal().Err(err).Msg("Failed to create notification service grpc client")
+        }</span>
+
+        <span class="cov0" title="0">storageClient, err := client.NewStorageClient(cfg, log)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal().Err(err).Msg("Failed to create storage service grpc client")
+        }</span>
+
+        <span class="cov0" title="0">userHandler := handlers.NewUserHandler(userClient, log, contentClient)
+        contentHandler := handlers.NewContentHandler(contentClient, log)
+        feedHandler := handlers.NewFeedHandler(feedClient, log)
+        notificationHandler := handlers.NewNotificationHandler(notificationClient, log)
+        storageHandler := handlers.NewStorageHandler(storageClient, log)
+
+        router.GET("/health", healthHandler.Check)
+        api := router.Group("/api")
+        api.Use(middleware.RedisRateLimiter(redisClient, 100, time.Minute))
+        </span><span class="cov0" title="0">{
+                api.GET("/health", healthHandler.Check)
+
+                users := api.Group("/users")
+                </span><span class="cov0" title="0">{
+                        users.GET("/health", userHandler.GetHealth)
+                        users.POST("/register", middleware.RedisRateLimiter(redisClient, 10, time.Minute), userHandler.Register)
+                        users.POST("/login", middleware.RedisRateLimiter(redisClient, 10, time.Minute), userHandler.Login)
+                        users.POST("/refresh", middleware.RedisRateLimiter(redisClient, 30, time.Minute), userHandler.RefreshToken)
+                        protectedUsers := users.Group("")
+                        protectedUsers.Use(middleware.AuthMiddleware(cfg))
+                        </span><span class="cov0" title="0">{
+                                protectedUsers.POST("/logout", userHandler.Logout)
+                                protectedUsers.GET("/me", userHandler.GetMe)
+                                protectedUsers.PATCH("/me", userHandler.UpdateProfile)
+                                protectedUsers.DELETE("/me", userHandler.DeleteUser)
+                        }</span>
+                }
+                <span class="cov0" title="0">contents := api.Group("/contents")
+                </span><span class="cov0" title="0">{
+                        contents.GET("/health", contentHandler.GetHealth)
+                        protectedContent := contents.Group("/posts")
+                        protectedContent.Use(middleware.AuthMiddleware(cfg))
+                        </span><span class="cov0" title="0">{
+                                protectedContent.POST("", contentHandler.CreatePost)
+                                protectedPost := protectedContent.Group("/:postID")
+                                </span><span class="cov0" title="0">{
+
+                                        protectedPost.GET("", contentHandler.GetPost)
+                                        protectedPost.DELETE("", contentHandler.DeletePost)
+                                        protectedPost.PATCH("", contentHandler.UpdatePost)
+                                        protectedPostReply := protectedPost.Group("/replies")
+                                        </span><span class="cov0" title="0">{
+                                                protectedPostReply.POST("", contentHandler.CreateReply)
+                                                protectedPostReply.GET("", contentHandler.GetReplies)
+                                        }</span>
+                                        <span class="cov0" title="0">protectedPost.POST("/likes", contentHandler.LikePost)
+                                        protectedPost.DELETE("/likes", contentHandler.UnlikePost)
+
+                                        protectedPost.POST("/bookmarks", contentHandler.BookmarkPost)
+                                        protectedPost.DELETE("/bookmarks", contentHandler.UnbookmarkPost)
+
+                                        protectedPost.POST("/reposts", contentHandler.RepostPost)
+                                        protectedPost.DELETE("/reposts", contentHandler.UndoRepost)</span>
+                                }
+                        }
+                        <span class="cov0" title="0">protectedContentUsers := contents.Group("/users")
+                        protectedContentUsers.Use(middleware.AuthMiddleware(cfg))
+                        </span><span class="cov0" title="0">{
+                                protectedContentUsers.POST("/:userID/follow", contentHandler.FollowUser)
+                                protectedContentUsers.DELETE("/:userID/follow", contentHandler.UnfollowUser)
+                                protectedContentUsers.GET("/:userID/followers", contentHandler.GetFollowers)
+                                protectedContentUsers.GET("/:userID/following", contentHandler.GetFollowing)
+                        }</span>
+                }
+                <span class="cov0" title="0">feeds := api.Group("/feeds")
+                </span><span class="cov0" title="0">{
+                        feeds.GET("/health", feedHandler.GetHealth)
+                        protectedFeeds := feeds.Group("")
+                        protectedFeeds.Use(middleware.AuthMiddleware(cfg))
+                        </span><span class="cov0" title="0">{
+                                protectedFeeds.GET("/home", feedHandler.GetHomeFeed)
+                        }</span>
+                }
+                <span class="cov0" title="0">notifications := api.Group("/notifications")
+                </span><span class="cov0" title="0">{
+                        notifications.GET("/health", notificationHandler.GetHealth)
+                        protectedNotifications := notifications.Group("")
+                        protectedNotifications.Use(middleware.AuthMiddleware(cfg))
+                        </span><span class="cov0" title="0">{
+                                protectedNotifications.GET("", notificationHandler.GetNotifications)
+                                protectedNotifications.GET("/unread-count", notificationHandler.GetUnreadNotificationCount)
+                                protectedNotifications.PATCH("/:id/read", notificationHandler.MarkNotificationRead)
+                                protectedNotifications.PATCH("/read-all", notificationHandler.MarkAllNotificationsRead)
+                        }</span>
+                }
+                <span class="cov0" title="0">storages := api.Group("/storages")
+                </span><span class="cov0" title="0">{
+                        storages.GET("/health", storageHandler.GetHealth)
+                        protectedStorages := storages.Group("")
+                        protectedStorages.Use(middleware.AuthMiddleware(cfg))
+                        </span><span class="cov0" title="0">{
+                                protectedStorages.POST("/upload", storageHandler.UploadMedia)
+                        }</span>
+                }
+        }
+
+        <span class="cov0" title="0">cleanup := func() error </span><span class="cov0" title="0">{
+                var cleanupErr error
+
+                if err := userClient.Close(); err != nil </span><span class="cov0" title="0">{
+                        log.Error().Err(err).Msg("failed to close user service grpc client")
+                        cleanupErr = err
+                }</span>
+
+                <span class="cov0" title="0">if err := contentClient.Close(); err != nil </span><span class="cov0" title="0">{
+                        log.Error().Err(err).Msg("failed to close content service grpc client")
+                        cleanupErr = err
+                }</span>
+
+                <span class="cov0" title="0">if err := feedClient.Close(); err != nil </span><span class="cov0" title="0">{
+                        log.Error().Err(err).Msg("failed to close feed service grpc client")
+                        cleanupErr = err
+                }</span>
+
+                <span class="cov0" title="0">if err := notificationClient.Close(); err != nil </span><span class="cov0" title="0">{
+                        log.Error().Err(err).Msg("failed to close notification service grpc client")
+                        cleanupErr = err
+                }</span>
+
+                <span class="cov0" title="0">if err := storageClient.Close(); err != nil </span><span class="cov0" title="0">{
+                        log.Error().Err(err).Msg("failed to close storage service grpc client")
+                        cleanupErr = err
+                }</span>
+
+                <span class="cov0" title="0">return cleanupErr</span>
+        }
+        <span class="cov0" title="0">return router, cleanup</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package client
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        contentpb "github.com/trungquantrannguyen/threadly/proto/content"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+)
+
+type ContentClient struct {
+        conn   *grpc.ClientConn
+        client contentpb.ContentServiceClient
+        log    zerolog.Logger
+}
+
+func NewContentClient(cfg config.Config, log zerolog.Logger) (*ContentClient, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(
+                cfg.ContentServiceGRPCAddr,
+                grpc.WithTransportCredentials(insecure.NewCredentials()),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := contentpb.NewContentServiceClient(conn)
+
+        return &amp;ContentClient{
+                conn:   conn,
+                client: client,
+                log:    log,
+        }, nil</span>
+}
+
+func (c *ContentClient) GetHealth(ctx context.Context) (*contentpb.GetContentServiceHealthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetHealth(ctx, &amp;contentpb.GetContentServiceHealthRequest{})
+}</span>
+
+func (c *ContentClient) CreatePost(ctx context.Context, req *contentpb.CreatePostRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.CreatePost(ctx, req)
+}</span>
+
+func (c *ContentClient) GetPost(ctx context.Context, req *contentpb.GetPostRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetPost(ctx, req)
+}</span>
+
+func (c *ContentClient) UpdatePost(ctx context.Context, req *contentpb.UpdatePostRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.UpdatePost(ctx, req)
+}</span>
+
+func (c *ContentClient) DeletePost(ctx context.Context, req *contentpb.DeletePostRequest) (*contentpb.DeletePostResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.DeletePost(ctx, req)
+}</span>
+
+func (c *ContentClient) CreateReply(ctx context.Context, req *contentpb.CreateReplyRequest) (*contentpb.PostResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.CreateReply(ctx, req)
+}</span>
+
+func (c *ContentClient) GetReplies(ctx context.Context, req *contentpb.GetRepliesRequest) (*contentpb.PostListResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetReplies(ctx, req)
+}</span>
+
+func (c *ContentClient) LikePost(ctx context.Context, req *contentpb.LikePostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.LikePost(ctx, req)
+}</span>
+
+func (c *ContentClient) UnlikePost(ctx context.Context, req *contentpb.UnlikePostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.UnlikePost(ctx, req)
+}</span>
+
+func (c *ContentClient) BookmarkPost(ctx context.Context, req *contentpb.BookmarkPostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.BookmarkPost(ctx, req)
+}</span>
+
+func (c *ContentClient) UnbookmarkPost(ctx context.Context, req *contentpb.UnbookmarkPostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.UnbookmarkPost(ctx, req)
+}</span>
+
+func (c *ContentClient) RepostPost(ctx context.Context, req *contentpb.RepostPostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.RepostPost(ctx, req)
+}</span>
+
+func (c *ContentClient) UndoRepost(ctx context.Context, req *contentpb.UndoRepostRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.UndoRepost(ctx, req)
+}</span>
+
+func (c *ContentClient) FollowUser(ctx context.Context, req *contentpb.FollowUserRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.FollowUser(ctx, req)
+}</span>
+
+func (c *ContentClient) UnfollowUser(ctx context.Context, req *contentpb.UnfollowUserRequest) (*contentpb.ActionResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.UnfollowUser(ctx, req)
+}</span>
+
+func (c *ContentClient) GetFollowers(ctx context.Context, req *contentpb.GetFollowersRequest) (*contentpb.UserListResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetFollowers(ctx, req)
+}</span>
+
+func (c *ContentClient) GetFollowing(ctx context.Context, req *contentpb.GetFollowingRequest) (*contentpb.UserListResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetFollowing(ctx, req)
+}</span>
+
+func (c *ContentClient) GetUserTimeline(ctx context.Context, req *contentpb.GetUserTimelineRequest) (*contentpb.TimelineResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetUserTimeline(ctx, req)
+}</span>
+
+func (c *ContentClient) Close() error <span class="cov0" title="0">{
+        return c.conn.Close()
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package client
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+)
+
+type FeedClient struct {
+        conn   *grpc.ClientConn
+        client feedpb.FeedServiceClient
+        log    zerolog.Logger
+}
+
+func NewFeedClient(cfg config.Config, log zerolog.Logger) (*FeedClient, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(
+                cfg.FeedServiceGRPCAddr,
+                grpc.WithTransportCredentials(insecure.NewCredentials()),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := feedpb.NewFeedServiceClient(conn)
+
+        return &amp;FeedClient{
+                conn:   conn,
+                client: client,
+                log:    log,
+        }, nil</span>
+}
+
+func (c *FeedClient) GetHealth(ctx context.Context) (*feedpb.GetFeedServiceHealthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetHealth(ctx, &amp;feedpb.GetFeedServiceHealthRequest{})
+}</span>
+
+func (c *FeedClient) GetHomeFeed(
+        ctx context.Context,
+        req *feedpb.GetHomeFeedRequest,
+) (*feedpb.HomeFeedResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetHomeFeed(ctx, req)
+}</span>
+
+func (c *FeedClient) Close() error <span class="cov0" title="0">{
+        return c.conn.Close()
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package client
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        notificationpb "github.com/trungquantrannguyen/threadly/proto/notification"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+)
+
+type NotificationClient struct {
+        conn   *grpc.ClientConn
+        client notificationpb.NotificationServiceClient
+        log    zerolog.Logger
+}
+
+func NewNotificationClient(cfg config.Config, log zerolog.Logger) (*NotificationClient, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(
+                cfg.NotificationServiceGRPCAddr,
+                grpc.WithTransportCredentials(insecure.NewCredentials()),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := notificationpb.NewNotificationServiceClient(conn)
+
+        return &amp;NotificationClient{
+                conn:   conn,
+                client: client,
+                log:    log,
+        }, nil</span>
+}
+
+func (c *NotificationClient) GetHealth(ctx context.Context) (*notificationpb.GetNotificationServiceHealthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetHealth(ctx, &amp;notificationpb.GetNotificationServiceHealthRequest{})
+}</span>
+
+func (c *NotificationClient) GetNotifications(ctx context.Context, userID string, limit int32) (*notificationpb.GetNotificationsResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetNotifications(ctx, &amp;notificationpb.GetNotificationsRequest{
+                UserId: userID,
+                Limit:  limit,
+        })
+}</span>
+
+func (c *NotificationClient) MarkNotificationRead(ctx context.Context, userID string, notificationID string) (*notificationpb.MarkNotificationReadResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.MarkNotificationRead(ctx, &amp;notificationpb.MarkNotificationReadRequest{
+                UserId:         userID,
+                NotificationId: notificationID,
+        })
+}</span>
+
+func (c *NotificationClient) MarkAllNotificationsRead(ctx context.Context, userID string) (*notificationpb.MarkAllNotificationsReadResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.MarkAllNotificationsRead(ctx, &amp;notificationpb.MarkAllNotificationsReadRequest{
+                UserId: userID,
+        })
+}</span>
+
+func (c *NotificationClient) GetUnreadNotificationCount(ctx context.Context, userID string) (*notificationpb.GetUnreadNotificationCountResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetUnreadNotificationCount(ctx, &amp;notificationpb.GetUnreadNotificationCountRequest{
+                UserId: userID,
+        })
+}</span>
+
+func (c *NotificationClient) Close() error <span class="cov0" title="0">{
+        return c.conn.Close()
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package client
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        storagepb "github.com/trungquantrannguyen/threadly/proto/storage"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+)
+
+type StorageClient struct {
+        conn   *grpc.ClientConn
+        client storagepb.StorageServiceClient
+        log    zerolog.Logger
+}
+
+func NewStorageClient(cfg config.Config, log zerolog.Logger) (*StorageClient, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(
+                cfg.StorageServiceGRPCAddr,
+                grpc.WithTransportCredentials(insecure.NewCredentials()),
+                grpc.WithDefaultCallOptions(
+                        grpc.MaxCallSendMsgSize(10&lt;&lt;20),
+                        grpc.MaxCallRecvMsgSize(10&lt;&lt;20),
+                ),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := storagepb.NewStorageServiceClient(conn)
+
+        return &amp;StorageClient{
+                conn:   conn,
+                client: client,
+                log:    log,
+        }, nil</span>
+}
+
+func (c *StorageClient) GetHealth(ctx context.Context) (*storagepb.GetStorageServiceHealthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetHealth(ctx, &amp;storagepb.GetStorageServiceHealthRequest{})
+}</span>
+
+func (c *StorageClient) UploadMedia(ctx context.Context, uploaderID string, filename string, contentType string, content []byte) (*storagepb.UploadMediaResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+        defer cancel()
+
+        return c.client.UploadMedia(ctx, &amp;storagepb.UploadMediaRequest{
+                UploaderId:  uploaderID,
+                Filename:    filename,
+                ContentType: contentType,
+                Content:     content,
+        })
+}</span>
+
+func (c *StorageClient) Close() error <span class="cov0" title="0">{
+        return c.conn.Close()
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package client
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        userpb "github.com/trungquantrannguyen/threadly/proto/user"
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/credentials/insecure"
+)
+
+type UserClient struct {
+        conn   *grpc.ClientConn
+        client userpb.UserServiceClient
+        log    zerolog.Logger
+}
+
+func NewUserClient(cfg config.Config, log zerolog.Logger) (*UserClient, error) <span class="cov0" title="0">{
+        conn, err := grpc.NewClient(
+                cfg.UserServiceGRPCAddr,
+                grpc.WithTransportCredentials(insecure.NewCredentials()),
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := userpb.NewUserServiceClient(conn)
+
+        return &amp;UserClient{
+                conn:   conn,
+                client: client,
+                log:    log,
+        }, nil</span>
+}
+
+func (c *UserClient) GetHealth(ctx context.Context) (*userpb.GetUserServiceHealthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetHealth(ctx, &amp;userpb.GetUserServiceHealthRequest{})
+}</span>
+
+func (c *UserClient) Register(
+        ctx context.Context,
+        req *userpb.RegisterRequest,
+) (*userpb.AuthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.Register(ctx, req)
+}</span>
+
+func (c *UserClient) Login(
+        ctx context.Context,
+        req *userpb.LoginRequest,
+) (*userpb.AuthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.Login(ctx, req)
+}</span>
+
+func (c *UserClient) RefreshToken(
+        ctx context.Context,
+        req *userpb.RefreshTokenRequest,
+) (*userpb.AuthResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.RefreshToken(ctx, req)
+}</span>
+
+func (c *UserClient) Logout(
+        ctx context.Context,
+        req *userpb.LogoutRequest,
+) (*userpb.LogoutResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.Logout(ctx, req)
+}</span>
+
+func (c *UserClient) GetMe(
+        ctx context.Context,
+        req *userpb.GetMeRequest,
+) (*userpb.AuthUserResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.GetMe(ctx, req)
+}</span>
+
+func (c *UserClient) UpdateProfile(
+        ctx context.Context,
+        req *userpb.UpdateProfileRequest,
+) (*userpb.AuthUserResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.UpdateProfile(ctx, req)
+}</span>
+
+func (c *UserClient) DeleteUser(
+        ctx context.Context,
+        req *userpb.DeleteUserRequest,
+) (*userpb.DeleteUserResponse, error) <span class="cov0" title="0">{
+        ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+        defer cancel()
+
+        return c.client.DeleteUser(ctx, req)
+}</span>
+
+func (c *UserClient) Close() error <span class="cov0" title="0">{
+        return c.conn.Close()
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package handlers
+
+import (
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/middleware"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+        contentpb "github.com/trungquantrannguyen/threadly/proto/content"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto"
+)
+
+type ContentHandler struct {
+        contentClient *client.ContentClient
+        log           zerolog.Logger
+}
+
+func NewContentHandler(contentClient *client.ContentClient, log zerolog.Logger) *ContentHandler <span class="cov0" title="0">{
+        return &amp;ContentHandler{
+                contentClient: contentClient,
+                log:           log,
+        }
+}</span>
+
+// Register godoc
+// @Summary Get Content service health
+// @Description Get the status of content service
+// @Tags Contents
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetContentServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/health [get]
+func (h *ContentHandler) GetHealth(c *gin.Context) <span class="cov0" title="0">{
+        health, err := h.contentClient.GetHealth(c.Request.Context())
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().
+                        Err(err).
+                        Msg("Failed to call content service health grpc method")
+
+                response.Error(c, http.StatusServiceUnavailable, "Content service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Content service available", health)</span>
+}
+
+// CreatePost godoc
+// @Summary Create a post
+// @Description Creates a new Threadly post of a user and returns the new post.
+// @Tags Contents
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body dto.CreatePostRequest true "Create post request body"
+// @Success 201 {object} dto.PostResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 409 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts [post]
+func (h *ContentHandler) CreatePost(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.CreatePostRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">authorID := middleware.GetUserID(c)
+        if authorID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.CreatePost(c.Request.Context(), &amp;contentpb.CreatePostRequest{
+                AuthorId:   authorID,
+                Content:    req.Content,
+                Visibility: req.Visibility,
+                MediaIds:   req.MediaIDs,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to create post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusCreated, "Created a post successfully", res)</span>
+}
+
+// GetPost godoc
+// @Summary Get a post
+// @Description Returns the requested post.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} dto.PostResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID} [get]
+func (h *ContentHandler) GetPost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing params", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.GetPost(c.Request.Context(), &amp;contentpb.GetPostRequest{
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Get post successfully", toPostResponse(res))</span>
+}
+
+// UpdatePost godoc
+// @Summary Update a post
+// @Description Updates the authenticated user's own post. Supports updating content, visibility, and attached media IDs.
+// @Tags Contents
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "Post ID"
+// @Param request body dto.UpdatePostRequest true "Update post request body"
+// @Success 200 {object} dto.PostResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /contents/posts/{postID} [patch]
+func (h *ContentHandler) UpdatePost(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.UpdatePostRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing params", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">requesterID := middleware.GetUserID(c)
+        if requesterID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.UpdatePost(c.Request.Context(), &amp;contentpb.UpdatePostRequest{
+                PostId:      postID,
+                RequesterId: requesterID,
+                Content:     req.Content,
+                Visibility:  req.Visibility,
+                MediaIds:    req.MediaIDs,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to update post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Updated post successfully", res)</span>
+}
+
+// DeletePost godoc
+// @Summary Delete a post
+// @Description Returns the delete post status.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 204 {object} interface{}
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID} [delete]
+func (h *ContentHandler) DeletePost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing params", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">requestID := middleware.GetUserID(c)
+
+        res, err := h.contentClient.DeletePost(c.Request.Context(), &amp;contentpb.DeletePostRequest{
+                PostId:      postID,
+                RequesterId: requestID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to delete post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusNoContent, "Delete post successfully", res)</span>
+}
+
+// CreateReply godoc
+// @Summary Create a reply post
+// @Description Creates a new reply to a post and returns the new reply.
+// @Tags Contents
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Param request body dto.CreatePostRequest true "Create reply request body"
+// @Success 201 {object} dto.PostResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 409 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/replies [post]
+func (h *ContentHandler) CreateReply(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.CreatePostRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing params", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">authorID := middleware.GetUserID(c)
+        if authorID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.CreateReply(c.Request.Context(), &amp;contentpb.CreateReplyRequest{
+                AuthorId:      authorID,
+                Content:       req.Content,
+                ReplyToPostId: postID,
+                MediaIds:      req.MediaIDs,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to create reply")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusCreated, "Create reply successfully", res)</span>
+}
+
+// GetReplies godoc
+// @Summary Get replies of a post
+// @Description Returns replies for a post.
+// @Tags Contents
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Param request query dto.GetRepliesRequest true "Get replies request body"
+// @Success 200 {object} []dto.PostResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 409 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/replies [get]
+func (h *ContentHandler) GetReplies(c *gin.Context) <span class="cov0" title="0">{
+        limit := int64(20)
+        limitQuery := c.Query("limit")
+        if limitQuery != "" </span><span class="cov0" title="0">{
+                parsedLimit, err := strconv.ParseInt(limitQuery, 10, 32)
+                if err != nil || parsedLimit &lt; 0 || parsedLimit &gt; 50 </span><span class="cov0" title="0">{
+                        response.Error(c, http.StatusBadRequest, "Invalid limit", err)
+                        return
+                }</span>
+                <span class="cov0" title="0">limit = parsedLimit</span>
+        }
+        <span class="cov0" title="0">cursor := c.Query("cursor")
+        postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing params", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.GetReplies(c.Request.Context(), &amp;contentpb.GetRepliesRequest{
+                PostId: postID,
+                Limit:  int32(limit),
+                Cursor: cursor,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">posts := make([]dto.PostResponse, 0, len(res.GetPosts()))
+
+        for _, post := range res.GetPosts() </span><span class="cov0" title="0">{
+                posts = append(posts, toPostResponse(post))
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Get replies successfully", posts)</span>
+}
+
+// LikePost godoc
+// @Summary Like a post
+// @Description Likes a post as the authenticated user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/likes [post]
+func (h *ContentHandler) LikePost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing postID", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.LikePost(c.Request.Context(), &amp;contentpb.LikePostRequest{
+                UserId: userID,
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to like post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// UnlikePost godoc
+// @Summary Unlike a post
+// @Description Removes the authenticated user's like from a post.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/likes [delete]
+func (h *ContentHandler) UnlikePost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing postID", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.UnlikePost(c.Request.Context(), &amp;contentpb.UnlikePostRequest{
+                UserId: userID,
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to unlike post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// BookmarkPost godoc
+// @Summary Bookmark a post
+// @Description Bookmarks a post as the authenticated user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/bookmarks [post]
+func (h *ContentHandler) BookmarkPost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        userID := middleware.GetUserID(c)
+
+        if !validatePostAction(c, postID, userID) </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.BookmarkPost(c.Request.Context(), &amp;contentpb.BookmarkPostRequest{
+                UserId: userID,
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to bookmark post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// UnbookmarkPost godoc
+// @Summary Unbookmark a post
+// @Description Removes the authenticated user's bookmark from a post.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/bookmarks [delete]
+func (h *ContentHandler) UnbookmarkPost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        userID := middleware.GetUserID(c)
+
+        if !validatePostAction(c, postID, userID) </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.UnbookmarkPost(c.Request.Context(), &amp;contentpb.UnbookmarkPostRequest{
+                UserId: userID,
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to unbookmark post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// RepostPost godoc
+// @Summary Repost a post
+// @Description Reposts a post as the authenticated user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/reposts [post]
+func (h *ContentHandler) RepostPost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        userID := middleware.GetUserID(c)
+
+        if !validatePostAction(c, postID, userID) </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.RepostPost(c.Request.Context(), &amp;contentpb.RepostPostRequest{
+                UserId: userID,
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to repost post")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// UndoRepost godoc
+// @Summary Undo repost
+// @Description Removes the authenticated user's repost from a post.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param postID path string true "postID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/posts/{postID}/reposts [delete]
+func (h *ContentHandler) UndoRepost(c *gin.Context) <span class="cov0" title="0">{
+        postID := c.Param("postID")
+        userID := middleware.GetUserID(c)
+
+        if !validatePostAction(c, postID, userID) </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.UndoRepost(c.Request.Context(), &amp;contentpb.UndoRepostRequest{
+                UserId: userID,
+                PostId: postID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to undo repost")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// FollowUser godoc
+// @Summary Follow a user
+// @Description Authenticated user follows another user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param userID path string true "target userID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/users/{userID}/follow [post]
+func (h *ContentHandler) FollowUser(c *gin.Context) <span class="cov0" title="0">{
+        followerID := middleware.GetUserID(c)
+        followingID := c.Param("userID")
+
+        if !validateUserAction(c, followerID, followingID) </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.FollowUser(c.Request.Context(), &amp;contentpb.FollowUserRequest{
+                FollowerId:  followerID,
+                FollowingId: followingID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to follow user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// UnfollowUser godoc
+// @Summary Unfollow a user
+// @Description Authenticated user unfollows another user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param userID path string true "target userID"
+// @Success 200 {object} interface{}
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/users/{userID}/follow [delete]
+func (h *ContentHandler) UnfollowUser(c *gin.Context) <span class="cov0" title="0">{
+        followerID := middleware.GetUserID(c)
+        followingID := c.Param("userID")
+
+        if !validateUserAction(c, followerID, followingID) </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.UnfollowUser(c.Request.Context(), &amp;contentpb.UnfollowUserRequest{
+                FollowerId:  followerID,
+                FollowingId: followingID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to unfollow user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// GetFollowers godoc
+// @Summary Get user followers
+// @Description Returns users who follow the requested user.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param userID path string true "userID"
+// @Param limit query int false "limit"
+// @Param cursor query string false "cursor"
+// @Success 200 {object} []dto.UserSummary
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/users/{userID}/followers [get]
+func (h *ContentHandler) GetFollowers(c *gin.Context) <span class="cov0" title="0">{
+        limit, ok := parseLimit(c)
+        if !ok </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">userID := c.Param("userID")
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing userID", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.GetFollowers(c.Request.Context(), &amp;contentpb.GetFollowersRequest{
+                UserId: userID,
+                Limit:  int32(limit),
+                Cursor: c.Query("cursor"),
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get followers")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">users := make([]dto.UserSummary, 0, len(res.GetUsers()))
+        for _, user := range res.GetUsers() </span><span class="cov0" title="0">{
+                users = append(users, toUserSummary(user))
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Get followers successfully", users)</span>
+}
+
+// GetFollowing godoc
+// @Summary Get users followed by a user
+// @Description Returns users that the requested user follows.
+// @Tags Contents
+// @Produce json
+// @Security BearerAuth
+// @Param userID path string true "userID"
+// @Param limit query int false "limit"
+// @Param cursor query string false "cursor"
+// @Success 200 {object} []dto.UserSummary
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /contents/users/{userID}/following [get]
+func (h *ContentHandler) GetFollowing(c *gin.Context) <span class="cov0" title="0">{
+        limit, ok := parseLimit(c)
+        if !ok </span><span class="cov0" title="0">{
+                return
+        }</span>
+
+        <span class="cov0" title="0">userID := c.Param("userID")
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing userID", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.contentClient.GetFollowing(c.Request.Context(), &amp;contentpb.GetFollowingRequest{
+                UserId: userID,
+                Limit:  int32(limit),
+                Cursor: c.Query("cursor"),
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get following")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">users := make([]dto.UserSummary, 0, len(res.GetUsers()))
+        for _, user := range res.GetUsers() </span><span class="cov0" title="0">{
+                users = append(users, toUserSummary(user))
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Get following successfully", users)</span>
+}
+
+func parseLimit(c *gin.Context) (int64, bool) <span class="cov0" title="0">{
+        limit := int64(20)
+        limitQuery := c.Query("limit")
+
+        if limitQuery == "" </span><span class="cov0" title="0">{
+                return limit, true
+        }</span>
+
+        <span class="cov0" title="0">parsedLimit, err := strconv.ParseInt(limitQuery, 10, 32)
+        if err != nil || parsedLimit &lt;= 0 || parsedLimit &gt; 50 </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid limit", err)
+                return 0, false
+        }</span>
+
+        <span class="cov0" title="0">return parsedLimit, true</span>
+}
+
+func validatePostAction(c *gin.Context, postID string, userID string) bool <span class="cov0" title="0">{
+        if postID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing postID", nil)
+                return false
+        }</span>
+
+        <span class="cov0" title="0">if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return false
+        }</span>
+
+        <span class="cov0" title="0">return true</span>
+}
+
+func validateUserAction(c *gin.Context, requesterID string, targetUserID string) bool <span class="cov0" title="0">{
+        if requesterID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return false
+        }</span>
+
+        <span class="cov0" title="0">if targetUserID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Missing userID", nil)
+                return false
+        }</span>
+
+        <span class="cov0" title="0">return true</span>
+}
+
+func toPostResponse(post *contentpb.PostResponse) dto.PostResponse <span class="cov0" title="0">{
+        author := post.GetAuthor()
+
+        return dto.PostResponse{
+                ID:            post.GetId(),
+                AuthorID:      post.GetAuthorId(),
+                ReplyToPostID: post.GetReplyToPostId(),
+                Content:       post.GetContent(),
+                Visibility:    post.GetVisibility(),
+
+                LikeCount:     int(post.GetLikeCount()),
+                ReplyCount:    int(post.GetReplyCount()),
+                RepostCount:   int(post.GetRepostCount()),
+                BookmarkCount: int(post.GetBookmarkCount()),
+
+                CreatedAt: post.GetCreatedAt(),
+                UpdatedAt: post.GetUpdatedAt(),
+
+                Author: dto.UserSummary{
+                        ID:          author.GetId(),
+                        Username:    author.GetUsername(),
+                        DisplayName: author.GetDisplayName(),
+                        AvatarURL:   author.GetAvatarUrl(),
+                        IsVerified:  author.GetIsVerified(),
+                },
+                Medias: toGatewayMediaResponses(post.Media),
+        }
+}</span>
+
+func toUserSummary(user *contentpb.UserSummary) dto.UserSummary <span class="cov0" title="0">{
+        return dto.UserSummary{
+                ID:          user.GetId(),
+                Username:    user.GetUsername(),
+                DisplayName: user.GetDisplayName(),
+                AvatarURL:   user.GetAvatarUrl(),
+                IsVerified:  user.GetIsVerified(),
+        }
+}</span>
+
+func toGatewayMediaResponses(media []*contentpb.MediaResponse) []dto.MediaResponse <span class="cov0" title="0">{
+        res := make([]dto.MediaResponse, 0, len(media))
+
+        for _, item := range media </span><span class="cov0" title="0">{
+                res = append(res, dto.MediaResponse{
+                        ID:        item.GetId(),
+                        URL:       item.GetUrl(),
+                        MimeType:  item.GetMimeType(),
+                        SizeBytes: item.GetSizeBytes(),
+                        Width:     int(item.GetWidth()),
+                        Height:    int(item.GetHeight()),
+                })
+        }</span>
+
+        <span class="cov0" title="0">return res</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package handlers
+
+import (
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/middleware"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+        feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
+)
+
+type FeedHandler struct {
+        FeedClient *client.FeedClient
+        log        zerolog.Logger
+}
+
+func NewFeedHandler(FeedClient *client.FeedClient, log zerolog.Logger) *FeedHandler <span class="cov0" title="0">{
+        return &amp;FeedHandler{
+                FeedClient: FeedClient,
+                log:        log,
+        }
+}</span>
+
+// GetHealth godoc
+// @Summary Get Feed service health
+// @Description Get the status of feed service
+// @Tags Feeds
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetFeedServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /feeds/health [get]
+func (h *FeedHandler) GetHealth(c *gin.Context) <span class="cov0" title="0">{
+        health, err := h.FeedClient.GetHealth(c.Request.Context())
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().
+                        Err(err).
+                        Msg("Failed to call feed service health grpc method")
+
+                response.Error(c, http.StatusServiceUnavailable, "Feed service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Feed service available", health)</span>
+}
+
+// GetHomeFeed godoc
+// @Summary Get home feed
+// @Description Returns the authenticated user's home feed.
+// @Tags Feeds
+// @Produce json
+// @Security BearerAuth
+// @Param limit query int false "Limit"
+// @Param cursor query string false "Cursor"
+// @Success 200 {object} dto.HomeFeedResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /feeds/home [get]
+func (h *FeedHandler) GetHomeFeed(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">limit := int32(20)
+        if value := c.Query("limit"); value != "" </span><span class="cov0" title="0">{
+                parsed, err := strconv.ParseInt(value, 10, 32)
+                if err != nil || parsed &lt;= 0 || parsed &gt; 50 </span><span class="cov0" title="0">{
+                        response.Error(c, http.StatusBadRequest, "Invalid limit", err)
+                        return
+                }</span>
+                <span class="cov0" title="0">limit = int32(parsed)</span>
+        }
+
+        <span class="cov0" title="0">res, err := h.FeedClient.GetHomeFeed(c.Request.Context(), &amp;feedpb.GetHomeFeedRequest{
+                UserId: userID,
+                Limit:  limit,
+                Cursor: c.Query("cursor"),
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get home feed")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Get home feed successfully", res)</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package handlers
+
+import (
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
+)
+
+func HandleGRPCError(c *gin.Context, err error) <span class="cov0" title="0">{
+        st, ok := status.FromError(err)
+        if !ok </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusInternalServerError, "Internal server error", err)
+        }</span>
+
+        <span class="cov0" title="0">switch st.Code() </span>{
+        case codes.InvalidArgument:<span class="cov0" title="0">
+                response.Error(c, http.StatusBadRequest, st.Message(), err)</span>
+
+        case codes.Unauthenticated:<span class="cov0" title="0">
+                response.Error(c, http.StatusUnauthorized, st.Message(), err)</span>
+
+        case codes.PermissionDenied:<span class="cov0" title="0">
+                response.Error(c, http.StatusForbidden, st.Message(), err)</span>
+
+        case codes.NotFound:<span class="cov0" title="0">
+                response.Error(c, http.StatusNotFound, st.Message(), err)</span>
+
+        case codes.AlreadyExists:<span class="cov0" title="0">
+                response.Error(c, http.StatusConflict, st.Message(), err)</span>
+
+        default:<span class="cov0" title="0">
+                response.Error(c, http.StatusInternalServerError, "Internal server error", err)</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package handlers
+
+import (
+        "net/http"
+        "time"
+
+        "github.com/gin-gonic/gin"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+)
+
+type HealthHandler struct {
+        cfg config.Config
+}
+
+func NewHealthHandler(cfg config.Config) *HealthHandler <span class="cov0" title="0">{
+        return &amp;HealthHandler{
+                cfg: cfg,
+        }
+}</span>
+
+// Register godoc
+// @Summary Get User service health
+// @Description Get the status of user service
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /health [get]
+func (h *HealthHandler) Check(ctx *gin.Context) <span class="cov0" title="0">{
+        response.OK(ctx, http.StatusOK, "service is health", gin.H{
+                "service":   h.cfg.ServiceName,
+                "env":       h.cfg.AppEnv,
+                "timestamp": time.Now().UTC(),
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package handlers
+
+import (
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/middleware"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
+)
+
+type NotificationHandler struct {
+        notificationClient *client.NotificationClient
+        log                zerolog.Logger
+}
+
+func NewNotificationHandler(notificationClient *client.NotificationClient, log zerolog.Logger) *NotificationHandler <span class="cov0" title="0">{
+        return &amp;NotificationHandler{
+                notificationClient: notificationClient,
+                log:                log,
+        }
+}</span>
+
+// GetHealth godoc
+// @Summary Get Notification service health
+// @Description Get the status of notification service
+// @Tags Notifications
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetNotificationServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /notifications/health [get]
+func (h *NotificationHandler) GetHealth(c *gin.Context) <span class="cov0" title="0">{
+        health, err := h.notificationClient.GetHealth(c.Request.Context())
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().
+                        Err(err).
+                        Msg("Failed to call Notification service health grpc method")
+
+                response.Error(c, http.StatusServiceUnavailable, "Notification service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Notification service available", health)</span>
+}
+
+// GetNotifications godoc
+// @Summary Get my notifications
+// @Description Get notifications for the authenticated user
+// @Tags Notifications
+// @Security BearerAuth
+// @Produce json
+// @Param limit query int false "Limit"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 503 {object} dto.ErrorResponse
+// @Router /notifications [get]
+func (h *NotificationHandler) GetNotifications(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">limit := int32(20)
+        if value := c.Query("limit"); value != "" </span><span class="cov0" title="0">{
+                parsed, err := strconv.Atoi(value)
+                if err == nil &amp;&amp; parsed &gt; 0 </span><span class="cov0" title="0">{
+                        limit = int32(parsed)
+                }</span>
+        }
+
+        <span class="cov0" title="0">res, err := h.notificationClient.GetNotifications(c.Request.Context(), userID, limit)
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get notifications")
+                response.Error(c, http.StatusServiceUnavailable, "Notification service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Notifications fetched successfully", res)</span>
+}
+
+// MarkNotificationRead godoc
+// @Summary Mark notification as read
+// @Description Mark one notification as read for the authenticated user
+// @Tags Notifications
+// @Security BearerAuth
+// @Produce json
+// @Param id path string true "Notification ID"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 503 {object} dto.ErrorResponse
+// @Router /notifications/{id}/read [patch]
+func (h *NotificationHandler) MarkNotificationRead(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">notificationID := c.Param("id")
+
+        res, err := h.notificationClient.MarkNotificationRead(c.Request.Context(), userID, notificationID)
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to mark notification as read")
+                response.Error(c, http.StatusServiceUnavailable, "Notification service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// MarkAllNotificationsRead godoc
+// @Summary Mark all notifications as read
+// @Description Mark all unread notifications as read for the authenticated user
+// @Tags Notifications
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 503 {object} dto.ErrorResponse
+// @Router /notifications/read-all [patch]
+func (h *NotificationHandler) MarkAllNotificationsRead(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.notificationClient.MarkAllNotificationsRead(c.Request.Context(), userID)
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to mark all notifications as read")
+                response.Error(c, http.StatusServiceUnavailable, "Notification service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, res.GetMessage(), res)</span>
+}
+
+// GetUnreadNotificationCount godoc
+// @Summary Get unread notification count
+// @Description Get unread notification count for the authenticated user
+// @Tags Notifications
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 503 {object} response.ErrorResponse
+// @Router /notifications/unread-count [get]
+func (h *NotificationHandler) GetUnreadNotificationCount(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.notificationClient.GetUnreadNotificationCount(c.Request.Context(), userID)
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get unread notification count")
+                response.Error(c, http.StatusServiceUnavailable, "Notification service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Unread notification count fetched successfully", gin.H{
+                "count": res.GetCount(),
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package handlers
+
+import (
+        "io"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/middleware"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
+)
+
+type StorageHandler struct {
+        storageClient *client.StorageClient
+        log           zerolog.Logger
+}
+
+func NewStorageHandler(storageClient *client.StorageClient, log zerolog.Logger) *StorageHandler <span class="cov0" title="0">{
+        return &amp;StorageHandler{
+                storageClient: storageClient,
+                log:           log,
+        }
+}</span>
+
+// GetHealth godoc
+// @Summary Get Storage service health
+// @Description Get the status of storage service
+// @Tags Storage
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetStorageServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /storages/health [get]
+func (h *StorageHandler) GetHealth(c *gin.Context) <span class="cov0" title="0">{
+        health, err := h.storageClient.GetHealth(c.Request.Context())
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().
+                        Err(err).
+                        Msg("failed to call Storage service health grpc method")
+
+                response.Error(c, http.StatusServiceUnavailable, "Storage service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Storage service available", health)</span>
+}
+
+// UploadMedia godoc
+// @Summary Upload media
+// @Description Upload an image file
+// @Tags Storage
+// @Security BearerAuth
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Media file"
+// @Success 201 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 503 {object} response.ErrorResponse
+// @Router /storages/upload [post]
+func (h *StorageHandler) UploadMedia(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">fileHeader, err := c.FormFile("file")
+        if err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "file is required", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">const maxFileSize = 5 &lt;&lt; 20 // 5MB
+        if fileHeader.Size &gt; maxFileSize </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "file size must be less than 5MB", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">file, err := fileHeader.Open()
+        if err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "failed to open file", err)
+                return
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        content, err := io.ReadAll(file)
+        if err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "failed to read file", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">contentType := fileHeader.Header.Get("Content-Type")
+
+        res, err := h.storageClient.UploadMedia(
+                c.Request.Context(),
+                userID,
+                fileHeader.Filename,
+                contentType,
+                content,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("failed to upload media")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusCreated, "Media uploaded successfully", res)</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package handlers
+
+import (
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/middleware"
+        "github.com/trungquantrannguyen/threadly/pkg/response"
+        contentpb "github.com/trungquantrannguyen/threadly/proto/content"
+        userpb "github.com/trungquantrannguyen/threadly/proto/user"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/client"
+        "github.com/trungquantrannguyen/threadly/services/api-gateway/internal/dto"
+)
+
+type GetMeWithPostsResponse struct {
+        User  *userpb.AuthUserResponse `json:"user"`
+        Posts []TimelineItemResponse   `json:"posts"`
+}
+
+type TimelineItemResponse struct {
+        Type       string           `json:"type"`
+        Post       dto.PostResponse `json:"post"`
+        RepostedAt string           `json:"reposted_at,omitempty"`
+}
+
+type UserHandler struct {
+        userClient    *client.UserClient
+        contentClient *client.ContentClient
+        log           zerolog.Logger
+}
+
+func NewUserHandler(userClient *client.UserClient, log zerolog.Logger, contentClient *client.ContentClient) *UserHandler <span class="cov0" title="0">{
+        return &amp;UserHandler{
+                userClient:    userClient,
+                contentClient: contentClient,
+                log:           log,
+        }
+}</span>
+
+// Register godoc
+// @Summary Get User service health
+// @Description Get the status of user service
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.GetUserServiceHealthResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/health [get]
+func (h *UserHandler) GetHealth(c *gin.Context) <span class="cov0" title="0">{
+        health, err := h.userClient.GetHealth(c.Request.Context())
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().
+                        Err(err).
+                        Msg("failed to call user service health grpc method")
+
+                response.Error(c, http.StatusServiceUnavailable, "user service unavailable", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "user service available", health)</span>
+}
+
+// Register godoc
+// @Summary Register a new user
+// @Description Creates a new Threadly user account and returns access and refresh tokens.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body dto.RegisterRequest true "Register request body"
+// @Success 201 {object} dto.RegisterResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 409 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/register [post]
+func (h *UserHandler) Register(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.RegisterRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.userClient.Register(c.Request.Context(), &amp;userpb.RegisterRequest{
+                Email:       req.Email,
+                Username:    req.Username,
+                Password:    req.Password,
+                DisplayName: req.DisplayName,
+                UserAgent:   c.Request.UserAgent(),
+                IpAddress:   c.ClientIP(),
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to register user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusCreated, "Register successfully", res)</span>
+}
+
+// Login godoc
+// @Summary Login user
+// @Description Authenticates a user using email/username and password.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body dto.LoginRequest true "Login request body"
+// @Success 200 {object} dto.LoginResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/login [post]
+func (h *UserHandler) Login(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.LoginRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.userClient.Login(c.Request.Context(), &amp;userpb.LoginRequest{
+                EmailOrUsername: req.EmailOrUsername,
+                Password:        req.Password,
+                UserAgent:       c.Request.UserAgent(),
+                IpAddress:       c.ClientIP(),
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to login user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Login successfully", res)</span>
+}
+
+// RefreshToken godoc
+// @Summary Refresh access token
+// @Description Uses a valid refresh token to issue a new access token.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body dto.RefreshTokenRequest true "Refresh token request body"
+// @Success 200 {object} dto.RefreshTokenResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/refresh [post]
+func (h *UserHandler) RefreshToken(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.RefreshTokenRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.userClient.RefreshToken(c.Request.Context(), &amp;userpb.RefreshTokenRequest{
+                RefreshToken: req.RefreshToken,
+                UserAgent:    c.Request.UserAgent(),
+                IpAddress:    c.ClientIP(),
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to refresh token")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Token refreshed successfully", res)</span>
+}
+
+// Logout godoc
+// @Summary Logout user
+// @Description Revokes the current refresh token session.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body dto.LogoutRequest true "Logout request body"
+// @Success 200 {object} dto.LogoutResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/logout [post]
+func (h *UserHandler) Logout(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.LogoutRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">_, err := h.userClient.Logout(c.Request.Context(), &amp;userpb.LogoutRequest{
+                RefreshToken: req.RefreshToken,
+                UserID:       userID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to log out user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Logged out successfully", nil)</span>
+}
+
+// GetMe godoc
+// @Summary Get current user
+// @Description Returns the authenticated user's profile.
+// @Tags Users
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} dto.GetMeResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/me [get]
+func (h *UserHandler) GetMe(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">userRes, err := h.userClient.GetMe(c.Request.Context(), &amp;userpb.GetMeRequest{
+                UserID: userID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">timelineRes, err := h.contentClient.GetUserTimeline(c.Request.Context(), &amp;contentpb.GetUserTimelineRequest{
+                UserId: userID,
+                Limit:  20,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to get user timeline")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">posts := make([]TimelineItemResponse, 0, len(timelineRes.GetItems()))
+
+        for _, item := range timelineRes.GetItems() </span><span class="cov0" title="0">{
+                posts = append(posts, TimelineItemResponse{
+                        Type:       item.GetType(),
+                        Post:       toGatewayPostResponse(item.GetPost()),
+                        RepostedAt: item.GetRepostedAt(),
+                })
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Get user successfully", GetMeWithPostsResponse{
+                User:  userRes,
+                Posts: posts,
+        })</span>
+}
+
+// UpdateProfile godoc
+// @Summary Update current user profile
+// @Description Updates the authenticated user's profile fields.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body dto.UpdateProfileRequest true "Update profile request body"
+// @Success 200 {object} dto.UpdateProfileResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/me [patch]
+func (h *UserHandler) UpdateProfile(c *gin.Context) <span class="cov0" title="0">{
+        var req dto.UpdateProfileRequest
+        if err := c.ShouldBindJSON(&amp;req); err != nil </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusBadRequest, "Invalid request body", err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">res, err := h.userClient.UpdateProfile(c.Request.Context(), &amp;userpb.UpdateProfileRequest{
+                UserID:      userID,
+                DisplayName: req.DisplayName,
+                Bio:         req.Bio,
+                AvatarURL:   req.AvatarURL,
+                BannerURL:   req.BannerURL,
+                Location:    req.Location,
+                WebsiteURL:  req.WebsiteURL,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to update profile")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "Profile updated successfully", res)</span>
+}
+
+// DeleteUser godoc
+// @Summary Delete current user
+// @Description Soft deletes the authenticated user's account.
+// @Tags Users
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} dto.DeleteUserResponse
+// @Failure 401 {object} dto.ErrorResponse
+// @Failure 404 {object} dto.ErrorResponse
+// @Failure 500 {object} dto.ErrorResponse
+// @Router /users/me [delete]
+func (h *UserHandler) DeleteUser(c *gin.Context) <span class="cov0" title="0">{
+        userID := middleware.GetUserID(c)
+        if userID == "" </span><span class="cov0" title="0">{
+                response.Error(c, http.StatusUnauthorized, "Unauthorized", nil)
+                return
+        }</span>
+
+        <span class="cov0" title="0">_, err := h.userClient.DeleteUser(c.Request.Context(), &amp;userpb.DeleteUserRequest{
+                UserID: userID,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                h.log.Error().Err(err).Msg("Failed to delete user")
+                HandleGRPCError(c, err)
+                return
+        }</span>
+
+        <span class="cov0" title="0">response.OK(c, http.StatusOK, "User deleted successfully", nil)</span>
+}
+
+func toGatewayPostResponse(post *contentpb.PostResponse) dto.PostResponse <span class="cov0" title="0">{
+        author := post.GetAuthor()
+
+        return dto.PostResponse{
+                ID:            post.GetId(),
+                AuthorID:      post.GetAuthorId(),
+                ReplyToPostID: post.GetReplyToPostId(),
+                Content:       post.GetContent(),
+                Visibility:    post.GetVisibility(),
+
+                LikeCount:     int(post.GetLikeCount()),
+                ReplyCount:    int(post.GetReplyCount()),
+                RepostCount:   int(post.GetRepostCount()),
+                BookmarkCount: int(post.GetBookmarkCount()),
+
+                CreatedAt: post.GetCreatedAt(),
+                UpdatedAt: post.GetUpdatedAt(),
+
+                Author: dto.UserSummary{
+                        ID:          author.GetId(),
+                        Username:    author.GetUsername(),
+                        DisplayName: author.GetDisplayName(),
+                        AvatarURL:   author.GetAvatarUrl(),
+                        IsVerified:  author.GetIsVerified(),
+                },
+                Medias: toGatewayMediaResponses(post.GetMedia()),
+        }
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

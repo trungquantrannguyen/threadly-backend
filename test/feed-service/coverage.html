@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>cache: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache/feed_cache.go (91.3%)</option>
+				
+				<option value="file1">github.com/trungquantrannguyen/threadly/services/feed-service/internal/grpc/grpc_server.go (93.8%)</option>
+				
+				<option value="file2">github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository/feed_repository.go (94.1%)</option>
+				
+				<option value="file3">github.com/trungquantrannguyen/threadly/services/feed-service/internal/service/feed_service.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package cache
+
+import (
+        "context"
+        "encoding/json"
+        "fmt"
+        "time"
+
+        "github.com/redis/go-redis/v9"
+        feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
+)
+
+type FeedCache interface {
+        GetHomeFeed(ctx context.Context, userID string, limit int32, cursor string) (*feedpb.HomeFeedResponse, error)
+        SetHomeFeed(ctx context.Context, userID string, limit int32, cursor string, feed *feedpb.HomeFeedResponse) error
+        DeleteHomeFeedByUserID(ctx context.Context, userID string) error
+}
+
+type feedCache struct {
+        redis *redis.Client
+        ttl   time.Duration
+}
+
+func NewFeedCache(redisClient *redis.Client, ttl time.Duration) FeedCache <span class="cov6" title="4">{
+        return &amp;feedCache{
+                redis: redisClient,
+                ttl:   ttl,
+        }
+}</span>
+
+func (c *feedCache) GetHomeFeed(ctx context.Context, userID string, limit int32, cursor string) (*feedpb.HomeFeedResponse, error) <span class="cov5" title="3">{
+        key := homeFeedKey(userID, limit, cursor)
+
+        value, err := c.redis.Get(ctx, key).Result()
+        if err != nil </span><span class="cov1" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov3" title="2">var feed feedpb.HomeFeedResponse
+        if err := json.Unmarshal([]byte(value), &amp;feed); err != nil </span><span class="cov1" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov1" title="1">return &amp;feed, nil</span>
+}
+
+func (c *feedCache) SetHomeFeed(ctx context.Context, userID string, limit int32, cursor string, feed *feedpb.HomeFeedResponse) error <span class="cov6" title="4">{
+        key := homeFeedKey(userID, limit, cursor)
+
+        bytes, err := json.Marshal(feed)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov6" title="4">return c.redis.Set(ctx, key, bytes, c.ttl).Err()</span>
+}
+
+func (c *feedCache) DeleteHomeFeedByUserID(ctx context.Context, userID string) error <span class="cov1" title="1">{
+        pattern := fmt.Sprintf("feed:home:%s:*", userID)
+
+        iter := c.redis.Scan(ctx, 0, pattern, 100).Iterator()
+        for iter.Next(ctx) </span><span class="cov3" title="2">{
+                if err := c.redis.Del(ctx, iter.Val()).Err(); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov1" title="1">return iter.Err()</span>
+}
+
+func homeFeedKey(userID string, limit int32, cursor string) string <span class="cov10" title="9">{
+        if cursor == "" </span><span class="cov8" title="7">{
+                cursor = "first"
+        }</span>
+
+        <span class="cov10" title="9">return fmt.Sprintf("feed:home:%s:limit:%d:cursor:%s", userID, limit, cursor)</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package grpc
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        feedpb "github.com/trungquantrannguyen/threadly/proto/feed"
+        "github.com/trungquantrannguyen/threadly/services/feed-service/internal/cache"
+        "github.com/trungquantrannguyen/threadly/services/feed-service/internal/service"
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
+)
+
+type FeedServiceServer struct {
+        feedpb.UnimplementedFeedServiceServer
+        cfg         config.Config
+        log         zerolog.Logger
+        feedService service.FeedService
+        feedCache   cache.FeedCache
+}
+
+func NewFeedServiceServer(cfg config.Config, log zerolog.Logger, feedService service.FeedService, feedCache cache.FeedCache) *FeedServiceServer <span class="cov10" title="5">{
+        return &amp;FeedServiceServer{
+                cfg:         cfg,
+                log:         log,
+                feedService: feedService,
+                feedCache:   feedCache,
+        }
+}</span>
+
+func (s *FeedServiceServer) GetHealth(ctx context.Context, req *feedpb.GetFeedServiceHealthRequest) (*feedpb.GetFeedServiceHealthResponse, error) <span class="cov1" title="1">{
+        s.log.Info().Msg("Feed service is healthy")
+        return &amp;feedpb.GetFeedServiceHealthResponse{
+                Status:    "ok",
+                Service:   s.cfg.ServiceName,
+                Env:       s.cfg.AppEnv,
+                CheckedAt: time.Now().String(),
+        }, nil
+}</span>
+
+func (s *FeedServiceServer) GetHomeFeed(ctx context.Context, req *feedpb.GetHomeFeedRequest) (*feedpb.HomeFeedResponse, error) <span class="cov8" title="4">{
+        cachedFeed, err := s.feedCache.GetHomeFeed(ctx, req.GetUserId(), req.GetLimit(), req.GetCursor())
+        if err == nil </span><span class="cov1" title="1">{
+                s.log.Info().
+                        Str("user_id", req.GetUserId()).
+                        Msg("home feed cache hit")
+
+                return cachedFeed, nil
+        }</span>
+
+        <span class="cov7" title="3">s.log.Info().
+                Str("user_id", req.GetUserId()).
+                Msg("home feed cache miss")
+
+        posts, nextCursor, err := s.feedService.GetHomeFeed(
+                ctx,
+                req.GetUserId(),
+                int(req.GetLimit()),
+                req.GetCursor(),
+        )
+        if err != nil </span><span class="cov1" title="1">{
+                return nil, status.Error(codes.Internal, "failed to get home feed")
+        }</span>
+
+        <span class="cov4" title="2">resPosts := make([]*feedpb.FeedPostResponse, 0, len(posts))
+
+        for _, post := range posts </span><span class="cov4" title="2">{
+                author := post.Author
+
+                resPosts = append(resPosts, &amp;feedpb.FeedPostResponse{
+                        Id:            post.ID.String(),
+                        AuthorId:      post.AuthorID.String(),
+                        Content:       post.Content,
+                        Visibility:    post.Visibility,
+                        LikeCount:     int32(post.LikeCount),
+                        ReplyCount:    int32(post.ReplyCount),
+                        RepostCount:   int32(post.RepostCount),
+                        BookmarkCount: int32(post.BookmarkCount),
+                        CreatedAt:     post.CreatedAt.Format(time.RFC3339Nano),
+                        UpdatedAt:     post.UpdatedAt.Format(time.RFC3339Nano),
+                        Author: &amp;feedpb.FeedUserSummary{
+                                Id:          author.ID.String(),
+                                Username:    author.Username,
+                                DisplayName: author.DisplayName,
+                                AvatarUrl:   stringValue(author.AvatarURL),
+                                IsVerified:  author.IsVerified,
+                        },
+                        Media: toFeedMediaResponses(post.Media),
+                })
+        }</span>
+
+        <span class="cov4" title="2">res := &amp;feedpb.HomeFeedResponse{
+                Posts:      resPosts,
+                NextCursor: nextCursor,
+        }
+
+        if err := s.feedCache.SetHomeFeed(ctx, req.GetUserId(), req.GetLimit(), req.GetCursor(), res); err != nil </span><span class="cov1" title="1">{
+                s.log.Warn().
+                        Err(err).
+                        Str("user_id", req.GetUserId()).
+                        Msg("failed to cache home feed")
+        }</span>
+
+        <span class="cov4" title="2">return res, nil</span>
+}
+
+func toFeedMediaResponses(media []dbmodel.Media) []*feedpb.FeedMediaResponse <span class="cov7" title="3">{
+        res := make([]*feedpb.FeedMediaResponse, 0, len(media))
+
+        for _, item := range media </span><span class="cov4" title="2">{
+                width := int32(0)
+                if item.Width != nil </span><span class="cov0" title="0">{
+                        width = int32(*item.Width)
+                }</span>
+
+                <span class="cov4" title="2">height := int32(0)
+                if item.Height != nil </span><span class="cov0" title="0">{
+                        height = int32(*item.Height)
+                }</span>
+
+                <span class="cov4" title="2">res = append(res, &amp;feedpb.FeedMediaResponse{
+                        Id:        item.ID.String(),
+                        Url:       item.URL,
+                        MimeType:  item.MimeType,
+                        SizeBytes: item.SizeBytes,
+                        Width:     width,
+                        Height:    height,
+                })</span>
+        }
+
+        <span class="cov7" title="3">return res</span>
+}
+
+func stringValue(value *string) string <span class="cov8" title="4">{
+        if value == nil </span><span class="cov4" title="2">{
+                return ""
+        }</span>
+
+        <span class="cov4" title="2">return *value</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package repository
+
+import (
+        "context"
+        "time"
+
+        dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+        "gorm.io/gorm"
+)
+
+type FeedRepository interface {
+        FindHomeFeed(ctx context.Context, userID string, limit int, cursor string) ([]dbmodel.Post, string, error)
+}
+
+type feedRepository struct {
+        db *gorm.DB
+}
+
+func NewFeedRepository(db *gorm.DB) FeedRepository <span class="cov10" title="8">{
+        return &amp;feedRepository{
+                db: db,
+        }
+}</span>
+
+func (r *feedRepository) FindHomeFeed(ctx context.Context, userID string, limit int, cursor string) ([]dbmodel.Post, string, error) <span class="cov10" title="8">{
+        if limit &lt;= 0 || limit &gt; 50 </span><span class="cov4" title="2">{
+                limit = 20
+        }</span>
+
+        <span class="cov10" title="8">query := r.db.WithContext(ctx).
+                Model(&amp;dbmodel.Post{}).
+                Preload("Author").
+                Preload("Media").
+                Joins(`
+                        LEFT JOIN follows
+                        ON follows.following_id = posts.author_id
+                        AND follows.follower_id = ?
+                `, userID).
+                Where("posts.reply_to_post_id IS NULL").
+                Where("posts.visibility = ?", "public").
+                Where("posts.author_id = ? OR follows.following_id IS NOT NULL", userID).
+                Order("posts.created_at DESC").
+                Limit(limit + 1)
+
+        if cursor != "" </span><span class="cov4" title="2">{
+                parsedCursor, err := time.Parse(time.RFC3339Nano, cursor)
+                if err != nil </span><span class="cov1" title="1">{
+                        return nil, "", err
+                }</span>
+
+                <span class="cov1" title="1">query = query.Where("posts.created_at &lt; ?", parsedCursor)</span>
+        }
+
+        <span class="cov9" title="7">var posts []dbmodel.Post
+        if err := query.Find(&amp;posts).Error; err != nil </span><span class="cov0" title="0">{
+                return nil, "", err
+        }</span>
+
+        <span class="cov9" title="7">nextCursor := ""
+        if len(posts) &gt; limit </span><span class="cov5" title="3">{
+                nextCursor = posts[limit-1].CreatedAt.Format(time.RFC3339Nano)
+                posts = posts[:limit]
+        }</span>
+
+        <span class="cov9" title="7">return posts, nextCursor, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package service
+
+import (
+        "context"
+        "errors"
+
+        "github.com/rs/zerolog"
+        dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+        "github.com/trungquantrannguyen/threadly/services/feed-service/internal/repository"
+)
+
+var ErrUnauthorized = errors.New("Unauthorized")
+
+type FeedService interface {
+        GetHomeFeed(ctx context.Context, userID string, limit int, cursor string) ([]dbmodel.Post, string, error)
+}
+
+type feedService struct {
+        feedRepo repository.FeedRepository
+        log      zerolog.Logger
+}
+
+func NewFeedService(feedRepo repository.FeedRepository, log zerolog.Logger) FeedService <span class="cov10" title="3">{
+        return &amp;feedService{
+                feedRepo: feedRepo,
+                log:      log,
+        }
+}</span>
+
+func (s *feedService) GetHomeFeed(ctx context.Context, userID string, limit int, cursor string) ([]dbmodel.Post, string, error) <span class="cov10" title="3">{
+        if userID == "" </span><span class="cov1" title="1">{
+                return nil, "", ErrUnauthorized
+        }</span>
+
+        <span class="cov6" title="2">return s.feedRepo.FindHomeFeed(ctx, userID, limit, cursor)</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

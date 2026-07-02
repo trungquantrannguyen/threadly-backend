@@ -1,0 +1,716 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>events: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/trungquantrannguyen/threadly/services/notification-service/internal/events/notification_event_consumer.go (0.0%)</option>
+				
+				<option value="file1">github.com/trungquantrannguyen/threadly/services/notification-service/internal/grpc/grpc_server.go (0.0%)</option>
+				
+				<option value="file2">github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository/notification_repository.go (0.0%)</option>
+				
+				<option value="file3">github.com/trungquantrannguyen/threadly/services/notification-service/internal/service/notification_service.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package events
+
+import (
+        "context"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/messaging"
+        "github.com/trungquantrannguyen/threadly/services/notification-service/internal/service"
+)
+
+const notificationQueue = "notification-service.events"
+
+type NotificationEventConsumer struct {
+        eventBus            *messaging.RabbitMQ
+        notificationService service.NotificationService
+        log                 zerolog.Logger
+}
+
+func NewNotificationEventConsumer(
+        eventBus *messaging.RabbitMQ,
+        notificationService service.NotificationService,
+        log zerolog.Logger,
+) *NotificationEventConsumer <span class="cov0" title="0">{
+        return &amp;NotificationEventConsumer{
+                eventBus:            eventBus,
+                notificationService: notificationService,
+                log:                 log,
+        }
+}</span>
+
+func (c *NotificationEventConsumer) Start(ctx context.Context) error <span class="cov0" title="0">{
+        return c.eventBus.Consume(
+                ctx,
+                notificationQueue,
+                []string{
+                        messaging.EventUserFollowed,
+                        messaging.EventPostLiked,
+                        messaging.EventReplyCreated,
+                        messaging.EventPostReposted,
+                },
+                c.handleEvent,
+        )
+}</span>
+
+func (c *NotificationEventConsumer) handleEvent(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+        if err := c.notificationService.CreateFromEvent(ctx, event); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">c.log.Info().
+                Str("event_type", event.Type).
+                Str("actor_id", event.ActorID).
+                Str("target_user_id", event.TargetUserID).
+                Msg("notification event processed")
+
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package grpc
+
+import (
+        "context"
+        "time"
+
+        "github.com/rs/zerolog"
+        "github.com/trungquantrannguyen/threadly/pkg/config"
+        notificationpb "github.com/trungquantrannguyen/threadly/proto/notification"
+        "github.com/trungquantrannguyen/threadly/services/notification-service/internal/service"
+)
+
+type NotificationServiceServer struct {
+        notificationpb.UnimplementedNotificationServiceServer
+        cfg                 config.Config
+        log                 zerolog.Logger
+        notificationService service.NotificationService
+}
+
+func NewNotificationServiceServer(cfg config.Config, log zerolog.Logger, notificationService service.NotificationService) *NotificationServiceServer <span class="cov0" title="0">{
+        return &amp;NotificationServiceServer{
+                cfg:                 cfg,
+                log:                 log,
+                notificationService: notificationService,
+        }
+}</span>
+
+func (s *NotificationServiceServer) GetHealth(ctx context.Context, req *notificationpb.GetNotificationServiceHealthRequest) (*notificationpb.GetNotificationServiceHealthResponse, error) <span class="cov0" title="0">{
+        s.log.Info().Msg("Notification service is healthy")
+        return &amp;notificationpb.GetNotificationServiceHealthResponse{
+                Status:    "ok",
+                Service:   s.cfg.ServiceName,
+                Env:       s.cfg.AppEnv,
+                CheckedAt: time.Now().String(),
+        }, nil
+}</span>
+
+func (s *NotificationServiceServer) GetNotifications(ctx context.Context, req *notificationpb.GetNotificationsRequest) (*notificationpb.GetNotificationsResponse, error) <span class="cov0" title="0">{
+        notifications, err := s.notificationService.GetNotifications(ctx, req.GetUserId(), int(req.GetLimit()))
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">res := make([]*notificationpb.NotificationResponse, 0, len(notifications))
+        for _, n := range notifications </span><span class="cov0" title="0">{
+                var actor *notificationpb.NotificationActor
+                if n.Actor != nil </span><span class="cov0" title="0">{
+                        actor = &amp;notificationpb.NotificationActor{
+                                Id:          n.Actor.ID,
+                                Username:    n.Actor.Username,
+                                DisplayName: n.Actor.DisplayName,
+                                AvatarUrl:   n.Actor.AvatarURL,
+                                IsVerified:  n.Actor.IsVerified,
+                        }
+                }</span>
+
+                <span class="cov0" title="0">res = append(res, &amp;notificationpb.NotificationResponse{
+                        Id:          n.ID,
+                        RecipientId: n.RecipientID,
+                        ActorId:     n.ActorID,
+                        Type:        n.Type,
+                        EntityType:  n.EntityType,
+                        EntityId:    n.EntityID,
+                        Payload:     n.Payload,
+                        ReadAt:      n.ReadAt,
+                        CreatedAt:   n.CreatedAt,
+                        Actor:       actor,
+                })</span>
+        }
+
+        <span class="cov0" title="0">return &amp;notificationpb.GetNotificationsResponse{
+                Notifications: res,
+        }, nil</span>
+}
+
+func (s *NotificationServiceServer) MarkNotificationRead(ctx context.Context, req *notificationpb.MarkNotificationReadRequest) (*notificationpb.MarkNotificationReadResponse, error) <span class="cov0" title="0">{
+        updated, err := s.notificationService.MarkNotificationRead(ctx, req.GetUserId(), req.GetNotificationId())
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">message := "notification marked as read"
+        if !updated </span><span class="cov0" title="0">{
+                message = "notification not found or already read"
+        }</span>
+
+        <span class="cov0" title="0">return &amp;notificationpb.MarkNotificationReadResponse{
+                Success: updated,
+                Message: message,
+        }, nil</span>
+}
+
+func (s *NotificationServiceServer) MarkAllNotificationsRead(ctx context.Context, req *notificationpb.MarkAllNotificationsReadRequest) (*notificationpb.MarkAllNotificationsReadResponse, error) <span class="cov0" title="0">{
+        count, err := s.notificationService.MarkAllNotificationsRead(ctx, req.GetUserId())
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;notificationpb.MarkAllNotificationsReadResponse{
+                Success:      true,
+                Message:      "notifications marked as read",
+                UpdatedCount: int32(count),
+        }, nil</span>
+}
+
+func (s *NotificationServiceServer) GetUnreadNotificationCount(ctx context.Context, req *notificationpb.GetUnreadNotificationCountRequest) (*notificationpb.GetUnreadNotificationCountResponse, error) <span class="cov0" title="0">{
+        count, err := s.notificationService.GetUnreadNotificationCount(ctx, req.GetUserId())
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;notificationpb.GetUnreadNotificationCountResponse{
+                Count: count,
+        }, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package repository
+
+import (
+        "context"
+        "time"
+
+        "github.com/google/uuid"
+        dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+        "gorm.io/gorm"
+        "gorm.io/gorm/clause"
+)
+
+type NotificationRepository interface {
+        Create(ctx context.Context, notification *dbmodel.Notification) error
+        FindByRecipientID(ctx context.Context, recipientID uuid.UUID, limit int) ([]dbmodel.Notification, error)
+        CountUnreadByRecipientID(ctx context.Context, recipientID uuid.UUID) (int64, error)
+        MarkAsRead(ctx context.Context, notificationID uuid.UUID, recipientID uuid.UUID) (bool, error)
+        MarkAllAsRead(ctx context.Context, recipientID uuid.UUID) (int64, error)
+}
+
+type notificationRepository struct {
+        db *gorm.DB
+}
+
+func NewNotificationRepository(db *gorm.DB) NotificationRepository <span class="cov0" title="0">{
+        return &amp;notificationRepository{
+                db: db,
+        }
+}</span>
+
+func (r *notificationRepository) Create(ctx context.Context, notification *dbmodel.Notification) error <span class="cov0" title="0">{
+        return r.db.WithContext(ctx).
+                Clauses(clause.OnConflict{
+                        Columns:   []clause.Column{{Name: "event_id"}},
+                        DoNothing: true,
+                }).
+                Create(notification).Error
+}</span>
+
+func (r *notificationRepository) FindByRecipientID(ctx context.Context, recipientID uuid.UUID, limit int) ([]dbmodel.Notification, error) <span class="cov0" title="0">{
+        var notifications []dbmodel.Notification
+
+        err := r.db.WithContext(ctx).
+                Preload("Actor").
+                Where("recipient_id = ?", recipientID).
+                Order("created_at DESC").
+                Limit(limit).
+                Find(&amp;notifications).Error
+
+        return notifications, err
+}</span>
+
+func (r *notificationRepository) CountUnreadByRecipientID(ctx context.Context, recipientID uuid.UUID) (int64, error) <span class="cov0" title="0">{
+        var count int64
+
+        err := r.db.WithContext(ctx).
+                Model(&amp;dbmodel.Notification{}).
+                Where("recipient_id = ? AND read_at IS NULL", recipientID).
+                Count(&amp;count).Error
+
+        return count, err
+}</span>
+
+func (r *notificationRepository) MarkAsRead(ctx context.Context, notificationID uuid.UUID, recipientID uuid.UUID) (bool, error) <span class="cov0" title="0">{
+        now := time.Now().UTC()
+
+        result := r.db.WithContext(ctx).
+                Model(&amp;dbmodel.Notification{}).
+                Where("id = ? AND recipient_id = ? AND read_at IS NULL", notificationID, recipientID).
+                Update("read_at", now)
+
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return false, result.Error
+        }</span>
+
+        <span class="cov0" title="0">return result.RowsAffected &gt; 0, nil</span>
+}
+
+func (r *notificationRepository) MarkAllAsRead(ctx context.Context, recipientID uuid.UUID) (int64, error) <span class="cov0" title="0">{
+        now := time.Now().UTC()
+
+        result := r.db.WithContext(ctx).
+                Model(&amp;dbmodel.Notification{}).
+                Where("recipient_id = ? AND read_at IS NULL", recipientID).
+                Update("read_at", now)
+
+        if result.Error != nil </span><span class="cov0" title="0">{
+                return 0, result.Error
+        }</span>
+
+        <span class="cov0" title="0">return result.RowsAffected, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package service
+
+import (
+        "context"
+        "encoding/json"
+        "errors"
+        "time"
+
+        "github.com/google/uuid"
+        dbmodel "github.com/trungquantrannguyen/threadly/db/models"
+        "github.com/trungquantrannguyen/threadly/pkg/messaging"
+        "github.com/trungquantrannguyen/threadly/services/notification-service/internal/dto"
+        "github.com/trungquantrannguyen/threadly/services/notification-service/internal/repository"
+        "gorm.io/datatypes"
+)
+
+var ErrInvalidNotificationEvent = errors.New("invalid notification event")
+
+const (
+        NotificationTypeUserFollowed = "user_followed"
+        NotificationTypePostLiked    = "post_liked"
+        NotificationTypePostReplied  = "post_replied"
+        NotificationTypePostReposted = "post_reposted"
+
+        EntityTypeUser = "user"
+        EntityTypePost = "post"
+)
+
+type NotificationService interface {
+        CreateFromEvent(ctx context.Context, event messaging.Event) error
+        GetNotifications(ctx context.Context, userID string, limit int) ([]dto.NotificationResponse, error)
+        GetUnreadNotificationCount(ctx context.Context, userID string) (int64, error)
+        MarkNotificationRead(ctx context.Context, userID string, notificationID string) (bool, error)
+        MarkAllNotificationsRead(ctx context.Context, userID string) (int64, error)
+}
+
+type notificationService struct {
+        notificationRepo repository.NotificationRepository
+}
+
+func NewNotificationService(notificationRepo repository.NotificationRepository) NotificationService <span class="cov0" title="0">{
+        return &amp;notificationService{
+                notificationRepo: notificationRepo,
+        }
+}</span>
+
+func (s *notificationService) CreateFromEvent(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+        switch event.Type </span>{
+        case messaging.EventUserFollowed:<span class="cov0" title="0">
+                return s.createFollowNotification(ctx, event)</span>
+
+        case messaging.EventPostLiked:<span class="cov0" title="0">
+                return s.createPostNotification(ctx, event, NotificationTypePostLiked, "liked your post")</span>
+
+        case messaging.EventReplyCreated:<span class="cov0" title="0">
+                return s.createReplyNotification(ctx, event)</span>
+
+        case messaging.EventPostReposted:<span class="cov0" title="0">
+                return s.createPostNotification(ctx, event, NotificationTypePostReposted, "reposted your post")</span>
+
+        default:<span class="cov0" title="0">
+                return nil</span>
+        }
+}
+
+func (s *notificationService) createFollowNotification(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+        eventID, err := parseEventID(event)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if event.ActorID == "" || event.TargetUserID == "" </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">if event.ActorID == event.TargetUserID </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">actorID, err := uuid.Parse(event.ActorID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">recipientID, err := uuid.Parse(event.TargetUserID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">payload, err := json.Marshal(map[string]string{
+                "message": "started following you",
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">notification := &amp;dbmodel.Notification{
+                EventID:     eventID,
+                RecipientID: recipientID,
+                ActorID:     &amp;actorID,
+                Type:        NotificationTypeUserFollowed,
+                EntityType:  EntityTypeUser,
+                EntityID:    &amp;actorID,
+                Payload:     datatypes.JSON(payload),
+                CreatedAt:   time.Now().UTC(),
+        }
+
+        return s.notificationRepo.Create(ctx, notification)</span>
+}
+
+func (s *notificationService) createPostNotification(
+        ctx context.Context,
+        event messaging.Event,
+        notificationType string,
+        message string,
+) error <span class="cov0" title="0">{
+        eventID, err := parseEventID(event)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if event.ActorID == "" || event.AuthorID == "" || event.PostID == "" </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">if event.ActorID == event.AuthorID </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">actorID, err := uuid.Parse(event.ActorID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">recipientID, err := uuid.Parse(event.AuthorID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">postID, err := uuid.Parse(event.PostID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">payload, err := json.Marshal(map[string]string{
+                "message": message,
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">notification := &amp;dbmodel.Notification{
+                EventID:     eventID,
+                RecipientID: recipientID,
+                ActorID:     &amp;actorID,
+                Type:        notificationType,
+                EntityType:  EntityTypePost,
+                EntityID:    &amp;postID,
+                Payload:     datatypes.JSON(payload),
+                CreatedAt:   time.Now().UTC(),
+        }
+
+        return s.notificationRepo.Create(ctx, notification)</span>
+}
+
+func (s *notificationService) createReplyNotification(ctx context.Context, event messaging.Event) error <span class="cov0" title="0">{
+        eventID, err := parseEventID(event)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if event.ActorID == "" || event.TargetUserID == "" || event.PostID == "" </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">if event.ActorID == event.TargetUserID </span><span class="cov0" title="0">{
+                return nil
+        }</span>
+
+        <span class="cov0" title="0">actorID, err := uuid.Parse(event.ActorID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">recipientID, err := uuid.Parse(event.TargetUserID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">replyID, err := uuid.Parse(event.PostID)
+        if err != nil </span><span class="cov0" title="0">{
+                return ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">payload, err := json.Marshal(map[string]string{
+                "message": "replied to your post",
+        })
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">notification := &amp;dbmodel.Notification{
+                EventID:     eventID,
+                RecipientID: recipientID,
+                ActorID:     &amp;actorID,
+                Type:        NotificationTypePostReplied,
+                EntityType:  EntityTypePost,
+                EntityID:    &amp;replyID,
+                Payload:     datatypes.JSON(payload),
+                CreatedAt:   time.Now().UTC(),
+        }
+
+        return s.notificationRepo.Create(ctx, notification)</span>
+}
+
+func (s *notificationService) GetUnreadNotificationCount(ctx context.Context, userID string) (int64, error) <span class="cov0" title="0">{
+        recipientID, err := uuid.Parse(userID)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">return s.notificationRepo.CountUnreadByRecipientID(ctx, recipientID)</span>
+}
+
+func (s *notificationService) GetNotifications(ctx context.Context, userID string, limit int) ([]dto.NotificationResponse, error) <span class="cov0" title="0">{
+        recipientID, err := uuid.Parse(userID)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">if limit &lt;= 0 || limit &gt; 50 </span><span class="cov0" title="0">{
+                limit = 20
+        }</span>
+
+        <span class="cov0" title="0">notifications, err := s.notificationRepo.FindByRecipientID(ctx, recipientID, limit)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">responses := make([]dto.NotificationResponse, 0, len(notifications))
+        for _, notification := range notifications </span><span class="cov0" title="0">{
+                responses = append(responses, toNotificationResponse(notification))
+        }</span>
+
+        <span class="cov0" title="0">return responses, nil</span>
+}
+
+func (s *notificationService) MarkNotificationRead(ctx context.Context, userID string, notificationID string) (bool, error) <span class="cov0" title="0">{
+        recipientID, err := uuid.Parse(userID)
+        if err != nil </span><span class="cov0" title="0">{
+                return false, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">id, err := uuid.Parse(notificationID)
+        if err != nil </span><span class="cov0" title="0">{
+                return false, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">return s.notificationRepo.MarkAsRead(ctx, id, recipientID)</span>
+}
+
+func (s *notificationService) MarkAllNotificationsRead(ctx context.Context, userID string) (int64, error) <span class="cov0" title="0">{
+        recipientID, err := uuid.Parse(userID)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">return s.notificationRepo.MarkAllAsRead(ctx, recipientID)</span>
+}
+
+func toNotificationResponse(notification dbmodel.Notification) dto.NotificationResponse <span class="cov0" title="0">{
+        actorID := ""
+        if notification.ActorID != nil </span><span class="cov0" title="0">{
+                actorID = notification.ActorID.String()
+        }</span>
+
+        <span class="cov0" title="0">entityID := ""
+        if notification.EntityID != nil </span><span class="cov0" title="0">{
+                entityID = notification.EntityID.String()
+        }</span>
+
+        <span class="cov0" title="0">readAt := ""
+        if notification.ReadAt != nil </span><span class="cov0" title="0">{
+                readAt = notification.ReadAt.Format(time.RFC3339)
+        }</span>
+
+        <span class="cov0" title="0">var actor *dto.NotificationActorResponse
+        if notification.Actor != nil </span><span class="cov0" title="0">{
+                avatarURL := ""
+                if notification.Actor.AvatarURL != nil </span><span class="cov0" title="0">{
+                        avatarURL = *notification.Actor.AvatarURL
+                }</span>
+
+                <span class="cov0" title="0">actor = &amp;dto.NotificationActorResponse{
+                        ID:          notification.Actor.ID.String(),
+                        Username:    notification.Actor.Username,
+                        DisplayName: notification.Actor.DisplayName,
+                        AvatarURL:   avatarURL,
+                        IsVerified:  notification.Actor.IsVerified,
+                }</span>
+        }
+
+        <span class="cov0" title="0">return dto.NotificationResponse{
+                ID:          notification.ID.String(),
+                RecipientID: notification.RecipientID.String(),
+                ActorID:     actorID,
+                Type:        notification.Type,
+                EntityType:  notification.EntityType,
+                EntityID:    entityID,
+                Payload:     string(notification.Payload),
+                ReadAt:      readAt,
+                CreatedAt:   notification.CreatedAt.Format(time.RFC3339),
+                Actor:       actor,
+        }</span>
+}
+
+func parseEventID(event messaging.Event) (uuid.UUID, error) <span class="cov0" title="0">{
+        if event.EventID == "" </span><span class="cov0" title="0">{
+                return uuid.Nil, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">eventID, err := uuid.Parse(event.EventID)
+        if err != nil </span><span class="cov0" title="0">{
+                return uuid.Nil, ErrInvalidNotificationEvent
+        }</span>
+
+        <span class="cov0" title="0">return eventID, nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
