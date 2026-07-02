@@ -1,0 +1,65 @@
+name: Deploy User Service
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      ref:
+        description: "Branch, tag, or commit SHA to deploy"
+        required: true
+        default: main
+
+concurrency:
+  group: deploy-user-service-${{ inputs.environment }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-user-service:
+    name: Deploy User Service
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Check formatting
+        run: |
+          UNFORMATTED=$(gofmt -l services/user-service pkg db proto)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "These files are not gofmt formatted:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./services/user-service/... ./pkg/... ./db/... ./proto/...
+
+      - name: Run User Service tests
+        run: go test ./services/user-service/... -cover
+
+      - name: Deployment placeholder
+        run: |
+          echo "Deploy User Service to ${{ inputs.environment }}"
+          echo "Ref: ${{ inputs.ref }}"
+          echo "Docker build/push/deploy steps will be added later."

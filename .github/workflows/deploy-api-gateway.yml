@@ -1,0 +1,51 @@
+name: Deploy API Gateway
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+      ref:
+        description: "Branch, tag, or commit SHA to deploy"
+        required: true
+        default: main
+
+concurrency:
+  group: deploy-api-gateway-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-api-gateway:
+    name: Deploy API Gateway
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run API Gateway tests before deploy
+        run: go test ./services/api-gateway/... -cover
+
+      # Later:
+      # - Build api-gateway Docker image
+      # - Push image to registry
+      # - Deploy api-gateway to server/platform
+      # - Run health check
