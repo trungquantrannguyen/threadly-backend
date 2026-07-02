@@ -40,24 +40,24 @@ The backend currently includes:
 
 ## Tech stack
 
-| Area | Technology |
-|---|---|
-| Language | Go |
-| HTTP API | Gin |
-| Internal RPC | gRPC + Protocol Buffers |
-| Database | Supabase PostgreSQL |
-| ORM | GORM |
-| Migrations | golang-migrate |
-| Cache | Redis |
-| Messaging | RabbitMQ |
-| Storage | Supabase Storage / S3-compatible API |
-| Authentication | JWT access tokens + refresh-token sessions |
-| Password security | Password hashing in User Service |
-| Logging | zerolog |
-| Local runtime | Docker Compose |
-| CI/CD | GitHub Actions |
-| API documentation | Swagger / OpenAPI via swaggo |
-| Testing | Go test, testify, miniredis, package/service unit tests |
+| Area              | Technology                                              |
+| ----------------- | ------------------------------------------------------- |
+| Language          | Go                                                      |
+| HTTP API          | Gin                                                     |
+| Internal RPC      | gRPC + Protocol Buffers                                 |
+| Database          | Supabase PostgreSQL                                     |
+| ORM               | GORM                                                    |
+| Migrations        | golang-migrate                                          |
+| Cache             | Redis                                                   |
+| Messaging         | RabbitMQ                                                |
+| Storage           | Supabase Storage / S3-compatible API                    |
+| Authentication    | JWT access tokens + refresh-token sessions              |
+| Password security | Password hashing in User Service                        |
+| Logging           | zerolog                                                 |
+| Local runtime     | Docker Compose                                          |
+| CI/CD             | GitHub Actions                                          |
+| API documentation | Swagger / OpenAPI via swaggo                            |
+| Testing           | Go test, testify, miniredis, package/service unit tests |
 
 ## System architecture
 
@@ -179,17 +179,17 @@ Threadly uses one shared PostgreSQL database. The schema is centralised under `d
 
 Core tables:
 
-| Table | Purpose |
-|---|---|
-| `users` | User accounts, profile data, roles, soft deletion |
-| `sessions` | Hashed refresh-token sessions, expiration, revocation |
-| `posts` | Posts and replies; replies use nullable `reply_to_post_id` |
-| `media` | Uploaded media metadata linked to users/posts |
-| `follows` | Follower/following relationships |
-| `likes` | User likes on posts |
-| `bookmarks` | Saved posts |
-| `reposts` | Repost relationships |
-| `notifications` | User notifications generated from events |
+| Table           | Purpose                                                    |
+| --------------- | ---------------------------------------------------------- |
+| `users`         | User accounts, profile data, roles, soft deletion          |
+| `sessions`      | Hashed refresh-token sessions, expiration, revocation      |
+| `posts`         | Posts and replies; replies use nullable `reply_to_post_id` |
+| `media`         | Uploaded media metadata linked to users/posts              |
+| `follows`       | Follower/following relationships                           |
+| `likes`         | User likes on posts                                        |
+| `bookmarks`     | Saved posts                                                |
+| `reposts`       | Repost relationships                                       |
+| `notifications` | User notifications generated from events                   |
 
 ```mermaid
 erDiagram
@@ -562,12 +562,12 @@ threadly-backend/
 
 Use separate env files for local and Docker modes.
 
-| File | Purpose | Commit? |
-|---|---|---|
-| `.env.example` | Safe template for required variables | Yes |
-| `.env.local` | Local Mac development using `localhost` | No |
-| `.env.docker` | Docker Compose using service hostnames | No |
-| `.env` | Optional local fallback loaded by `godotenv` | No |
+| File           | Purpose                                      | Commit? |
+| -------------- | -------------------------------------------- | ------- |
+| `.env.example` | Safe template for required variables         | Yes     |
+| `.env.local`   | Local Mac development using `localhost`      | No      |
+| `.env.docker`  | Docker Compose using service hostnames       | No      |
+| `.env`         | Optional local fallback loaded by `godotenv` | No      |
 
 Important Docker hostnames:
 
@@ -865,10 +865,9 @@ This project demonstrates:
 
 Planned improvements:
 
-- Finalise auth hardening: admin-only registration, stricter role checks, and route ownership checks
-- Add rate limiting at the API Gateway using Redis
 - Complete full end-to-end integration tests
 - Add deployment implementation to manual GitHub Actions workflows
 - Add production-grade Docker image publishing
 - Add observability: request IDs, metrics, traces, and structured audit logs
-- Add frontend integration with React + Vite + TypeScript
+- Add API rate limiting for public endpoints
+- Add refresh-token rotation and session management hardening
